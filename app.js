@@ -169,12 +169,26 @@ function toggleAll() {
 }
 
 function clearAll() {
-    if (confirm('هل أنت متأكد من مسح التقرير كاملاً؟')) {
-        students = [];
-        openIds.clear();
-        localStorage.removeItem('sana_data');
-        render();
-    }
+    if (!confirm('هل أنت متأكد من مسح بيانات التقرير كاملاً؟\n\nسيتم تصفير كافة الحقول والطلاب والملاحظات، مع الحفاظ على اسم المعلم فقط.')) return;
+    
+    // مسح بيانات الطلاب
+    students = [];
+    openIds.clear();
+    localStorage.removeItem('sana_data');
+    
+    // تصفير حقول الجلسة مع استثناء اسم المعلم
+    const today = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('reportDate').value = today;
+    document.getElementById('studentCategory').value = 'أطفال';
+    document.getElementById('halaType').value = 'صباحية';
+    document.getElementById('durationHours').value = '1';
+    document.getElementById('durationMinutes').value = '0';
+    document.getElementById('halaNum').value = '';
+    document.getElementById('adminNotes').value = '';
+    
+    saveState();
+    render();
+    showToast('تم مسح التقرير مع حفظ اسم المعلم');
 }
 
 function rolloverStudent(id) {
