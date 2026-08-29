@@ -13,6 +13,7 @@
     <meta name="apple-mobile-web-app-title" content="تقارير سنا">
     <link rel="stylesheet" href="styles.css">
     <script src="html2pdf.bundle.min.js"></script>
+    <script src="quran-data.js"></script>
     <script src="app.js" defer></script>
 </head>
 <body>
@@ -112,6 +113,89 @@
         <button type="button" onclick="submitToGoogleForm()" class="btn btn-primary" style="background:#0284c7;" aria-label="فتح استمارة جوجل المعبأة مسبقاً لإرسال التقرير">إرسال للاستمارة ↗</button>
     </div>
 </footer>
+
+<!-- نافذة منتقي المصحف الشريف -->
+<div id="quranModal" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="quranModalTitle">
+    <div class="modal-box">
+        <header class="modal-header">
+            <h3 id="quranModalTitle">📖 اختيار من المصحف الشريف</h3>
+            <button type="button" class="modal-close-btn" onclick="closeQuranPicker()" aria-label="إغلاق">✕</button>
+        </header>
+        <div class="modal-tabs" role="tablist">
+            <button type="button" class="tab-btn active" id="tabSurahBtn" onclick="setQuranTab('surah')">١. بالسورة والآيات</button>
+            <button type="button" class="tab-btn" id="tabPageBtn" onclick="setQuranTab('page')">٢. بالصفحات</button>
+            <button type="button" class="tab-btn" id="tabJuzBtn" onclick="setQuranTab('juz')">٣. بالأجزاء والأرباع</button>
+        </div>
+        <div class="modal-body">
+            <!-- تبويب السورة والآيات -->
+            <div id="tabSurahContent">
+                <div class="form-group">
+                    <label for="pickerSurahSelect">السورة:</label>
+                    <select id="pickerSurahSelect" onchange="onSurahChange()"></select>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div class="form-group">
+                        <label for="pickerFromAyah">من آية:</label>
+                        <input type="number" id="pickerFromAyah" min="1" value="1" oninput="updateQuranPreview()">
+                    </div>
+                    <div class="form-group">
+                        <label for="pickerToAyah">إلى آية:</label>
+                        <input type="number" id="pickerToAyah" min="1" value="10" oninput="updateQuranPreview()">
+                    </div>
+                </div>
+                <div class="quick-chips">
+                    <button type="button" class="chip-btn" onclick="setSurahRange('full')">كامل السورة</button>
+                    <button type="button" class="chip-btn" onclick="setSurahRange('firstHalf')">النصف الأول</button>
+                    <button type="button" class="chip-btn" onclick="setSurahRange('secondHalf')">النصف الثاني</button>
+                    <button type="button" class="chip-btn" onclick="setSurahRange('first10')">أول ١٠ آيات</button>
+                </div>
+            </div>
+
+            <!-- تبويب الصفحات -->
+            <div id="tabPageContent" style="display:none;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div class="form-group">
+                        <label for="pickerFromPage">من صفحة (1-604):</label>
+                        <input type="number" id="pickerFromPage" min="1" max="604" value="1" oninput="updateQuranPreview()">
+                    </div>
+                    <div class="form-group">
+                        <label for="pickerToPage">إلى صفحة (1-604):</label>
+                        <input type="number" id="pickerToPage" min="1" max="604" value="1" oninput="updateQuranPreview()">
+                    </div>
+                </div>
+                <div id="pageSurahInfo" style="font-size:0.85rem;color:var(--primary);font-weight:bold;margin-top:4px;"></div>
+                <div class="quick-chips">
+                    <button type="button" class="chip-btn" onclick="setPageRange(1)">صفحة واحدة</button>
+                    <button type="button" class="chip-btn" onclick="setPageRange(2)">وجهان (ورقة)</button>
+                    <button type="button" class="chip-btn" onclick="setPageRange(5)">٥ صفحات</button>
+                    <button type="button" class="chip-btn" onclick="setPageRange(10)">١٠ صفحات</button>
+                </div>
+            </div>
+
+            <!-- تبويب الأجزاء والأرباع -->
+            <div id="tabJuzContent" style="display:none;">
+                <div class="form-group">
+                    <label for="pickerJuzSelect">الجزء:</label>
+                    <select id="pickerJuzSelect" onchange="onJuzChange()"></select>
+                </div>
+                <div class="form-group">
+                    <label for="pickerRubSelect">الربع / المقرر:</label>
+                    <select id="pickerRubSelect" onchange="updateQuranPreview()"></select>
+                </div>
+            </div>
+
+            <!-- المعاينة الحية -->
+            <div class="picker-preview-box">
+                <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:3px;">النص الناتج:</div>
+                <strong id="quranPreviewText" style="color:var(--primary);">...</strong>
+            </div>
+        </div>
+        <footer class="modal-footer">
+            <button type="button" onclick="closeQuranPicker()" class="btn btn-outline btn-sm">إلغاء</button>
+            <button type="button" onclick="insertQuranSelection()" class="btn btn-success btn-sm">إدراج في التقرير ✓</button>
+        </footer>
+    </div>
+</div>
 
 </body>
 </html>
