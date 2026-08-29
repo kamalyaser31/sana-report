@@ -20,7 +20,9 @@
 ## هيكل الملفات
 - [index.html](file:///index.html): الصفحة الرئيسة وهيكل الواجهة الدلالي.
 - [styles.css](file:///styles.css): منظومة الأنماط والألوان الزمردية والتجاوب والطباعة.
-- [quran-data.js](file:///quran-data.js): فهرس مصحف المدينة المحلي (114 سورة، 604 صفحات، 30 جزءاً وأرباعها).
+- [quran-data.js](file:///quran-data.js): مشغل ومنسق فهرس مصحف المدينة المحلي.
+- [quran_surahs.json](file:///quran_surahs.json): ملف بيانات السور الـ 114 المحمل مباشرة من GitHub.
+- [quran_juzs.json](file:///quran_juzs.json): ملف بيانات الأجزاء الـ 30 المحمل مباشرة من GitHub.
 - [app.js](file:///app.js): منطق التطبيق وإدارة البيانات والحفظ والتصدير.
 - [manifest.json](file:///manifest.json): ملف توصيف تطبيق الويب التقدمي (PWA).
 - [sw.js](file:///sw.js): عامل الخدمة للتخزين المؤقت والعمل دون اتصال.
