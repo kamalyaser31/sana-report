@@ -98,6 +98,12 @@
         </div>
     </details>
 
+    <!-- اختيار المسودة الحالية (مبسط وسهل الوصول لقارئات الشاشة) -->
+    <div class="draft-selector-row">
+        <label for="draftSelect" class="draft-selector-label">📂 المسودة الحالية:</label>
+        <select id="draftSelect" class="draft-select-control" onchange="onDraftChange(this.value)" aria-label="اختر المسودة الحالية"></select>
+    </div>
+
     <section class="stats-bar" aria-label="إحصائيات التقرير">
         <div>
             <span>إجمالي الطلاب: <strong id="totalCount">0</strong></span>
@@ -250,6 +256,18 @@
                     <input type="checkbox" id="vis_quran_picker" onchange="updateFieldVisibility()">
                     <span>إظهار أزرار منتقي المصحف الشريف (📖 مصحف)</span>
                 </label>
+            </div>
+
+            <hr class="modal-divider">
+            
+            <div class="settings-section-title">📁 إدارة مسودات الحلقات:</div>
+            <p class="modal-desc" style="margin-bottom:10px;">
+                يمكنك إنشاء مسودات مخصصة لكل حلقة، أو إعادة تسميتها، أو حذف المسودة الحالية:
+            </p>
+            <div class="draft-modal-actions">
+                <button type="button" onclick="createNewDraftPrompt()" class="btn btn-outline btn-sm" aria-label="إنشاء مسودة جديدة">+ إنشاء مسودة جديدة</button>
+                <button type="button" onclick="renameCurrentDraftPrompt()" class="btn btn-outline btn-sm" aria-label="إعادة تسمية المسودة الحالية">✏️ إعادة تسمية المسودة الحالية</button>
+                <button type="button" onclick="deleteCurrentDraftConfirm()" class="btn btn-outline btn-sm btn-danger-outline" aria-label="حذف المسودة الحالية">🗑️ حذف المسودة الحالية</button>
             </div>
         </div>
         <footer class="modal-footer">
