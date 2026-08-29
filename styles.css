@@ -83,8 +83,8 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); outlin
 
 @media (max-width: 600px) {
     .settings-grid, .card-fields-grid { grid-template-columns: 1fr; }
-    .action-bar-inner { flex-direction: column; }
-    .container { margin-bottom: 120px; }
+    .action-bar-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .container { margin-bottom: 140px; }
 }
 
 @media print {

@@ -1,5 +1,5 @@
 /**
- * نظام تقارير أكاديمية سنا - المنطق البرمجي الرشيق
+ * نظام تقارير أكاديمية سنا - المنطق البرمجي المتكامل مع استمارة الأتمتة
  */
 const BASMALA = "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ";
 const HEADER = "═══ [ تقرير أكاديمية سنا لتعليم القرآن الكريم ] ═══";
@@ -10,6 +10,19 @@ const AWARDS = [
     "محاولة جيدة، تحتاج إلى مزيد من التركيز 🎯", "ننتظر جدية أكبر ⚠️"
 ];
 
+// معرفات حقول نموذج Google Forms المعتمد في منظومة الأتمتة
+const FORM_CONFIG = {
+    URL: "https://docs.google.com/forms/d/e/1FAIpQLSfNKy_h48Ia7dhe_zBoGxTdw0dF5qU2rlul-4JYYUX2VCgcyQ/viewform",
+    ENTRIES: {
+        TEACHER: "entry.1538514296",
+        STUDENT_CATEGORY: "entry.265432297",
+        HOURS: "entry.758192319",
+        MINUTES: "entry.592377570",
+        REPORT_TEXT: "entry.253620165",
+        ADMIN_NOTES: "entry.1749036968"
+    }
+};
+
 let students = JSON.parse(localStorage.getItem('sana_data') || '[]');
 let openIds = new Set(students.length ? [students[0].id] : []);
 
@@ -19,9 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSettings();
     render();
     
-    // ربط أحداث الإدخال لشريط الإعدادات
-    ['reportDate', 'halaType', 'halaNum', 'halaDuration', 'teacherName'].forEach(id => {
+    // ربط أحداث الإدخال للحفظ التلقائي
+    ['reportDate', 'teacherName', 'studentCategory', 'halaType', 'durationHours', 'durationMinutes', 'halaNum', 'adminNotes'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', saveState);
+        document.getElementById(id)?.addEventListener('change', saveState);
     });
 });
 
@@ -39,20 +53,26 @@ function toggleTheme() {
 function loadSettings() {
     const s = JSON.parse(localStorage.getItem('sana_settings') || '{}');
     document.getElementById('reportDate').value = s.date || new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('teacherName').value = s.teacherName || 'محمد نبيل';
+    document.getElementById('studentCategory').value = s.studentCategory || 'أطفال';
     document.getElementById('halaType').value = s.halaType || 'صباحية';
+    document.getElementById('durationHours').value = s.durationHours !== undefined ? s.durationHours : '1';
+    document.getElementById('durationMinutes').value = s.durationMinutes !== undefined ? s.durationMinutes : '0';
     document.getElementById('halaNum').value = s.halaNum || '';
-    document.getElementById('halaDuration').value = s.halaDuration || '';
-    document.getElementById('teacherName').value = s.teacherName || '';
+    document.getElementById('adminNotes').value = s.adminNotes || '';
 }
 
 function saveState() {
     localStorage.setItem('sana_data', JSON.stringify(students));
     localStorage.setItem('sana_settings', JSON.stringify({
         date: document.getElementById('reportDate').value,
+        teacherName: document.getElementById('teacherName').value,
+        studentCategory: document.getElementById('studentCategory').value,
         halaType: document.getElementById('halaType').value,
+        durationHours: document.getElementById('durationHours').value,
+        durationMinutes: document.getElementById('durationMinutes').value,
         halaNum: document.getElementById('halaNum').value,
-        halaDuration: document.getElementById('halaDuration').value,
-        teacherName: document.getElementById('teacherName').value
+        adminNotes: document.getElementById('adminNotes').value
     }));
     renderStats();
 }
@@ -130,6 +150,7 @@ function rolloverHomework() {
     });
     
     document.getElementById('reportDate').value = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('adminNotes').value = '';
     saveState();
     render();
     alert('تم تدوير الواجبات بنجاح وتحديث تاريخ التقرير.');
@@ -208,6 +229,15 @@ function render() {
     }).join('');
 }
 
+function formatDurationText(hours, minutes) {
+    const h = parseInt(hours || '0', 10);
+    const m = parseInt(minutes || '0', 10);
+    if (h > 0 && m > 0) return `${h} ${h === 1 ? 'ساعة' : (h === 2 ? 'ساعتان' : (h <= 10 ? 'ساعات' : 'ساعة'))} و${m} دقيقة`;
+    if (h > 0) return `${h} ${h === 1 ? 'ساعة' : (h === 2 ? 'ساعتان' : (h <= 10 ? 'ساعات' : 'ساعة'))}`;
+    if (m > 0) return `${m} دقيقة`;
+    return '0 دقيقة';
+}
+
 function formatStudent(s) {
     const isMale = s.gender === 'male';
     let res = `${isMale ? 'الطالب' : 'الطالبة'}: ${s.name.trim() || 'بدون اسم'}\n\n`;
@@ -220,16 +250,27 @@ function formatStudent(s) {
     return res.replace(/\n━━━━━━━━━━━━━━━\n$/, '');
 }
 
-function copyAll() {
-    if (!students.length) return alert('لا يوجد طلاب مسجلون لنسخ بياناتهم.');
+function getFullReportText() {
     const d = id => document.getElementById(id)?.value || '';
-    let rep = `${BASMALA}\n${HEADER}\nالتاريخ: ${d('reportDate')}\nالفترة: ${d('halaType')}\n`;
+    const durationText = formatDurationText(d('durationHours'), d('durationMinutes'));
+    
+    let rep = `${BASMALA}\n${HEADER}\n`;
+    rep += `التاريخ: ${d('reportDate')}\n`;
+    rep += `الفترة: ${d('halaType')}\n`;
     if (d('halaNum')) rep += `رقم الحلقة: ${d('halaNum')}\n`;
-    if (d('halaDuration')) rep += `المدة: ${d('halaDuration')}\n`;
+    rep += `المدة: ${durationText}\n`;
     if (d('teacherName')) rep += `المعلم: ${d('teacherName')}\n`;
     rep += `عدد الطلاب: ${students.length}\n━━━━━━━━━━━━━━━\n`;
+    
+    // ترتيب عكسي لمطابقة أسلوب النشر المعتمد للحلقات
     [...students].reverse().forEach(s => rep += formatStudent(s) + "\n\n━━━━━━━━━━━━━━━\n");
     rep += `\n*نسأل الله لهم التوفيق والسداد.*`;
+    return rep;
+}
+
+function copyAll() {
+    if (!students.length) return alert('لا يوجد طلاب مسجلون لنسخ بياناتهم.');
+    const rep = getFullReportText();
     copyText(rep, 'تم نسخ التقرير الكلي بنجاح.');
 }
 
@@ -247,9 +288,41 @@ function copyText(text, msg) {
     });
 }
 
+function submitToGoogleForm() {
+    if (!students.length) {
+        return alert('يرجى إضافة الطلاب وتعبئة بيانات التقرير قبل الإرسال إلى الاستمارة.');
+    }
+    
+    const d = id => document.getElementById(id)?.value || '';
+    const reportText = getFullReportText();
+    
+    // نسخ النص للحافظة احتياطياً
+    navigator.clipboard?.writeText(reportText).catch(() => {});
+    
+    // تجهيز معلمات الرابط المعبأ مسبقاً (Pre-filled URL)
+    const params = new URLSearchParams();
+    params.append('usp', 'pp_url');
+    params.append(FORM_CONFIG.ENTRIES.TEACHER, d('teacherName'));
+    params.append(FORM_CONFIG.ENTRIES.STUDENT_CATEGORY, d('studentCategory'));
+    params.append(FORM_CONFIG.ENTRIES.HOURS, d('durationHours') || '0');
+    params.append(FORM_CONFIG.ENTRIES.MINUTES, d('durationMinutes') || '0');
+    params.append(FORM_CONFIG.ENTRIES.REPORT_TEXT, reportText);
+    
+    if (d('adminNotes')) {
+        params.append(FORM_CONFIG.ENTRIES.ADMIN_NOTES, d('adminNotes'));
+    }
+    
+    const targetUrl = `${FORM_CONFIG.URL}?${params.toString()}`;
+    
+    // فتح الاستمارة في تبويب جديد
+    window.open(targetUrl, '_blank');
+}
+
 function exportPDF() {
     if (!students.length) return alert('لا يوجد طلاب لتصدير التقرير.');
     const d = id => document.getElementById(id)?.value || '';
+    const durationText = formatDurationText(d('durationHours'), d('durationMinutes'));
+    
     const box = document.createElement('div');
     box.style.cssText = 'padding:20px;font-family:sans-serif;direction:rtl;color:#111;background:#fff;';
     box.innerHTML = `
@@ -261,11 +334,11 @@ function exportPDF() {
             <tr>
                 <td style="padding:6px;border:1px solid #ddd;"><strong>التاريخ:</strong> ${escapeHtml(d('reportDate'))}</td>
                 <td style="padding:6px;border:1px solid #ddd;"><strong>الفترة:</strong> ${escapeHtml(d('halaType'))}</td>
-                <td style="padding:6px;border:1px solid #ddd;"><strong>رقم الحلقة:</strong> ${escapeHtml(d('halaNum') || '-')}</td>
+                <td style="padding:6px;border:1px solid #ddd;"><strong>فئة الطلاب:</strong> ${escapeHtml(d('studentCategory'))}</td>
             </tr>
             <tr>
                 <td style="padding:6px;border:1px solid #ddd;"><strong>المعلم:</strong> ${escapeHtml(d('teacherName') || '-')}</td>
-                <td style="padding:6px;border:1px solid #ddd;"><strong>المدة:</strong> ${escapeHtml(d('halaDuration') || '-')}</td>
+                <td style="padding:6px;border:1px solid #ddd;"><strong>المدة:</strong> ${escapeHtml(durationText)}</td>
                 <td style="padding:6px;border:1px solid #ddd;"><strong>عدد الطلاب:</strong> ${students.length}</td>
             </tr>
         </table>

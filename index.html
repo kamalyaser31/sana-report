@@ -14,7 +14,7 @@
     <header class="app-header">
         <div>
             <h1>أكاديمية سنا لتعليم القرآن الكريم</h1>
-            <p style="font-size:0.85rem;color:var(--text-muted)">نظام إعداد وتوثيق تقارير الحلقات اليومية</p>
+            <p style="font-size:0.85rem;color:var(--text-muted)">نظام إعداد وتوثيق تقارير الحلقات اليومية المرتبط بالاستمارة السحابية</p>
         </div>
         <div class="header-controls">
             <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-outline btn-sm" aria-label="تبديل الوضع الليلي">الوضع الليلي</button>
@@ -23,30 +23,50 @@
         </div>
     </header>
 
-    <section class="settings-section" aria-label="بيانات الحلقة">
+    <section class="settings-section" aria-label="بيانات الحلقة والاستمارة">
         <div class="settings-grid">
-            <div class="form-group full-width">
+            <div class="form-group">
                 <label for="reportDate">تاريخ اليوم:</label>
                 <input type="text" id="reportDate" aria-label="تاريخ التقرير">
             </div>
             <div class="form-group">
-                <label for="halaType">فترة الحلقة:</label>
-                <select id="halaType" aria-label="فترة الحلقة">
-                    <option value="صباحية">صباحية</option>
-                    <option value="مسائية">مسائية</option>
+                <label for="teacherName">اسم المعلم:</label>
+                <select id="teacherName" aria-label="اسم المعلم">
+                    <option value="محمد نبيل">محمد نبيل</option>
+                    <option value="أسماء علي">أسماء علي</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="halaNum">رقم الحلقة:</label>
+                <label for="studentCategory">فئة الطلاب:</label>
+                <select id="studentCategory" aria-label="فئة الطلاب">
+                    <option value="أطفال">أطفال</option>
+                    <option value="كبار">كبار</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="halaType">نوع الحلقة / الفترة:</label>
+                <select id="halaType" aria-label="نوع الحلقة">
+                    <option value="صباحية">صباحية</option>
+                    <option value="مسائية">مسائية</option>
+                    <option value="تجويد">تجويد</option>
+                    <option value="إضافية">إضافية</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="durationHours">الساعات:</label>
+                <input type="number" id="durationHours" min="0" max="24" value="1" placeholder="ساعات" aria-label="عدد الساعات">
+            </div>
+            <div class="form-group">
+                <label for="durationMinutes">الدقائق:</label>
+                <input type="number" id="durationMinutes" min="0" max="59" step="5" value="0" placeholder="دقائق" aria-label="عدد الدقائق">
+            </div>
+            <div class="form-group">
+                <label for="halaNum">رقم الحلقة (اختياري):</label>
                 <input type="text" id="halaNum" placeholder="رقم الحلقة" aria-label="رقم الحلقة">
             </div>
-            <div class="form-group">
-                <label for="halaDuration">مدة الحلقة:</label>
-                <input type="text" id="halaDuration" placeholder="المدة" aria-label="مدة الحلقة">
-            </div>
-            <div class="form-group">
-                <label for="teacherName">اسم المعلم:</label>
-                <input type="text" id="teacherName" placeholder="اسم المعلم" aria-label="اسم المعلم">
+            <div class="form-group full-width">
+                <label for="adminNotes">ملاحظات خاصة للإدارة (تُرسل للاستمارة فقط):</label>
+                <input type="text" id="adminNotes" placeholder="تنبيه أو إشعار خاص للإدارة دون أن يظهر في تقرير الطلاب" aria-label="ملاحظات خاصة للإدارة">
             </div>
         </div>
     </section>
@@ -65,8 +85,9 @@
 <footer class="action-bar-container" aria-label="شريط الإجراءات">
     <div class="action-bar-inner">
         <button type="button" onclick="addStudent()" class="btn btn-success" aria-label="إضافة طالب جديد">+ إضافة طالب</button>
-        <button type="button" onclick="copyAll()" class="btn btn-primary" aria-label="نسخ التقرير الكلي">نسخ التقرير الكلي</button>
+        <button type="button" onclick="copyAll()" class="btn btn-primary" aria-label="نسخ التقرير الكلي">نسخ التقرير</button>
         <button type="button" onclick="exportPDF()" class="btn btn-outline" style="border-color:var(--primary);color:var(--primary);" aria-label="تصدير ملف PDF">تصدير PDF</button>
+        <button type="button" onclick="submitToGoogleForm()" class="btn btn-primary" style="background:#0284c7;" aria-label="فتح استمارة جوجل المعبأة مسبقاً لإرسال التقرير">إرسال للاستمارة ↗</button>
     </div>
 </footer>
 
