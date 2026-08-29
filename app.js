@@ -31,6 +31,7 @@ const DEFAULT_FIELD_VISIBILITY = {
     'ماضي_قريب': true,
     'مراجعة_قديمة': true,
     'حفظ': true,
+    'ماضي_قريب_جديد': true,
     'مراجعة': true,
     'ملاحظات': true,
     'وسام': true,
@@ -207,18 +208,22 @@ function clearAll() {
 function rolloverStudent(id) {
     const s = students.find(x => x.id === id);
     if (!s) return;
-    if (!confirm(`هل ترغب في تدوير واجبات (${s.name || 'هذا الطالب'})؟\n\n- سينتقل (الحفظ الجديد) إلى (التسميع اليومي)\n- وسينتقل (المراجعة) إلى (الماضي القريب)\n- وتُفرّغ خانات الحفظ والمراجعة والملاحظات والوسام للبدء من جديد.`)) return;
+    if (!confirm(`هل ترغب في تدوير واجبات (${s.name || 'هذا الطالب'})؟\n\n- ينتقل (الحفظ الجديد) إلى (التسميع اليومي)\n- ينتقل (الماضي القريب المطلوب) إلى (الماضي القريب)\n- ينتقل (المراجعة القديمة المطلوبة) إلى (المراجعة القديمة)\n- تُفرّغ خانات الواجبات القادمة والملاحظات والوسام للبدء من جديد.`)) return;
     
     s.تسميع = s.حفظ || '';
-    s.ماضي_قريب = s.مراجعة || '';
+    s.ماضي_قريب = s.ماضي_قريب_جديد || '';
+    s.مراجعة_قديمة = s.مراجعة || '';
     s.حفظ = '';
+    s.ماضي_قريب_جديد = '';
     s.مراجعة = '';
     s.ملاحظات = '';
     s.وسام = '';
     s.تقييم_تسميع = 'ممتاز';
     s.تقييم_ماضي_قريب = 'ممتاز';
+    s.تقييم_مراجعة = 'ممتاز';
     saveState();
     render();
+    showToast(`تم تدوير واجبات ${s.name || 'الطالب'} بنجاح ✓`);
 }
 
 function renderStats() {
@@ -238,12 +243,13 @@ function render() {
     const fields = [
         { k: 'تسميع', l: 'التسميع اليومي:', t: 'area', ph: 'السور أو الآيات التي سُمّعت اليوم' },
         { k: 'تقييم_تسميع', l: 'تقييم التسميع:', t: 'sel', opts: GRADES },
-        { k: 'ماضي_قريب', l: 'الماضي القريب:', t: 'area', ph: 'المراجعة القريبة السابقة' },
+        { k: 'ماضي_قريب', l: 'الماضي القريب:', t: 'area', ph: 'تسميع الماضي القريب اليوم' },
         { k: 'تقييم_ماضي_قريب', l: 'تقييم الماضي القريب:', t: 'sel', opts: GRADES },
-        { k: 'مراجعة_قديمة', l: 'المراجعة القديمة (الماضي البعيد):', t: 'area', ph: 'المحفوظات السابقة البعيدة' },
+        { k: 'مراجعة_قديمة', l: 'المراجعة القديمة (الماضي البعيد):', t: 'area', ph: 'تسميع المحفوظات السابقة البعيدة اليوم' },
         { k: 'تقييم_مراجعة', l: 'تقييم المراجعة القديمة:', t: 'sel', opts: GRADES },
         { k: 'حفظ', l: 'الحفظ الجديد المطلوب:', t: 'area', ph: 'المقرر للحصة القادمة' },
-        { k: 'مراجعة', l: 'المراجعة القريبة المطلوبة:', t: 'area', ph: 'المراجعة للحصة القادمة' },
+        { k: 'ماضي_قريب_جديد', l: 'الماضي القريب المطلوب:', t: 'area', ph: 'الماضي القريب للحصة القادمة' },
+        { k: 'مراجعة', l: 'المراجعة القديمة المطلوبة:', t: 'area', ph: 'المراجعة القديمة للحصة القادمة' },
         { k: 'ملاحظات', l: 'ملاحظات المعلم:', t: 'area', ph: 'توجيهات لولي الأمر أو الطالب' },
         { k: 'وسام', l: 'الوسام التشجيعي:', t: 'sel', opts: ['', ...AWARDS], def: '-- اختر وساماً --' }
     ];
@@ -261,7 +267,7 @@ function render() {
     list.innerHTML = students.map((s, idx) => {
         const isOpen = openIds.has(s.id);
         const fieldsHtml = visibleFields.map(f => {
-            const isQuranField = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'مراجعة'].includes(f.k);
+            const isQuranField = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'ماضي_قريب_جديد', 'مراجعة'].includes(f.k);
             const showQuranBtn = isQuranField && (fieldVisibility['quran_picker'] !== false);
             const quranBtn = showQuranBtn 
                 ? `<button type="button" class="btn-quran" onclick="openQuranPicker(${s.id}, '${f.k}')" aria-label="اختيار من المصحف لحقل ${f.l}">📖 مصحف</button>` 
@@ -337,11 +343,12 @@ function formatStudent(s) {
     const isMale = s.gender === 'male';
     const vis = k => fieldVisibility[k] !== false;
     let res = `${isMale ? 'الطالب' : 'الطالبة'}: ${s.name.trim() || 'بدون اسم'}\n\n`;
-    if (vis('تسميع') && s.تسميع?.trim()) res += `التسميع:\n${s.تسميع.trim()}\nالتقييم: ${s.تقييم_تسميع || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('تسميع') && s.تسميع?.trim()) res += `التسميع اليومي:\n${s.تسميع.trim()}\nالتقييم: ${s.تقييم_تسميع || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
     if (vis('ماضي_قريب') && s.ماضي_قريب?.trim()) res += `الماضي القريب:\n${s.ماضي_قريب.trim()}\nالتقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
     if (vis('مراجعة_قديمة') && s.مراجعة_قديمة?.trim()) res += `المراجعة القديمة:\n${s.مراجعة_قديمة.trim()}\nالتقييم: ${s.تقييم_مراجعة || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
-    if (vis('حفظ') && s.حفظ?.trim()) res += `الحفظ الجديد:\n${s.حفظ.trim()}\n━━━━━━━━━━━━━━━\n`;
-    if (vis('مراجعة') && s.مراجعة?.trim()) res += `المراجعة:\n${s.مراجعة.trim()}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('حفظ') && s.حفظ?.trim()) res += `الحفظ الجديد المطلوب:\n${s.حفظ.trim()}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('ماضي_قريب_جديد') && s.ماضي_قريب_جديد?.trim()) res += `الماضي القريب المطلوب:\n${s.ماضي_قريب_جديد.trim()}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('مراجعة') && s.مراجعة?.trim()) res += `المراجعة القديمة المطلوبة:\n${s.مراجعة.trim()}\n━━━━━━━━━━━━━━━\n`;
     if (vis('ملاحظات') && s.ملاحظات?.trim()) res += `ملاحظات:\n${s.ملاحظات.trim().replace(/يسمع/g, isMale ? 'يسمع' : 'تسمع').replace(/يستمر/g, isMale ? 'يستمر' : 'تستمر')}\n━━━━━━━━━━━━━━━\n`;
     if (vis('وسام') && s.وسام?.trim()) res += `الوسام:\n${s.وسام.trim()}\n`;
     return res.replace(/\n━━━━━━━━━━━━━━━\n$/, '');
@@ -474,11 +481,12 @@ function exportPDF() {
                     <span>${i + 1}. ${s.gender === 'male' ? 'الطالب' : 'الطالبة'}: ${escapeHtml(s.name) || 'بدون اسم'}</span>
                     ${fieldVisibility['تسميع'] !== false ? `<span>التقييم: ${s.تقييم_تسميع || 'ممتاز'}</span>` : ''}
                 </div>
-                ${(fieldVisibility['تسميع'] !== false && s.تسميع) ? `<div><strong>التسميع:</strong> ${escapeHtml(s.تسميع)} (تقييم: ${s.تقييم_تسميع || 'ممتاز'})</div>` : ''}
+                ${(fieldVisibility['تسميع'] !== false && s.تسميع) ? `<div><strong>التسميع اليومي:</strong> ${escapeHtml(s.تسميع)} (تقييم: ${s.تقييم_تسميع || 'ممتاز'})</div>` : ''}
                 ${(fieldVisibility['ماضي_قريب'] !== false && s.ماضي_قريب) ? `<div><strong>الماضي القريب:</strong> ${escapeHtml(s.ماضي_قريب)} (تقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'})</div>` : ''}
                 ${(fieldVisibility['مراجعة_قديمة'] !== false && s.مراجعة_قديمة) ? `<div><strong>المراجعة القديمة:</strong> ${escapeHtml(s.مراجعة_قديمة)} (تقييم: ${s.تقييم_مراجعة || 'ممتاز'})</div>` : ''}
-                ${(fieldVisibility['حفظ'] !== false && s.حفظ) ? `<div><strong>الحفظ الجديد:</strong> ${escapeHtml(s.حفظ)}</div>` : ''}
-                ${(fieldVisibility['مراجعة'] !== false && s.مراجعة) ? `<div><strong>المراجعة:</strong> ${escapeHtml(s.مراجعة)}</div>` : ''}
+                ${(fieldVisibility['حفظ'] !== false && s.حفظ) ? `<div><strong>الحفظ الجديد المطلوب:</strong> ${escapeHtml(s.حفظ)}</div>` : ''}
+                ${(fieldVisibility['ماضي_قريب_جديد'] !== false && s.ماضي_قريب_جديد) ? `<div><strong>الماضي القريب المطلوب:</strong> ${escapeHtml(s.ماضي_قريب_جديد)}</div>` : ''}
+                ${(fieldVisibility['مراجعة'] !== false && s.مراجعة) ? `<div><strong>المراجعة القديمة المطلوبة:</strong> ${escapeHtml(s.مراجعة)}</div>` : ''}
                 ${(fieldVisibility['ملاحظات'] !== false && s.ملاحظات) ? `<div><strong>ملاحظات:</strong> ${escapeHtml(s.ملاحظات)}</div>` : ''}
                 ${(fieldVisibility['وسام'] !== false && s.وسام) ? `<div style="color:#d97706;font-weight:bold;"><strong>الوسام:</strong> ${escapeHtml(s.وسام)}</div>` : ''}
             </div>
@@ -691,7 +699,7 @@ function insertQuranSelection() {
    منظومة إعدادات المعلم وتخصيص الحقول (Field Visibility Settings)
    ========================================================================== */
 function openSettingsModal() {
-    const fields = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'مراجعة', 'ملاحظات', 'وسام', 'quran_picker'];
+    const fields = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'ماضي_قريب_جديد', 'مراجعة', 'ملاحظات', 'وسام', 'quran_picker'];
     fields.forEach(k => {
         const el = document.getElementById(`vis_${k}`);
         if (el) el.checked = fieldVisibility[k] !== false;
@@ -707,7 +715,7 @@ function closeSettingsModal() {
 }
 
 function updateFieldVisibility() {
-    const fields = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'مراجعة', 'ملاحظات', 'وسام', 'quran_picker'];
+    const fields = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'ماضي_قريب_جديد', 'مراجعة', 'ملاحظات', 'وسام', 'quran_picker'];
     fields.forEach(k => {
         const el = document.getElementById(`vis_${k}`);
         if (el) fieldVisibility[k] = el.checked;
@@ -720,7 +728,7 @@ function updateFieldVisibility() {
 
 function resetFieldVisibility() {
     fieldVisibility = { ...DEFAULT_FIELD_VISIBILITY };
-    const fields = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'مراجعة', 'ملاحظات', 'وسام', 'quran_picker'];
+    const fields = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'ماضي_قريب_جديد', 'مراجعة', 'ملاحظات', 'وسام', 'quran_picker'];
     fields.forEach(k => {
         const el = document.getElementById(`vis_${k}`);
         if (el) el.checked = true;
