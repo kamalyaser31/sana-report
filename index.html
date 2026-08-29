@@ -132,9 +132,9 @@
             <button type="button" class="modal-close-btn" onclick="closeQuranPicker()" aria-label="إغلاق">✕</button>
         </header>
         <div class="modal-tabs" role="tablist">
-            <button type="button" class="tab-btn active" id="tabSurahBtn" onclick="setQuranTab('surah')">السورة والآيات</button>
-            <button type="button" class="tab-btn" id="tabPageBtn" onclick="setQuranTab('page')">الصفحات</button>
-            <button type="button" class="tab-btn" id="tabJuzBtn" onclick="setQuranTab('juz')">الأجزاء والأرباع</button>
+            <button type="button" class="tab-btn active" id="tabSurahBtn" role="tab" aria-selected="true" aria-controls="tabSurahContent" onclick="setQuranTab('surah')">السورة والآيات</button>
+            <button type="button" class="tab-btn" id="tabPageBtn" role="tab" aria-selected="false" aria-controls="tabPageContent" onclick="setQuranTab('page')">الصفحات</button>
+            <button type="button" class="tab-btn" id="tabJuzBtn" role="tab" aria-selected="false" aria-controls="tabJuzContent" onclick="setQuranTab('juz')">الأجزاء والأرباع</button>
         </div>
         <div class="modal-body">
             <!-- تبويب السورة والآيات -->

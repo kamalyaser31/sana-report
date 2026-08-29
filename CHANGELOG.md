@@ -1,5 +1,7 @@
 # سجل التغييرات (CHANGELOG)
 
+- 2026-08-29: refactor(app.js + index.html): تطبيق clean-code-guard — استخلاص VISIBILITY_FIELD_KEYS وSTUDENT_FIELDS وformatArabicStudentCount وrenderStudentHeader وbuildStudentFieldHtml وbuildStudentCardHtml وbuildPdfHtml، وإصلاح catch-all handlers في SW وJSON.parse، وإعادة تسمية d إلى getFieldValue في كل مواضعها، وتصفية localStorage عند التهيئة؛ وإضافة role/aria-selected/aria-controls لأزرار التبويب (WCAG 2.1 AA).
+
 - 2026-08-29: إضافة ميزة إدارة مسودات الحلقات المتعددة (Multi-Session Drafts) بواجهة بسيطة ورشيقة (Minimalist) تتيح إنشاء مسودات مخصصة والتبديل السريع بينها مع عزل تام لبيانات الطلاب وحفظها تلقائياً وترقية كاش PWA إلى v6.
 - 2026-08-29: إعادة تنظيم وهيكلة ملفات المشروع في مجلدات متخصصة ونظيفة (css/ و js/ و data/ و assets/) مع تحديث كافة المسارات وعامل الخدمة sw.js.
 - 2026-08-29: تطبيق حزمة الإتقان البصري والوظيفي الشاملة: تنسيق إشعارات التوست العائمة، وإصلاح خلفيات النوافذ، وإدراج خطي Readex Pro والأميري، وضبط إيقاع المسافات البصرية وإغلاق النوافذ بمفتاح Escape مع تحديث كاش PWA إلى v4.
