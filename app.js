@@ -37,6 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id)?.addEventListener('input', saveState);
         document.getElementById(id)?.addEventListener('change', saveState);
     });
+
+    // تسجيل عامل الخدمة لتشغيل وتثبيت التطبيق دون اتصال (PWA)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
 });
 
 function setTheme(t) {

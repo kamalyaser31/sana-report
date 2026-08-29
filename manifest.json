@@ -1,0 +1,21 @@
+{
+  "name": "أكاديمية سنا - نظام التقارير",
+  "short_name": "تقارير سنا",
+  "description": "نظام إعداد وتوثيق تقارير الحلقات اليومية لأكاديمية سنا",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#006655",
+  "theme_color": "#006655",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

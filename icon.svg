@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="sanaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#008870"/>
+      <stop offset="100%" stop-color="#004d40"/>
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  
+  <!-- الخلفية الدائرية الزمردية -->
+  <rect width="512" height="512" rx="128" fill="url(#sanaGrad)"/>
+  
+  <!-- إطار زخرفي خفيف -->
+  <rect x="24" y="24" width="464" height="464" rx="104" fill="none" stroke="#ffffff" stroke-width="4" stroke-opacity="0.2"/>
+  
+  <!-- أيقونة المصحف الشريف المفتوح والتقرير -->
+  <g filter="url(#dropShadow)" transform="translate(256, 256)">
+    <!-- حامل المصحف / صفحات القرآن -->
+    <path d="M-130,-40 C-80,-70 -30,-40 0,-10 C30,-40 80,-70 130,-40 C140,-35 145,-20 140,-5 L120,90 C80,60 30,85 0,110 C-30,85 -80,60 -120,90 L-140,-5 C-145,-20 -140,-35 -130,-40 Z" fill="#ffffff"/>
+    
+    <!-- خط فاصل بين الصفتحين -->
+    <path d="M0,-10 L0,110" stroke="#004d40" stroke-width="5" stroke-linecap="round"/>
+    
+    <!-- خطوط رمزية للآيات والتلاوة -->
+    <path d="M-105,0 C-70,-20 -35,-5 -15,10 M-95,30 C-65,15 -35,25 -15,40 M-85,60 C-60,45 -35,55 -15,70" stroke="#006655" stroke-width="4" stroke-linecap="round" stroke-opacity="0.6"/>
+    <path d="M105,0 C70,-20 35,-5 15,10 M95,30 C65,15 35,25 15,40 M85,60 C60,45 35,55 15,70" stroke="#006655" stroke-width="4" stroke-linecap="round" stroke-opacity="0.6"/>
+    
+    <!-- نجمة إسلامية ثمانية علوية -->
+    <g transform="translate(0, -90) scale(0.65)" fill="#f59e0b">
+      <rect x="-24" y="-24" width="48" height="48" rx="6"/>
+      <rect x="-24" y="-24" width="48" height="48" rx="6" transform="rotate(45)"/>
+      <circle cx="0" cy="0" r="10" fill="#ffffff"/>
+    </g>
+  </g>
+  
+  <!-- النص السفلي التوضيحي -->
+  <text x="256" y="440" text-anchor="middle" fill="#ffffff" font-family="system-ui, sans-serif" font-size="34" font-weight="bold" letter-spacing="2">أكاديمية سنا</text>
+</svg>
