@@ -260,7 +260,7 @@ function render() {
                     ${fieldsHtml}
                 </div>
                 <footer class="card-actions">
-                    <button type="button" onclick="copySingle(${s.id})" class="btn btn-primary btn-sm">نسخ تقرير الطالب</button>
+                    <button type="button" onclick="copySingle(${s.id}, event)" class="btn btn-primary btn-sm">نسخ تقرير الطالب</button>
                     <button type="button" onclick="rolloverStudent(${s.id})" class="btn btn-outline btn-sm" style="border-color:var(--primary);color:var(--primary);" aria-label="تدوير واجبات هذا الطالب">تدوير الواجبات</button>
                     <button type="button" onclick="removeStudent(${s.id})" class="btn btn-danger btn-sm">حذف الطالب</button>
                 </footer>
@@ -317,29 +317,56 @@ function getFullReportText() {
     return rep;
 }
 
-function copyAll() {
-    if (!students.length) return alert('لا يوجد طلاب مسجلون لنسخ بياناتهم.');
-    const rep = getFullReportText();
-    copyText(rep, 'تم نسخ التقرير الكلي بنجاح.');
+function showToast(msg) {
+    let toast = document.getElementById('toastMsg');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastMsg';
+        toast.className = 'toast-msg';
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
+        document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('show'), 1600);
 }
 
-function copySingle(id) {
+function copyAll(e) {
+    if (!students.length) return showToast('لا يوجد طلاب مسجلون لنسخ التقرير');
+    const rep = getFullReportText();
+    copyText(rep, e?.target || document.querySelector('button[onclick*="copyAll"]'));
+}
+
+function copySingle(id, e) {
     const s = students.find(x => x.id === id);
     if (!s) return;
     const d = id => document.getElementById(id)?.value || '';
     let rep = `${BASMALA}\n${HEADER}\nالتاريخ: ${d('reportDate')}\nالمعلم: ${d('teacherName')}\n━━━━━━━━━━━━━━━\n${formatStudent(s)}\n\n*نسأل الله ${s.gender === 'male' ? 'له' : 'لها'} التوفيق.*`;
-    copyText(rep, `تم نسخ تقرير ${s.name || 'الطالب'} بنجاح.`);
+    copyText(rep, e?.target);
 }
 
-function copyText(text, msg) {
-    navigator.clipboard?.writeText(text).then(() => alert(msg)).catch(() => {
+function copyText(text, btn) {
+    navigator.clipboard?.writeText(text).then(() => {
+        showToast('تم النسخ في الحافظة ✓');
+        if (btn && btn.tagName === 'BUTTON') {
+            const orig = btn.textContent;
+            btn.textContent = 'تم النسخ ✓';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.textContent = orig;
+                btn.disabled = false;
+            }, 1400);
+        }
+    }).catch(() => {
         prompt('انسخ التقرير:', text);
     });
 }
 
 function submitToGoogleForm() {
     if (!students.length) {
-        return alert('يرجى إضافة الطلاب وتعبئة بيانات التقرير قبل الإرسال إلى الاستمارة.');
+        return showToast('يرجى إضافة الطلاب قبل الإرسال للاستمارة');
     }
     
     const d = id => document.getElementById(id)?.value || '';
@@ -347,6 +374,7 @@ function submitToGoogleForm() {
     
     // نسخ النص للحافظة احتياطياً
     navigator.clipboard?.writeText(reportText).catch(() => {});
+    showToast('جاري فتح الاستمارة المعبأة...');
     
     // تجهيز معلمات الرابط المعبأ مسبقاً (Pre-filled URL)
     const params = new URLSearchParams();
@@ -368,7 +396,8 @@ function submitToGoogleForm() {
 }
 
 function exportPDF() {
-    if (!students.length) return alert('لا يوجد طلاب لتصدير التقرير.');
+    if (!students.length) return showToast('لا يوجد طلاب لتصدير التقرير');
+    showToast('جاري تجهيز ملف PDF...');
     const d = id => document.getElementById(id)?.value || '';
     const durationText = formatDurationText(d('durationHours'), d('durationMinutes'));
     
