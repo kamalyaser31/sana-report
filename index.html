@@ -11,6 +11,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="تقارير سنا">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="html2pdf.bundle.min.js"></script>
     <script src="quran-data.js"></script>
@@ -22,7 +25,7 @@
     <header class="app-header">
         <div>
             <h1>أكاديمية سنا لتعليم القرآن الكريم</h1>
-            <p style="font-size:0.85rem;color:var(--text-muted)">نظام إعداد وتوثيق تقارير الحلقات اليومية المرتبط بالاستمارة السحابية</p>
+            <p class="app-subtitle">نظام إعداد وتوثيق تقارير الحلقات اليومية المرتبط بالاستمارة السحابية</p>
         </div>
         <div class="header-controls">
             <button type="button" onclick="openSettingsModal()" class="btn btn-outline btn-sm" aria-label="تخصيص الحقول المعروضة وإعدادات المعلم">⚙️ تخصيص الحقول</button>
@@ -46,8 +49,8 @@
                     <div style="display:flex;justify-content:space-between;align-items:center;">
                         <label for="reportDate">تاريخ التقرير:</label>
                         <div style="display:flex;gap:4px;">
-                            <button type="button" onclick="setDatePreset('today')" class="btn btn-outline btn-sm" style="padding:2px 6px;min-height:24px;font-size:0.75rem;" aria-label="تعيين تاريخ اليوم">اليوم</button>
-                            <button type="button" onclick="setDatePreset('yesterday')" class="btn btn-outline btn-sm" style="padding:2px 6px;min-height:24px;font-size:0.75rem;" aria-label="تعيين تاريخ الأمس">الأمس</button>
+                            <button type="button" onclick="setDatePreset('today')" class="btn btn-outline btn-xs" aria-label="تعيين تاريخ اليوم">اليوم</button>
+                            <button type="button" onclick="setDatePreset('yesterday')" class="btn btn-outline btn-xs" aria-label="تعيين تاريخ الأمس">الأمس</button>
                         </div>
                     </div>
                     <input type="text" id="reportDate" aria-label="تاريخ التقرير">
@@ -134,7 +137,7 @@
                     <label for="pickerSurahSelect">السورة:</label>
                     <select id="pickerSurahSelect" onchange="onSurahChange()"></select>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div class="two-col-grid">
                     <div class="form-group">
                         <label for="pickerFromAyah">من آية:</label>
                         <input type="number" id="pickerFromAyah" min="1" value="1" oninput="updateQuranPreview()">
@@ -154,7 +157,7 @@
 
             <!-- تبويب الصفحات -->
             <div id="tabPageContent" style="display:none;">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div class="two-col-grid">
                     <div class="form-group">
                         <label for="pickerFromPage">من صفحة (1-604):</label>
                         <input type="number" id="pickerFromPage" min="1" max="604" value="1" oninput="updateQuranPreview()">
@@ -187,7 +190,7 @@
 
             <!-- المعاينة الحية -->
             <div class="picker-preview-box">
-                <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:3px;">النص الناتج:</div>
+                <div class="picker-preview-label">النص الناتج:</div>
                 <strong id="quranPreviewText" style="color:var(--primary);">...</strong>
             </div>
         </div>
@@ -206,44 +209,44 @@
             <button type="button" class="modal-close-btn" onclick="closeSettingsModal()" aria-label="إغلاق">✕</button>
         </header>
         <div class="modal-body">
-            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0;margin-bottom:12px;">
+            <p class="modal-desc">
                 حدد الحقول التي ترغب في إظهارها في بطاقة كل طالب، لتخصيص الواجهة بحسب نظام حلقتك:
             </p>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+            <div class="settings-checklist">
+                <label class="checkbox-label">
                     <input type="checkbox" id="vis_تسميع" onchange="updateFieldVisibility()">
                     <span>التسميع اليومي (مع التقييم)</span>
                 </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                <label class="checkbox-label">
                     <input type="checkbox" id="vis_ماضي_قريب" onchange="updateFieldVisibility()">
                     <span>الماضي القريب (مع التقييم)</span>
                 </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                <label class="checkbox-label">
                     <input type="checkbox" id="vis_مراجعة_قديمة" onchange="updateFieldVisibility()">
                     <span>المراجعة القديمة - الماضي البعيد (مع التقييم)</span>
                 </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                <label class="checkbox-label">
                     <input type="checkbox" id="vis_حفظ" onchange="updateFieldVisibility()">
                     <span>الحفظ الجديد المطلوب (المقرر للحصة القادمة)</span>
                 </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                <label class="checkbox-label">
                     <input type="checkbox" id="vis_ماضي_قريب_جديد" onchange="updateFieldVisibility()">
                     <span>الماضي القريب المطلوب (المقرر للحصة القادمة)</span>
                 </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                <label class="checkbox-label">
                     <input type="checkbox" id="vis_مراجعة" onchange="updateFieldVisibility()">
                     <span>المراجعة القديمة المطلوبة (المقرر للحصة القادمة)</span>
                 </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                <label class="checkbox-label">
                     <input type="checkbox" id="vis_ملاحظات" onchange="updateFieldVisibility()">
                     <span>ملاحظات المعلم</span>
                 </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                <label class="checkbox-label">
                     <input type="checkbox" id="vis_وسام" onchange="updateFieldVisibility()">
                     <span>الوسام التشجيعي</span>
                 </label>
-                <hr style="border:none;border-top:1px solid var(--border);margin:6px 0;">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;color:var(--primary);">
+                <hr style="border:none;border-top:1px solid var(--border);margin:8px 0;">
+                <label class="checkbox-label" style="color:var(--primary);">
                     <input type="checkbox" id="vis_quran_picker" onchange="updateFieldVisibility()">
                     <span>إظهار أزرار منتقي المصحف الشريف (📖 مصحف)</span>
                 </label>

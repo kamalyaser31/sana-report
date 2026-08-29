@@ -56,6 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
+
+    // إغلاق النوافذ المنبثقة بمفتاح Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeQuranPicker();
+            closeSettingsModal();
+        }
+    });
 });
 
 function setTheme(t) {
