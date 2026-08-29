@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="نظام إدارة وصياغة تقارير حلقات القرآن الكريم لمعلمي أكاديمية سنا مع تصدير PDF ونسخ مباشر.">
     <title>أكاديمية سنا - نظام التقارير اليومية</title>
     <link rel="stylesheet" href="styles.css">
     <script src="html2pdf.bundle.min.js"></script>
@@ -11,25 +10,23 @@
 </head>
 <body>
 
-<main class="container" id="reportMainArea">
-    <!-- ترويسة التطبيق -->
+<main class="container">
     <header class="app-header">
-        <div class="header-title">
+        <div>
             <h1>أكاديمية سنا لتعليم القرآن الكريم</h1>
-            <p>نظام إعداد وتوثيق تقارير الحلقات اليومية</p>
+            <p style="font-size:0.85rem;color:var(--text-muted)">نظام إعداد وتوثيق تقارير الحلقات اليومية</p>
         </div>
         <div class="header-controls">
-            <button type="button" id="themeToggleBtn" class="btn btn-outline btn-sm" aria-label="التبديل إلى الوضع الليلي">الوضع الليلي 🌙</button>
-            <button type="button" id="clearAllBtn" class="btn btn-danger btn-sm" aria-label="مسح التقرير كاملاً">مسح الكل</button>
+            <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-outline btn-sm" aria-label="تبديل الوضع الليلي">الوضع الليلي 🌙</button>
+            <button type="button" onclick="clearAll()" class="btn btn-danger btn-sm" aria-label="مسح التقرير كاملاً">مسح الكل</button>
         </div>
     </header>
 
-    <!-- شريط إعدادات الحلقة والتاريخ -->
     <section class="settings-section" aria-label="بيانات الحلقة">
         <div class="settings-grid">
             <div class="form-group full-width">
                 <label for="reportDate">تاريخ اليوم:</label>
-                <input type="text" id="reportDate" aria-label="تاريخ التقرير" placeholder="مثال: السبت 29 أغسطس 2026">
+                <input type="text" id="reportDate" aria-label="تاريخ التقرير">
             </div>
             <div class="form-group">
                 <label for="halaType">فترة الحلقة:</label>
@@ -40,11 +37,11 @@
             </div>
             <div class="form-group">
                 <label for="halaNum">رقم الحلقة:</label>
-                <input type="text" id="halaNum" placeholder="مثال: 5" aria-label="رقم الحلقة">
+                <input type="text" id="halaNum" placeholder="رقم الحلقة" aria-label="رقم الحلقة">
             </div>
             <div class="form-group">
                 <label for="halaDuration">مدة الحلقة:</label>
-                <input type="text" id="halaDuration" placeholder="مثال: 60 دقيقة" aria-label="مدة الحلقة">
+                <input type="text" id="halaDuration" placeholder="المدة" aria-label="مدة الحلقة">
             </div>
             <div class="form-group">
                 <label for="teacherName">اسم المعلم:</label>
@@ -53,27 +50,22 @@
         </div>
     </section>
 
-    <!-- شريط الإحصائيات والإجراءات السريعة -->
     <section class="stats-bar" aria-label="إحصائيات التقرير">
         <div>
-            <span>إجمالي الطلاب: <strong id="totalStudentsCount">0</strong></span>
-            <span style="margin-right: 12px; font-size: 0.85rem; opacity: 0.9;">(ذكور: <strong id="maleStudentsCount">0</strong> | إناث: <strong id="femaleStudentsCount">0</strong>)</span>
+            <span>إجمالي الطلاب: <strong id="totalCount">0</strong></span>
+            <span style="margin-right:8px;font-size:0.85rem;opacity:0.9;">(ذكور: <strong id="maleCount">0</strong> | إناث: <strong id="femaleCount">0</strong>)</span>
         </div>
-        <div>
-            <button type="button" id="expandAllBtn" class="btn btn-outline btn-sm" style="background: transparent; color: inherit; border-color: currentColor;" aria-label="طي أو توسيع كافة بطاقات الطلاب">طي الكل</button>
-        </div>
+        <button type="button" id="expandAllBtn" onclick="toggleAll()" class="btn btn-outline btn-sm" style="color:inherit;border-color:currentColor;" aria-label="طي أو توسيع كافة بطاقات الطلاب">طي الكل</button>
     </section>
 
-    <!-- قائمة بطاقات الطلاب بنظام الأكورديون -->
     <section id="studentsList" class="students-container" aria-label="بطاقات الطلاب"></section>
 </main>
 
-<!-- شريط الإجراءات الثابت في الأسفل -->
-<footer class="action-bar-container" aria-label="شريط الإجراءات الرئيسة">
+<footer class="action-bar-container" aria-label="شريط الإجراءات">
     <div class="action-bar-inner">
-        <button type="button" id="addStudentBtn" class="btn btn-success" aria-label="إضافة طالب جديد إلى التقرير">+ إضافة طالب</button>
-        <button type="button" id="copyAllBtn" class="btn btn-primary" aria-label="نسخ التقرير الكلي لنشره في مجموعات التواصل">نسخ التقرير الكلي</button>
-        <button type="button" id="exportPDFBtn" class="btn btn-outline" style="border-color: var(--primary); color: var(--primary); font-weight: bold;" aria-label="تصدير التقرير كملف PDF">تصدير PDF</button>
+        <button type="button" onclick="addStudent()" class="btn btn-success" aria-label="إضافة طالب جديد">+ إضافة طالب</button>
+        <button type="button" onclick="copyAll()" class="btn btn-primary" aria-label="نسخ التقرير الكلي">نسخ التقرير الكلي</button>
+        <button type="button" onclick="exportPDF()" class="btn btn-outline" style="border-color:var(--primary);color:var(--primary);" aria-label="تصدير ملف PDF">تصدير PDF</button>
     </div>
 </footer>
 
