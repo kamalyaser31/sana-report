@@ -26,6 +26,19 @@ const FORM_CONFIG = {
 let students = JSON.parse(localStorage.getItem('sana_data') || '[]');
 let openIds = new Set(students.length ? [students[0].id] : []);
 
+const DEFAULT_FIELD_VISIBILITY = {
+    'تسميع': true,
+    'ماضي_قريب': true,
+    'مراجعة_قديمة': true,
+    'حفظ': true,
+    'مراجعة': true,
+    'ملاحظات': true,
+    'وسام': true,
+    'quran_picker': true
+};
+
+let fieldVisibility = { ...DEFAULT_FIELD_VISIBILITY, ...(JSON.parse(localStorage.getItem('sana_field_vis') || '{}')) };
+
 document.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem("sana_theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     setTheme(savedTheme);
@@ -235,11 +248,22 @@ function render() {
         { k: 'وسام', l: 'الوسام التشجيعي:', t: 'sel', opts: ['', ...AWARDS], def: '-- اختر وساماً --' }
     ];
 
+    const isFieldVisible = (k) => {
+        if (k.startsWith('تقييم_')) {
+            const parentKey = k.replace('تقييم_', '');
+            return fieldVisibility[parentKey] !== false;
+        }
+        return fieldVisibility[k] !== false;
+    };
+
+    const visibleFields = fields.filter(f => isFieldVisible(f.k));
+
     list.innerHTML = students.map((s, idx) => {
         const isOpen = openIds.has(s.id);
-        const fieldsHtml = fields.map(f => {
+        const fieldsHtml = visibleFields.map(f => {
             const isQuranField = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'مراجعة'].includes(f.k);
-            const quranBtn = isQuranField 
+            const showQuranBtn = isQuranField && (fieldVisibility['quran_picker'] !== false);
+            const quranBtn = showQuranBtn 
                 ? `<button type="button" class="btn-quran" onclick="openQuranPicker(${s.id}, '${f.k}')" aria-label="اختيار من المصحف لحقل ${f.l}">📖 مصحف</button>` 
                 : '';
 
@@ -311,14 +335,15 @@ function formatDurationText(hours, minutes) {
 
 function formatStudent(s) {
     const isMale = s.gender === 'male';
+    const vis = k => fieldVisibility[k] !== false;
     let res = `${isMale ? 'الطالب' : 'الطالبة'}: ${s.name.trim() || 'بدون اسم'}\n\n`;
-    if (s.تسميع?.trim()) res += `التسميع:\n${s.تسميع.trim()}\nالتقييم: ${s.تقييم_تسميع || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
-    if (s.ماضي_قريب?.trim()) res += `الماضي القريب:\n${s.ماضي_قريب.trim()}\nالتقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
-    if (s.مراجعة_قديمة?.trim()) res += `المراجعة القديمة:\n${s.مراجعة_قديمة.trim()}\nالتقييم: ${s.تقييم_مراجعة || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
-    if (s.حفظ?.trim()) res += `الحفظ الجديد:\n${s.حفظ.trim()}\n━━━━━━━━━━━━━━━\n`;
-    if (s.مراجعة?.trim()) res += `المراجعة:\n${s.مراجعة.trim()}\n━━━━━━━━━━━━━━━\n`;
-    if (s.ملاحظات?.trim()) res += `ملاحظات:\n${s.ملاحظات.trim().replace(/يسمع/g, isMale ? 'يسمع' : 'تسمع').replace(/يستمر/g, isMale ? 'يستمر' : 'تستمر')}\n━━━━━━━━━━━━━━━\n`;
-    if (s.وسام?.trim()) res += `الوسام:\n${s.وسام.trim()}\n`;
+    if (vis('تسميع') && s.تسميع?.trim()) res += `التسميع:\n${s.تسميع.trim()}\nالتقييم: ${s.تقييم_تسميع || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('ماضي_قريب') && s.ماضي_قريب?.trim()) res += `الماضي القريب:\n${s.ماضي_قريب.trim()}\nالتقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('مراجعة_قديمة') && s.مراجعة_قديمة?.trim()) res += `المراجعة القديمة:\n${s.مراجعة_قديمة.trim()}\nالتقييم: ${s.تقييم_مراجعة || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('حفظ') && s.حفظ?.trim()) res += `الحفظ الجديد:\n${s.حفظ.trim()}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('مراجعة') && s.مراجعة?.trim()) res += `المراجعة:\n${s.مراجعة.trim()}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('ملاحظات') && s.ملاحظات?.trim()) res += `ملاحظات:\n${s.ملاحظات.trim().replace(/يسمع/g, isMale ? 'يسمع' : 'تسمع').replace(/يستمر/g, isMale ? 'يستمر' : 'تستمر')}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('وسام') && s.وسام?.trim()) res += `الوسام:\n${s.وسام.trim()}\n`;
     return res.replace(/\n━━━━━━━━━━━━━━━\n$/, '');
 }
 
@@ -447,15 +472,15 @@ function exportPDF() {
             <div style="border:1px solid #006655;border-radius:5px;padding:10px;margin-bottom:10px;page-break-inside:avoid;font-size:13px;line-height:1.5;">
                 <div style="display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding-bottom:4px;margin-bottom:6px;font-weight:bold;color:#006655;">
                     <span>${i + 1}. ${s.gender === 'male' ? 'الطالب' : 'الطالبة'}: ${escapeHtml(s.name) || 'بدون اسم'}</span>
-                    <span>التقييم: ${s.تقييم_تسميع}</span>
+                    ${fieldVisibility['تسميع'] !== false ? `<span>التقييم: ${s.تقييم_تسميع || 'ممتاز'}</span>` : ''}
                 </div>
-                ${s.تسميع ? `<div><strong>التسميع:</strong> ${escapeHtml(s.تسميع)} (تقييم: ${s.تقييم_تسميع || 'ممتاز'})</div>` : ''}
-                ${s.ماضي_قريب ? `<div><strong>الماضي القريب:</strong> ${escapeHtml(s.ماضي_قريب)} (تقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'})</div>` : ''}
-                ${s.مراجعة_قديمة ? `<div><strong>المراجعة القديمة:</strong> ${escapeHtml(s.مراجعة_قديمة)} (تقييم: ${s.تقييم_مراجعة || 'ممتاز'})</div>` : ''}
-                ${s.حفظ ? `<div><strong>الحفظ الجديد:</strong> ${escapeHtml(s.حفظ)}</div>` : ''}
-                ${s.مراجعة ? `<div><strong>المراجعة:</strong> ${escapeHtml(s.مراجعة)}</div>` : ''}
-                ${s.ملاحظات ? `<div><strong>ملاحظات:</strong> ${escapeHtml(s.ملاحظات)}</div>` : ''}
-                ${s.وسام ? `<div style="color:#d97706;font-weight:bold;"><strong>الوسام:</strong> ${escapeHtml(s.وسام)}</div>` : ''}
+                ${(fieldVisibility['تسميع'] !== false && s.تسميع) ? `<div><strong>التسميع:</strong> ${escapeHtml(s.تسميع)} (تقييم: ${s.تقييم_تسميع || 'ممتاز'})</div>` : ''}
+                ${(fieldVisibility['ماضي_قريب'] !== false && s.ماضي_قريب) ? `<div><strong>الماضي القريب:</strong> ${escapeHtml(s.ماضي_قريب)} (تقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'})</div>` : ''}
+                ${(fieldVisibility['مراجعة_قديمة'] !== false && s.مراجعة_قديمة) ? `<div><strong>المراجعة القديمة:</strong> ${escapeHtml(s.مراجعة_قديمة)} (تقييم: ${s.تقييم_مراجعة || 'ممتاز'})</div>` : ''}
+                ${(fieldVisibility['حفظ'] !== false && s.حفظ) ? `<div><strong>الحفظ الجديد:</strong> ${escapeHtml(s.حفظ)}</div>` : ''}
+                ${(fieldVisibility['مراجعة'] !== false && s.مراجعة) ? `<div><strong>المراجعة:</strong> ${escapeHtml(s.مراجعة)}</div>` : ''}
+                ${(fieldVisibility['ملاحظات'] !== false && s.ملاحظات) ? `<div><strong>ملاحظات:</strong> ${escapeHtml(s.ملاحظات)}</div>` : ''}
+                ${(fieldVisibility['وسام'] !== false && s.وسام) ? `<div style="color:#d97706;font-weight:bold;"><strong>الوسام:</strong> ${escapeHtml(s.وسام)}</div>` : ''}
             </div>
         `).join('')}
         <div style="text-align:center;margin-top:15px;font-size:12px;color:#777;">نسأل الله للطلاب التوفيق والسداد • أكاديمية سنا</div>
@@ -661,3 +686,48 @@ function insertQuranSelection() {
     }
     closeQuranPicker();
 }
+
+/* ==========================================================================
+   منظومة إعدادات المعلم وتخصيص الحقول (Field Visibility Settings)
+   ========================================================================== */
+function openSettingsModal() {
+    const fields = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'مراجعة', 'ملاحظات', 'وسام', 'quran_picker'];
+    fields.forEach(k => {
+        const el = document.getElementById(`vis_${k}`);
+        if (el) el.checked = fieldVisibility[k] !== false;
+    });
+
+    const modal = document.getElementById('settingsModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeSettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function updateFieldVisibility() {
+    const fields = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'مراجعة', 'ملاحظات', 'وسام', 'quran_picker'];
+    fields.forEach(k => {
+        const el = document.getElementById(`vis_${k}`);
+        if (el) fieldVisibility[k] = el.checked;
+    });
+
+    localStorage.setItem('sana_field_vis', JSON.stringify(fieldVisibility));
+    render();
+    showToast('تم حفظ تفضيلات الحقول ✓');
+}
+
+function resetFieldVisibility() {
+    fieldVisibility = { ...DEFAULT_FIELD_VISIBILITY };
+    const fields = ['تسميع', 'ماضي_قريب', 'مراجعة_قديمة', 'حفظ', 'مراجعة', 'ملاحظات', 'وسام', 'quran_picker'];
+    fields.forEach(k => {
+        const el = document.getElementById(`vis_${k}`);
+        if (el) el.checked = true;
+    });
+
+    localStorage.setItem('sana_field_vis', JSON.stringify(fieldVisibility));
+    render();
+    showToast('تم استعادة كافة الحقول ✓');
+}
+

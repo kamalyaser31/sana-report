@@ -25,6 +25,7 @@
             <p style="font-size:0.85rem;color:var(--text-muted)">نظام إعداد وتوثيق تقارير الحلقات اليومية المرتبط بالاستمارة السحابية</p>
         </div>
         <div class="header-controls">
+            <button type="button" onclick="openSettingsModal()" class="btn btn-outline btn-sm" aria-label="تخصيص الحقول المعروضة وإعدادات المعلم">⚙️ تخصيص الحقول</button>
             <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-outline btn-sm" aria-label="تبديل الوضع الليلي">الوضع الليلي</button>
             <button type="button" onclick="clearAll()" class="btn btn-danger btn-sm" aria-label="مسح التقرير كاملاً مع الإبقاء على اسم المعلم">مسح التقرير</button>
         </div>
@@ -193,6 +194,60 @@
         <footer class="modal-footer">
             <button type="button" onclick="closeQuranPicker()" class="btn btn-outline btn-sm">إلغاء</button>
             <button type="button" onclick="insertQuranSelection()" class="btn btn-success btn-sm">إدراج في التقرير ✓</button>
+        </footer>
+    </div>
+</div>
+
+<!-- نافذة إعدادات المعلم وتخصيص الحقول -->
+<div id="settingsModal" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="modal-box">
+        <header class="modal-header">
+            <h3 id="settingsModalTitle">⚙️ تخصيص الحقول وإعدادات المعلم</h3>
+            <button type="button" class="modal-close-btn" onclick="closeSettingsModal()" aria-label="إغلاق">✕</button>
+        </header>
+        <div class="modal-body">
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0;margin-bottom:12px;">
+                حدد الحقول التي ترغب في إظهارها في بطاقة كل طالب، لتخصيص الواجهة بحسب نظام حلقتك:
+            </p>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                    <input type="checkbox" id="vis_تسميع" onchange="updateFieldVisibility()">
+                    <span>التسميع اليومي (مع التقييم)</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                    <input type="checkbox" id="vis_ماضي_قريب" onchange="updateFieldVisibility()">
+                    <span>الماضي القريب (مع التقييم)</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                    <input type="checkbox" id="vis_مراجعة_قديمة" onchange="updateFieldVisibility()">
+                    <span>المراجعة القديمة - الماضي البعيد (مع التقييم)</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                    <input type="checkbox" id="vis_حفظ" onchange="updateFieldVisibility()">
+                    <span>الحفظ الجديد المطلوب</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                    <input type="checkbox" id="vis_مراجعة" onchange="updateFieldVisibility()">
+                    <span>المراجعة القريبة المطلوبة</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                    <input type="checkbox" id="vis_ملاحظات" onchange="updateFieldVisibility()">
+                    <span>ملاحظات المعلم</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;">
+                    <input type="checkbox" id="vis_وسام" onchange="updateFieldVisibility()">
+                    <span>الوسام التشجيعي</span>
+                </label>
+                <hr style="border:none;border-top:1px solid var(--border);margin:6px 0;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:bold;color:var(--primary);">
+                    <input type="checkbox" id="vis_quran_picker" onchange="updateFieldVisibility()">
+                    <span>إظهار أزرار منتقي المصحف الشريف (📖 مصحف)</span>
+                </label>
+            </div>
+        </div>
+        <footer class="modal-footer">
+            <button type="button" onclick="resetFieldVisibility()" class="btn btn-outline btn-sm" style="margin-left:auto;">إظهار كافة الحقول</button>
+            <button type="button" onclick="closeSettingsModal()" class="btn btn-success btn-sm">تم ✓</button>
         </footer>
     </div>
 </div>
