@@ -3,176 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أكاديمية سنا - نظام التقارير</title>
-    <style>
-        body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #f4f7f6; padding: 20px; margin: 0; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .settings-bar { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .student-card { border: 2px solid #006655; padding: 15px; margin: 15px 0; border-radius: 8px; background: #fff; }
-        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 5px; margin: 5px; font-size: 14px; }
-        textarea, input, select { width: 100%; margin-top: 5px; padding: 8px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ced4da; }
-        label { font-weight: bold; margin-top: 8px; display: block; }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <meta name="description" content="نظام إدارة وصياغة تقارير حلقات القرآن الكريم لمعلمي أكاديمية سنا مع تصدير PDF ونسخ مباشر.">
+    <title>أكاديمية سنا - نظام التقارير اليومية</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="html2pdf.bundle.min.js"></script>
+    <script src="app.js" defer></script>
 </head>
 <body>
 
-<main class="container" id="reportArea">
-    <div style="text-align:center;">
-        <h1>أكاديمية سنا - نظام التقارير</h1>
-        <button type="button" onclick="clearAll()" style="background:#dc3545; color:white; font-size: 16px; font-weight: bold;" class="btn" aria-label="مسح التقرير كاملاً">مسح التقرير كاملاً</button>
-    </div>
+<main class="container" id="reportMainArea">
+    <!-- ترويسة التطبيق -->
+    <header class="app-header">
+        <div class="header-title">
+            <h1>أكاديمية سنا لتعليم القرآن الكريم</h1>
+            <p>نظام إعداد وتوثيق تقارير الحلقات اليومية</p>
+        </div>
+        <div class="header-controls">
+            <button type="button" id="themeToggleBtn" class="btn btn-outline btn-sm" aria-label="التبديل إلى الوضع الليلي">الوضع الليلي 🌙</button>
+            <button type="button" id="clearAllBtn" class="btn btn-danger btn-sm" aria-label="مسح التقرير كاملاً">مسح الكل</button>
+        </div>
+    </header>
 
-    <section class="settings-bar" aria-label="إعدادات الحلقة">
-        <input type="text" id="reportDate" aria-label="التاريخ" style="width:100%; font-weight:bold; text-align:center;" oninput="saveData()">
-        <select id="halaType" aria-label="نوع الحلقة" onchange="saveData()"><option value="صباحية">صباحية</option><option value="مسائية">مسائية</option></select>
-        <input type="text" id="halaNum" placeholder="رقم الحلقة" aria-label="رقم الحلقة" style="width:80px;" oninput="saveData()">
-        <input type="text" id="halaDuration" placeholder="المدة" aria-label="المدة" style="width:80px;" oninput="saveData()">
-        <input type="text" id="teacherName" placeholder="اسم المعلم" aria-label="اسم المعلم" style="width:120px;" oninput="saveData()">
+    <!-- شريط إعدادات الحلقة والتاريخ -->
+    <section class="settings-section" aria-label="بيانات الحلقة">
+        <div class="settings-grid">
+            <div class="form-group full-width">
+                <label for="reportDate">تاريخ اليوم:</label>
+                <input type="text" id="reportDate" aria-label="تاريخ التقرير" placeholder="مثال: السبت 29 أغسطس 2026">
+            </div>
+            <div class="form-group">
+                <label for="halaType">فترة الحلقة:</label>
+                <select id="halaType" aria-label="فترة الحلقة">
+                    <option value="صباحية">صباحية</option>
+                    <option value="مسائية">مسائية</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="halaNum">رقم الحلقة:</label>
+                <input type="text" id="halaNum" placeholder="مثال: 5" aria-label="رقم الحلقة">
+            </div>
+            <div class="form-group">
+                <label for="halaDuration">مدة الحلقة:</label>
+                <input type="text" id="halaDuration" placeholder="مثال: 60 دقيقة" aria-label="مدة الحلقة">
+            </div>
+            <div class="form-group">
+                <label for="teacherName">اسم المعلم:</label>
+                <input type="text" id="teacherName" placeholder="اسم المعلم" aria-label="اسم المعلم">
+            </div>
+        </div>
     </section>
 
-    <div style="text-align:center;">
-        <button type="button" onclick="addStudent()" style="background:#28a745; color:white; font-size: 16px; font-weight: bold;" class="btn" aria-label="إضافة طالب جديد">+ إضافة طالب جديد</button>
-    </div>
+    <!-- شريط الإحصائيات والإجراءات السريعة -->
+    <section class="stats-bar" aria-label="إحصائيات التقرير">
+        <div>
+            <span>إجمالي الطلاب: <strong id="totalStudentsCount">0</strong></span>
+            <span style="margin-right: 12px; font-size: 0.85rem; opacity: 0.9;">(ذكور: <strong id="maleStudentsCount">0</strong> | إناث: <strong id="femaleStudentsCount">0</strong>)</span>
+        </div>
+        <div>
+            <button type="button" id="expandAllBtn" class="btn btn-outline btn-sm" style="background: transparent; color: inherit; border-color: currentColor;" aria-label="طي أو توسيع كافة بطاقات الطلاب">طي الكل</button>
+        </div>
+    </section>
 
-    <section id="studentsList" aria-label="قائمة الطلاب"></section>
-
-    <div style="text-align:center; margin-top:20px;">
-        <button type="button" onclick="copyAll()" class="btn" style="background:#007bff; color:white; font-size: 18px; font-weight: bold; padding: 10px 30px;" aria-label="نسخ التقرير الكلي">نسخ التقرير الكلي</button>
-        <button type="button" onclick="exportPDF()" class="btn" style="background:#ffc107; font-size: 18px; font-weight: bold; padding: 10px 30px;" aria-label="تصدير ملف PDF">تصدير PDF</button>
-    </div>
+    <!-- قائمة بطاقات الطلاب بنظام الأكورديون -->
+    <section id="studentsList" class="students-container" aria-label="بطاقات الطلاب"></section>
 </main>
 
-<script>
-    let students = JSON.parse(localStorage.getItem('sana_data') || '[]');
-    const basmala = "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ";
-    const header = "═══ [ تقرير أكاديمية سنا لتعليم القرآن الكريم ] ═══";
-    const awards = [
-        "ما شاء الله، إتقان مبهر 🌟", "حفظ متين، بارك الله فيك 👑", "أداء ممتاز ومتميز 🏆", 
-        "تقدم ملحوظ، مستواك في تصاعد 🚀", "بداية طيبة، استمر يا بطل 📈", "همة قوية، الحفظ يأتي بالصبر ⏳", 
-        "محاولة جيدة، تحتاج إلى مزيد من التركيز 🎯", "ننتظر جدية أكبر ⚠️"
-    ];
+<!-- شريط الإجراءات الثابت في الأسفل -->
+<footer class="action-bar-container" aria-label="شريط الإجراءات الرئيسة">
+    <div class="action-bar-inner">
+        <button type="button" id="addStudentBtn" class="btn btn-success" aria-label="إضافة طالب جديد إلى التقرير">+ إضافة طالب</button>
+        <button type="button" id="copyAllBtn" class="btn btn-primary" aria-label="نسخ التقرير الكلي لنشره في مجموعات التواصل">نسخ التقرير الكلي</button>
+        <button type="button" id="exportPDFBtn" class="btn btn-outline" style="border-color: var(--primary); color: var(--primary); font-weight: bold;" aria-label="تصدير التقرير كملف PDF">تصدير PDF</button>
+    </div>
+</footer>
 
-    window.onload = () => {
-        if(!localStorage.getItem('sana_settings')) {
-            document.getElementById('reportDate').value = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        } else {
-            const settings = JSON.parse(localStorage.getItem('sana_settings'));
-            document.getElementById('reportDate').value = settings.date || '';
-            document.getElementById('halaType').value = settings.halaType || 'صباحية';
-            document.getElementById('halaNum').value = settings.halaNum || '';
-            document.getElementById('halaDuration').value = settings.halaDuration || '';
-            document.getElementById('teacherName').value = settings.teacherName || '';
-        }
-        render();
-    };
-
-    function saveData() {
-        localStorage.setItem('sana_data', JSON.stringify(students));
-        localStorage.setItem('sana_settings', JSON.stringify({
-            date: document.getElementById('reportDate').value,
-            halaType: document.getElementById('halaType').value,
-            halaNum: document.getElementById('halaNum').value,
-            halaDuration: document.getElementById('halaDuration').value,
-            teacherName: document.getElementById('teacherName').value
-        }));
-    }
-
-    const grades = ["ممتاز", "جيد جداً", "جيد مرتفع", "جيد", "مقبول", "إعادة"];
-
-    function addStudent() {
-        students.unshift({ id: Date.now(), name: '', gender: 'male', تسميع: '', تقييم_تسميع: 'ممتاز', مراجعة_قديمة: '', تقييم_مراجعة: 'ممتاز', حفظ: '', مراجعة: '', ملاحظات: '', وسام: '' });
-        render();
-        saveData();
-    }
-
-    function render() {
-        const list = document.getElementById('studentsList');
-        list.innerHTML = '';
-        students.forEach(s => {
-            let card = document.createElement('article');
-            card.className = 'student-card';
-            card.setAttribute('aria-label', `بطاقة ${s.name || 'طالب جديد'}`);
-            card.innerHTML = `
-                <label>اسم الطالب:</label>
-                <input type="text" placeholder="اسم الطالب" value="${s.name}" aria-label="اسم الطالب" oninput="update(${s.id}, 'name', this.value)">
-                <label>الجنس:</label>
-                <select aria-label="جنس الطالب" onchange="update(${s.id}, 'gender', this.value)"><option value="male" ${s.gender=='male'?'selected':''}>ذكر</option><option value="female" ${s.gender=='female'?'selected':''}>أنثى</option></select>
-                <div><label>التسميع:</label><textarea aria-label="التسميع" oninput="update(${s.id}, 'تسميع', this.value)">${s.تسميع}</textarea></div>
-                <label>تقييم التسميع:</label>
-                <select aria-label="تقييم التسميع" onchange="update(${s.id}, 'تقييم_تسميع', this.value)">${grades.map(g => `<option ${s.تقييم_تسميع==g?'selected':''}>${g}</option>`).join('')}</select>
-                <div><label>المراجعة القديمة:</label><textarea aria-label="المراجعة القديمة" oninput="update(${s.id}, 'مراجعة_قديمة', this.value)">${s.مراجعة_قديمة}</textarea></div>
-                <label>تقييم المراجعة:</label>
-                <select aria-label="تقييم المراجعة" onchange="update(${s.id}, 'تقييم_مراجعة', this.value)">${grades.map(g => `<option ${s.تقييم_مراجعة==g?'selected':''}>${g}</option>`).join('')}</select>
-                <div><label>الحفظ الجديد:</label><textarea aria-label="الحفظ الجديد" oninput="update(${s.id}, 'حفظ', this.value)">${s.حفظ}</textarea></div>
-                <div><label>المراجعة:</label><textarea aria-label="المراجعة" oninput="update(${s.id}, 'مراجعة', this.value)">${s.مراجعة}</textarea></div>
-                <div><label>ملاحظات:</label><textarea aria-label="ملاحظات المعلم" oninput="update(${s.id}, 'ملاحظات', this.value)">${s.ملاحظات}</textarea></div>
-                <div><label>الوسام:</label><select aria-label="الوسام" onchange="update(${s.id}, 'وسام', this.value)"><option value="">اختر الوسام</option>${awards.map(a => `<option value="${a}" ${s.وسام==a?'selected':''}>${a}</option>`).join('')}</select></div>
-                <div style="margin-top:10px;">
-                    <button type="button" onclick="copySingle(${s.id})" class="btn" style="background:#007bff; color:white;" aria-label="نسخ فردي للطالب">نسخ فردي</button>
-                    <button type="button" onclick="remove(${s.id})" class="btn" style="background:#6c757d; color:white;" aria-label="حذف الطالب">حذف الطالب</button>
-                </div>
-            `;
-            list.appendChild(card);
-        });
-    }
-
-    function update(id, field, value) { 
-        let target = students.find(x => x.id === id);
-        if (target) {
-            target[field] = value; 
-            saveData(); 
-        }
-    }
-    function remove(id) { 
-        if(confirm('هل أنت متأكد من حذف الطالب؟')) { 
-            students = students.filter(x => x.id !== id); 
-            render(); 
-            saveData(); 
-        } 
-    }
-    function clearAll() { 
-        if(confirm('هل أنت متأكد من مسح الكل؟')) { 
-            students = []; 
-            localStorage.clear(); 
-            location.reload(); 
-        } 
-    }
-    function exportPDF() { html2pdf().from(document.getElementById('reportArea')).save('sana_report.pdf'); }
-
-    function formatStudent(s) {
-        let isMale = s.gender === 'male';
-        let res = `${isMale ? 'الطالب' : 'الطالبة'}: ${s.name}\n\n`;
-        if(s.تسميع && s.تسميع.trim()) res += `التسميع:\n${s.تسميع}\nالتقييم: ${s.تقييم_تسميع}\n━━━━━━━━━━━━━━━\n`;
-        if(s.مراجعة_قديمة && s.مراجعة_قديمة.trim()) res += `المراجعة القديمة:\n${s.مراجعة_قديمة}\nالتقييم: ${s.تقييم_مراجعة}\n━━━━━━━━━━━━━━━\n`;
-        if(s.حفظ && s.حفظ.trim()) res += `الحفظ الجديد:\n${s.حفظ}\n━━━━━━━━━━━━━━━\n`;
-        if(s.مراجعة && s.مراجعة.trim()) res += `المراجعة:\n${s.مراجعة}\n━━━━━━━━━━━━━━━\n`;
-        if(s.ملاحظات && s.ملاحظات.trim()) res += `ملاحظات:\n${s.ملاحظات.replace(/يسمع/g, isMale?'يسمع':'تسمع').replace(/يستمر/g, isMale?'يستمر':'تستمر')}\n━━━━━━━━━━━━━━━\n`;
-        if(s.وسام && s.وسام.trim()) res += `الوسام:\n${s.وسام}\n`;
-        return res.replace(/\n━━━━━━━━━━━━━━━\n$/, '');
-    }
-
-    function copyAll() {
-        let rep = `${basmala}\n${header}\nالتاريخ: ${document.getElementById('reportDate').value}\nالفترة: ${document.getElementById('halaType').value}\nرقم الحلقة: ${document.getElementById('halaNum').value}\nالمدة: ${document.getElementById('halaDuration').value}\nالمعلم: ${document.getElementById('teacherName').value}\nعدد الطلاب: ${students.length}\n━━━━━━━━━━━━━━━\n`;
-        [...students].reverse().forEach(s => { rep += formatStudent(s) + "\n\n━━━━━━━━━━━━━━━\n"; });
-        rep += `\n*نسأل الله لهم التوفيق.*`;
-        navigator.clipboard.writeText(rep).then(() => {
-            alert('تم نسخ التقرير الكلي بنجاح.');
-        }).catch(() => {
-            prompt('انسخ التقرير من هنا:', rep);
-        });
-    }
-
-    function copySingle(id) {
-        let s = students.find(x => x.id === id);
-        if(!s) return;
-        let rep = `${basmala}\n${header}\nالتاريخ: ${document.getElementById('reportDate').value}\nالمعلم: ${document.getElementById('teacherName').value}\n━━━━━━━━━━━━━━━\n` + formatStudent(s) + `\n\n*نسأل الله ${s.gender === 'male' ? 'له' : 'لها'} التوفيق.*`;
-        navigator.clipboard.writeText(rep).then(() => {
-            alert(`تم نسخ تقرير ${s.name || 'الطالب'} بنجاح.`);
-        }).catch(() => {
-            prompt('انسخ التقرير من هنا:', rep);
-        });
-    }
-</script>
 </body>
 </html>
