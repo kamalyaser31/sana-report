@@ -29,7 +29,7 @@ function setTheme(t) {
     document.documentElement.setAttribute("data-theme", t);
     localStorage.setItem("sana_theme", t);
     const btn = document.getElementById("themeToggleBtn");
-    if (btn) btn.textContent = t === "dark" ? "الوضع الفاتح ☀️" : "الوضع الليلي 🌙";
+    if (btn) btn.textContent = t === "dark" ? "الوضع الفاتح" : "الوضع الليلي";
 }
 
 function toggleTheme() {
@@ -112,6 +112,27 @@ function clearAll() {
         localStorage.removeItem('sana_data');
         render();
     }
+}
+
+function rolloverHomework() {
+    if (!students.length) return alert('لا يوجد طلاب مسجلون لتدوير واجباتهم.');
+    if (!confirm('هل ترغب في تدوير الواجبات لتقرير جديد؟\n\nسيتم نقل (الحفظ الجديد) إلى (التسميع)، و(المراجعة) إلى (المراجعة القديمة)، وتفريغ خانات الواجبات والتقييمات للبدء من جديد.')) return;
+    
+    students.forEach(s => {
+        s.تسميع = s.حفظ || '';
+        s.مراجعة_قديمة = s.مراجعة || '';
+        s.حفظ = '';
+        s.مراجعة = '';
+        s.ملاحظات = '';
+        s.وسام = '';
+        s.تقييم_تسميع = 'ممتاز';
+        s.تقييم_مراجعة = 'ممتاز';
+    });
+    
+    document.getElementById('reportDate').value = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    saveState();
+    render();
+    alert('تم تدوير الواجبات بنجاح وتحديث تاريخ التقرير.');
 }
 
 function renderStats() {
