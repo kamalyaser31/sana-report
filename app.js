@@ -50,6 +50,24 @@ function toggleTheme() {
     setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
 }
 
+function setDatePreset(preset) {
+    const d = new Date();
+    if (preset === 'yesterday') {
+        d.setDate(d.getDate() - 1);
+    }
+    const formatted = d.toLocaleDateString('ar-EG', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    const el = document.getElementById('reportDate');
+    if (el) {
+        el.value = formatted;
+        saveState();
+    }
+}
+
 function loadSettings() {
     const s = JSON.parse(localStorage.getItem('sana_settings') || '{}');
     document.getElementById('reportDate').value = s.date || new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
