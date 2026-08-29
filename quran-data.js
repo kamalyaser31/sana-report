@@ -1,122 +1,806 @@
 /**
- * فهرس مصحف المدينة النبوية الشريف المحلي (Offline Quran Index)
- * يضم بيانات 114 سورة، و 604 صفحات، و 30 جزءاً وأرباعها
+ * فهرس مصحف المدينة النبوية الشريف - تم جلبه واعتماده من مستودع semarketir/quranjson على GitHub
+ * Source: https://github.com/semarketir/quranjson
  */
 const QURAN_SURAHS = [
-    { id: 1, name: "الفاتحة", verses: 7, page: 1 },
-    { id: 2, name: "البقرة", verses: 286, page: 2 },
-    { id: 3, name: "آل عمران", verses: 200, page: 50 },
-    { id: 4, name: "النساء", verses: 176, page: 77 },
-    { id: 5, name: "المائدة", verses: 120, page: 106 },
-    { id: 6, name: "الأنعام", verses: 165, page: 128 },
-    { id: 7, name: "الأعراف", verses: 206, page: 151 },
-    { id: 8, name: "الأنفال", verses: 75, page: 177 },
-    { id: 9, name: "التوبة", verses: 129, page: 187 },
-    { id: 10, name: "يونس", verses: 109, page: 208 },
-    { id: 11, name: "هود", verses: 123, page: 221 },
-    { id: 12, name: "يوسف", verses: 111, page: 235 },
-    { id: 13, name: "الرعد", verses: 43, page: 249 },
-    { id: 14, name: "إبراهيم", verses: 52, page: 255 },
-    { id: 15, name: "الحجر", verses: 99, page: 262 },
-    { id: 16, name: "النحل", verses: 128, page: 267 },
-    { id: 17, name: "الإسراء", verses: 111, page: 282 },
-    { id: 18, name: "الكهف", verses: 110, page: 293 },
-    { id: 19, name: "مريم", verses: 98, page: 305 },
-    { id: 20, name: "طه", verses: 135, page: 312 },
-    { id: 21, name: "الأنبياء", verses: 112, page: 322 },
-    { id: 22, name: "الحج", verses: 78, page: 332 },
-    { id: 23, name: "المؤمنون", verses: 118, page: 342 },
-    { id: 24, name: "النور", verses: 64, page: 350 },
-    { id: 25, name: "الفرقان", verses: 77, page: 359 },
-    { id: 26, name: "الشعراء", verses: 227, page: 367 },
-    { id: 27, name: "النمل", verses: 93, page: 377 },
-    { id: 28, name: "القصص", verses: 88, page: 385 },
-    { id: 29, name: "العنكبوت", verses: 69, page: 396 },
-    { id: 30, name: "الروم", verses: 60, page: 404 },
-    { id: 31, name: "لقمان", verses: 34, page: 411 },
-    { id: 32, name: "السجدة", verses: 30, page: 415 },
-    { id: 33, name: "الأحزاب", verses: 73, page: 418 },
-    { id: 34, name: "سبأ", verses: 54, page: 428 },
-    { id: 35, name: "فاطر", verses: 45, page: 434 },
-    { id: 36, name: "يس", verses: 83, page: 440 },
-    { id: 37, name: "الصافات", verses: 182, page: 446 },
-    { id: 38, name: "ص", verses: 88, page: 453 },
-    { id: 39, name: "الزمر", verses: 75, page: 458 },
-    { id: 40, name: "غافر", verses: 85, page: 467 },
-    { id: 41, name: "فصلت", verses: 54, page: 477 },
-    { id: 42, name: "الشورى", verses: 53, page: 483 },
-    { id: 43, name: "الزخرف", verses: 89, page: 489 },
-    { id: 44, name: "الدخان", verses: 59, page: 496 },
-    { id: 45, name: "الجاثية", verses: 37, page: 499 },
-    { id: 46, name: "الأحقاف", verses: 35, page: 502 },
-    { id: 47, name: "محمد", verses: 38, page: 507 },
-    { id: 48, name: "الفتح", verses: 29, page: 511 },
-    { id: 49, name: "الحجرات", verses: 18, page: 515 },
-    { id: 50, name: "ق", verses: 45, page: 518 },
-    { id: 51, name: "الذاريات", verses: 60, page: 520 },
-    { id: 52, name: "الطور", verses: 49, page: 523 },
-    { id: 53, name: "النجم", verses: 62, page: 526 },
-    { id: 54, name: "القمر", verses: 55, page: 528 },
-    { id: 55, name: "الرحمن", verses: 78, page: 531 },
-    { id: 56, name: "الواقعة", verses: 96, page: 534 },
-    { id: 57, name: "الحديد", verses: 29, page: 537 },
-    { id: 58, name: "المجادلة", verses: 22, page: 542 },
-    { id: 59, name: "الحشر", verses: 24, page: 545 },
-    { id: 60, name: "الممتحنة", verses: 13, page: 549 },
-    { id: 61, name: "الصف", verses: 14, page: 551 },
-    { id: 62, name: "الجمعة", verses: 11, page: 553 },
-    { id: 63, name: "المنافقون", verses: 11, page: 554 },
-    { id: 64, name: "التغابن", verses: 18, page: 556 },
-    { id: 65, name: "الطلاق", verses: 12, page: 558 },
-    { id: 66, name: "التحريم", verses: 12, page: 560 },
-    { id: 67, name: "الملك", verses: 30, page: 562 },
-    { id: 68, name: "القلم", verses: 52, page: 564 },
-    { id: 69, name: "الحاقة", verses: 52, page: 566 },
-    { id: 70, name: "المعارج", verses: 44, page: 568 },
-    { id: 71, name: "نوح", verses: 28, page: 570 },
-    { id: 72, name: "الجن", verses: 28, page: 572 },
-    { id: 73, name: "المزمل", verses: 20, page: 574 },
-    { id: 74, name: "المدثر", verses: 56, page: 575 },
-    { id: 75, name: "القيامة", verses: 40, page: 577 },
-    { id: 76, name: "الإنسان", verses: 31, page: 578 },
-    { id: 77, name: "المرسلات", verses: 50, page: 580 },
-    { id: 78, name: "النبأ", verses: 40, page: 582 },
-    { id: 79, name: "النازعات", verses: 46, page: 583 },
-    { id: 80, name: "عبس", verses: 42, page: 585 },
-    { id: 81, name: "التكوير", verses: 29, page: 586 },
-    { id: 82, name: "الانفطار", verses: 19, page: 587 },
-    { id: 83, name: "المطففين", verses: 36, page: 587 },
-    { id: 84, name: "الانشقاق", verses: 25, page: 589 },
-    { id: 85, name: "البروج", verses: 22, page: 590 },
-    { id: 86, name: "الطارق", verses: 17, page: 591 },
-    { id: 87, name: "الأعلى", verses: 19, page: 591 },
-    { id: 88, name: "الغاشية", verses: 26, page: 592 },
-    { id: 89, name: "الفجر", verses: 30, page: 593 },
-    { id: 90, name: "البلد", verses: 20, page: 594 },
-    { id: 91, name: "الشمس", verses: 15, page: 595 },
-    { id: 92, name: "الليل", verses: 21, page: 595 },
-    { id: 93, name: "الضحى", verses: 11, page: 596 },
-    { id: 94, name: "الشرح", verses: 8, page: 596 },
-    { id: 95, name: "التين", verses: 8, page: 597 },
-    { id: 96, name: "العلق", verses: 19, page: 597 },
-    { id: 97, name: "القدر", verses: 5, page: 598 },
-    { id: 98, name: "البينة", verses: 8, page: 598 },
-    { id: 99, name: "الزلزلة", verses: 8, page: 599 },
-    { id: 100, name: "العاديات", verses: 11, page: 599 },
-    { id: 101, name: "القارعة", verses: 11, page: 600 },
-    { id: 102, name: "التكاثر", verses: 8, page: 600 },
-    { id: 103, name: "العصر", verses: 3, page: 601 },
-    { id: 104, name: "الهمزة", verses: 9, page: 601 },
-    { id: 105, name: "الفيل", verses: 5, page: 601 },
-    { id: 106, name: "قريش", verses: 4, page: 602 },
-    { id: 107, name: "الماعون", verses: 7, page: 602 },
-    { id: 108, name: "الكوثر", verses: 3, page: 602 },
-    { id: 109, name: "الكافرون", verses: 6, page: 603 },
-    { id: 110, name: "النصر", verses: 3, page: 603 },
-    { id: 111, name: "المسد", verses: 5, page: 603 },
-    { id: 112, name: "الإخلاص", verses: 4, page: 604 },
-    { id: 113, name: "الفلق", verses: 5, page: 604 },
-    { id: 114, name: "الناس", verses: 6, page: 604 }
+    {
+        "id": 1,
+        "name": "الفاتحة",
+        "verses": 7,
+        "page": 1,
+        "type": "مكية"
+    },
+    {
+        "id": 2,
+        "name": "البقرة",
+        "verses": 286,
+        "page": 2,
+        "type": "مدنية"
+    },
+    {
+        "id": 3,
+        "name": "آل عمران",
+        "verses": 200,
+        "page": 45,
+        "type": "مدنية"
+    },
+    {
+        "id": 4,
+        "name": "النساء",
+        "verses": 176,
+        "page": 69,
+        "type": "مدنية"
+    },
+    {
+        "id": 5,
+        "name": "المائدة",
+        "verses": 120,
+        "page": 95,
+        "type": "مدنية"
+    },
+    {
+        "id": 6,
+        "name": "الأنعام",
+        "verses": 165,
+        "page": 115,
+        "type": "مكية"
+    },
+    {
+        "id": 7,
+        "name": "الأعراف",
+        "verses": 206,
+        "page": 136,
+        "type": "مكية"
+    },
+    {
+        "id": 8,
+        "name": "الأنفال",
+        "verses": 75,
+        "page": 160,
+        "type": "مدنية"
+    },
+    {
+        "id": 9,
+        "name": "التوبة",
+        "verses": 129,
+        "page": 169,
+        "type": "مدنية"
+    },
+    {
+        "id": 10,
+        "name": "يونس",
+        "verses": 109,
+        "page": 187,
+        "type": "مكية"
+    },
+    {
+        "id": 11,
+        "name": "هود",
+        "verses": 123,
+        "page": 199,
+        "type": "مكية"
+    },
+    {
+        "id": 12,
+        "name": "يوسف",
+        "verses": 111,
+        "page": 212,
+        "type": "مكية"
+    },
+    {
+        "id": 13,
+        "name": "الرعد",
+        "verses": 43,
+        "page": 225,
+        "type": "مدنية"
+    },
+    {
+        "id": 14,
+        "name": "إبراهيم",
+        "verses": 52,
+        "page": 231,
+        "type": "مكية"
+    },
+    {
+        "id": 15,
+        "name": "الحجر",
+        "verses": 99,
+        "page": 237,
+        "type": "مكية"
+    },
+    {
+        "id": 16,
+        "name": "النحل",
+        "verses": 128,
+        "page": 242,
+        "type": "مكية"
+    },
+    {
+        "id": 17,
+        "name": "الإسراء",
+        "verses": 111,
+        "page": 255,
+        "type": "مكية"
+    },
+    {
+        "id": 18,
+        "name": "الكهف",
+        "verses": 110,
+        "page": 266,
+        "type": "مكية"
+    },
+    {
+        "id": 19,
+        "name": "مريم",
+        "verses": 98,
+        "page": 277,
+        "type": "مكية"
+    },
+    {
+        "id": 20,
+        "name": "طه",
+        "verses": 135,
+        "page": 284,
+        "type": "مكية"
+    },
+    {
+        "id": 21,
+        "name": "الأنبياء",
+        "verses": 112,
+        "page": 294,
+        "type": "مكية"
+    },
+    {
+        "id": 22,
+        "name": "الحج",
+        "verses": 78,
+        "page": 302,
+        "type": "مدنية"
+    },
+    {
+        "id": 23,
+        "name": "المؤمنون",
+        "verses": 118,
+        "page": 311,
+        "type": "مكية"
+    },
+    {
+        "id": 24,
+        "name": "النور",
+        "verses": 64,
+        "page": 319,
+        "type": "مدنية"
+    },
+    {
+        "id": 25,
+        "name": "الفرقان",
+        "verses": 77,
+        "page": 329,
+        "type": "مكية"
+    },
+    {
+        "id": 26,
+        "name": "الشعراء",
+        "verses": 227,
+        "page": 335,
+        "type": "مكية"
+    },
+    {
+        "id": 27,
+        "name": "النمل",
+        "verses": 93,
+        "page": 345,
+        "type": "مكية"
+    },
+    {
+        "id": 28,
+        "name": "القصص",
+        "verses": 88,
+        "page": 354,
+        "type": "مكية"
+    },
+    {
+        "id": 29,
+        "name": "العنكبوت",
+        "verses": 69,
+        "page": 364,
+        "type": "مكية"
+    },
+    {
+        "id": 30,
+        "name": "الروم",
+        "verses": 60,
+        "page": 371,
+        "type": "مكية"
+    },
+    {
+        "id": 31,
+        "name": "لقمان",
+        "verses": 34,
+        "page": 377,
+        "type": "مكية"
+    },
+    {
+        "id": 32,
+        "name": "السجدة",
+        "verses": 30,
+        "page": 381,
+        "type": "مكية"
+    },
+    {
+        "id": 33,
+        "name": "الأحزاب",
+        "verses": 73,
+        "page": 383,
+        "type": "مدنية"
+    },
+    {
+        "id": 34,
+        "name": "سبأ",
+        "verses": 54,
+        "page": 393,
+        "type": "مكية"
+    },
+    {
+        "id": 35,
+        "name": "فاطر",
+        "verses": 45,
+        "page": 399,
+        "type": "مكية"
+    },
+    {
+        "id": 36,
+        "name": "يس",
+        "verses": 83,
+        "page": 404,
+        "type": "مكية"
+    },
+    {
+        "id": 37,
+        "name": "الصافات",
+        "verses": 182,
+        "page": 410,
+        "type": "مكية"
+    },
+    {
+        "id": 38,
+        "name": "ص",
+        "verses": 88,
+        "page": 417,
+        "type": "مكية"
+    },
+    {
+        "id": 39,
+        "name": "الزمر",
+        "verses": 75,
+        "page": 422,
+        "type": "مكية"
+    },
+    {
+        "id": 40,
+        "name": "غافر",
+        "verses": 85,
+        "page": 431,
+        "type": "مكية"
+    },
+    {
+        "id": 41,
+        "name": "فصلت",
+        "verses": 54,
+        "page": 439,
+        "type": "مكية"
+    },
+    {
+        "id": 42,
+        "name": "الشورى",
+        "verses": 53,
+        "page": 445,
+        "type": "مكية"
+    },
+    {
+        "id": 43,
+        "name": "الزخرف",
+        "verses": 89,
+        "page": 451,
+        "type": "مكية"
+    },
+    {
+        "id": 44,
+        "name": "الدخان",
+        "verses": 59,
+        "page": 457,
+        "type": "مكية"
+    },
+    {
+        "id": 45,
+        "name": "الجاثية",
+        "verses": 37,
+        "page": 460,
+        "type": "مكية"
+    },
+    {
+        "id": 46,
+        "name": "الأحقاف",
+        "verses": 35,
+        "page": 464,
+        "type": "مكية"
+    },
+    {
+        "id": 47,
+        "name": "محمد",
+        "verses": 38,
+        "page": 468,
+        "type": "مدنية"
+    },
+    {
+        "id": 48,
+        "name": "الفتح",
+        "verses": 29,
+        "page": 472,
+        "type": "مدنية"
+    },
+    {
+        "id": 49,
+        "name": "الحجرات",
+        "verses": 18,
+        "page": 477,
+        "type": "مدنية"
+    },
+    {
+        "id": 50,
+        "name": "ق",
+        "verses": 45,
+        "page": 479,
+        "type": "مكية"
+    },
+    {
+        "id": 51,
+        "name": "الذاريات",
+        "verses": 60,
+        "page": 482,
+        "type": "مكية"
+    },
+    {
+        "id": 52,
+        "name": "الطور",
+        "verses": 49,
+        "page": 485,
+        "type": "مكية"
+    },
+    {
+        "id": 53,
+        "name": "النجم",
+        "verses": 62,
+        "page": 487,
+        "type": "مكية"
+    },
+    {
+        "id": 54,
+        "name": "القمر",
+        "verses": 55,
+        "page": 490,
+        "type": "مكية"
+    },
+    {
+        "id": 55,
+        "name": "الرحمن",
+        "verses": 78,
+        "page": 493,
+        "type": "مدنية"
+    },
+    {
+        "id": 56,
+        "name": "الواقعة",
+        "verses": 96,
+        "page": 496,
+        "type": "مكية"
+    },
+    {
+        "id": 57,
+        "name": "الحديد",
+        "verses": 29,
+        "page": 499,
+        "type": "مدنية"
+    },
+    {
+        "id": 58,
+        "name": "المجادلة",
+        "verses": 22,
+        "page": 504,
+        "type": "مدنية"
+    },
+    {
+        "id": 59,
+        "name": "الحشر",
+        "verses": 24,
+        "page": 507,
+        "type": "مدنية"
+    },
+    {
+        "id": 60,
+        "name": "الممتحنة",
+        "verses": 13,
+        "page": 510,
+        "type": "مدنية"
+    },
+    {
+        "id": 61,
+        "name": "الصف",
+        "verses": 14,
+        "page": 513,
+        "type": "مدنية"
+    },
+    {
+        "id": 62,
+        "name": "الجمعة",
+        "verses": 11,
+        "page": 515,
+        "type": "مدنية"
+    },
+    {
+        "id": 63,
+        "name": "المنافقون",
+        "verses": 11,
+        "page": 516,
+        "type": "مدنية"
+    },
+    {
+        "id": 64,
+        "name": "التغابن",
+        "verses": 18,
+        "page": 518,
+        "type": "مدنية"
+    },
+    {
+        "id": 65,
+        "name": "الطلاق",
+        "verses": 12,
+        "page": 520,
+        "type": "مدنية"
+    },
+    {
+        "id": 66,
+        "name": "التحريم",
+        "verses": 12,
+        "page": 522,
+        "type": "مدنية"
+    },
+    {
+        "id": 67,
+        "name": "الملك",
+        "verses": 30,
+        "page": 524,
+        "type": "مكية"
+    },
+    {
+        "id": 68,
+        "name": "القلم",
+        "verses": 52,
+        "page": 526,
+        "type": "مكية"
+    },
+    {
+        "id": 69,
+        "name": "الحاقة",
+        "verses": 52,
+        "page": 529,
+        "type": "مكية"
+    },
+    {
+        "id": 70,
+        "name": "المعارج",
+        "verses": 44,
+        "page": 531,
+        "type": "مكية"
+    },
+    {
+        "id": 71,
+        "name": "نوح",
+        "verses": 28,
+        "page": 533,
+        "type": "مكية"
+    },
+    {
+        "id": 72,
+        "name": "الجن",
+        "verses": 28,
+        "page": 534,
+        "type": "مكية"
+    },
+    {
+        "id": 73,
+        "name": "المزمل",
+        "verses": 20,
+        "page": 537,
+        "type": "مكية"
+    },
+    {
+        "id": 74,
+        "name": "المدثر",
+        "verses": 56,
+        "page": 538,
+        "type": "مكية"
+    },
+    {
+        "id": 75,
+        "name": "القيامة",
+        "verses": 40,
+        "page": 540,
+        "type": "مكية"
+    },
+    {
+        "id": 76,
+        "name": "الإنسان",
+        "verses": 31,
+        "page": 542,
+        "type": "مدنية"
+    },
+    {
+        "id": 77,
+        "name": "المرسلات",
+        "verses": 50,
+        "page": 544,
+        "type": "مكية"
+    },
+    {
+        "id": 78,
+        "name": "النبأ",
+        "verses": 40,
+        "page": 545,
+        "type": "مكية"
+    },
+    {
+        "id": 79,
+        "name": "النازعات",
+        "verses": 46,
+        "page": 547,
+        "type": "مكية"
+    },
+    {
+        "id": 80,
+        "name": "عبس",
+        "verses": 42,
+        "page": 548,
+        "type": "مكية"
+    },
+    {
+        "id": 81,
+        "name": "التكوير",
+        "verses": 29,
+        "page": 550,
+        "type": "مكية"
+    },
+    {
+        "id": 82,
+        "name": "الإنفطار",
+        "verses": 19,
+        "page": 551,
+        "type": "مكية"
+    },
+    {
+        "id": 83,
+        "name": "المطففين",
+        "verses": 36,
+        "page": 552,
+        "type": "مكية"
+    },
+    {
+        "id": 84,
+        "name": "الإنشقاق",
+        "verses": 25,
+        "page": 553,
+        "type": "مكية"
+    },
+    {
+        "id": 85,
+        "name": "البروج",
+        "verses": 22,
+        "page": 554,
+        "type": "مكية"
+    },
+    {
+        "id": 86,
+        "name": "الطارق",
+        "verses": 17,
+        "page": 555,
+        "type": "مكية"
+    },
+    {
+        "id": 87,
+        "name": "الأعلى",
+        "verses": 19,
+        "page": 556,
+        "type": "مكية"
+    },
+    {
+        "id": 88,
+        "name": "الغاشية",
+        "verses": 26,
+        "page": 556,
+        "type": "مكية"
+    },
+    {
+        "id": 89,
+        "name": "الفجر",
+        "verses": 30,
+        "page": 557,
+        "type": "مكية"
+    },
+    {
+        "id": 90,
+        "name": "البلد",
+        "verses": 20,
+        "page": 559,
+        "type": "مكية"
+    },
+    {
+        "id": 91,
+        "name": "الشمس",
+        "verses": 15,
+        "page": 559,
+        "type": "مكية"
+    },
+    {
+        "id": 92,
+        "name": "الليل",
+        "verses": 21,
+        "page": 560,
+        "type": "مكية"
+    },
+    {
+        "id": 93,
+        "name": "الضحى",
+        "verses": 11,
+        "page": 561,
+        "type": "مكية"
+    },
+    {
+        "id": 94,
+        "name": "الشرح",
+        "verses": 8,
+        "page": 561,
+        "type": "مكية"
+    },
+    {
+        "id": 95,
+        "name": "التين",
+        "verses": 8,
+        "page": 562,
+        "type": "مكية"
+    },
+    {
+        "id": 96,
+        "name": "العلق",
+        "verses": 19,
+        "page": 562,
+        "type": "مكية"
+    },
+    {
+        "id": 97,
+        "name": "القدر",
+        "verses": 5,
+        "page": 563,
+        "type": "مكية"
+    },
+    {
+        "id": 98,
+        "name": "البينة",
+        "verses": 8,
+        "page": 563,
+        "type": "مدنية"
+    },
+    {
+        "id": 99,
+        "name": "الزلزلة",
+        "verses": 8,
+        "page": 564,
+        "type": "مدنية"
+    },
+    {
+        "id": 100,
+        "name": "العاديات",
+        "verses": 11,
+        "page": 564,
+        "type": "مكية"
+    },
+    {
+        "id": 101,
+        "name": "القارعة",
+        "verses": 11,
+        "page": 565,
+        "type": "مكية"
+    },
+    {
+        "id": 102,
+        "name": "التكاثر",
+        "verses": 8,
+        "page": 565,
+        "type": "مكية"
+    },
+    {
+        "id": 103,
+        "name": "العصر",
+        "verses": 3,
+        "page": 566,
+        "type": "مكية"
+    },
+    {
+        "id": 104,
+        "name": "الهمزة",
+        "verses": 9,
+        "page": 566,
+        "type": "مكية"
+    },
+    {
+        "id": 105,
+        "name": "الفيل",
+        "verses": 5,
+        "page": 566,
+        "type": "مكية"
+    },
+    {
+        "id": 106,
+        "name": "قريش",
+        "verses": 4,
+        "page": 567,
+        "type": "مكية"
+    },
+    {
+        "id": 107,
+        "name": "الماعون",
+        "verses": 7,
+        "page": 567,
+        "type": "مكية"
+    },
+    {
+        "id": 108,
+        "name": "الكوثر",
+        "verses": 3,
+        "page": 567,
+        "type": "مكية"
+    },
+    {
+        "id": 109,
+        "name": "الكافرون",
+        "verses": 6,
+        "page": 568,
+        "type": "مكية"
+    },
+    {
+        "id": 110,
+        "name": "النصر",
+        "verses": 3,
+        "page": 568,
+        "type": "مدنية"
+    },
+    {
+        "id": 111,
+        "name": "المسد",
+        "verses": 5,
+        "page": 568,
+        "type": "مكية"
+    },
+    {
+        "id": 112,
+        "name": "الإخلاص",
+        "verses": 4,
+        "page": 569,
+        "type": "مكية"
+    },
+    {
+        "id": 113,
+        "name": "الفلق",
+        "verses": 5,
+        "page": 569,
+        "type": "مكية"
+    },
+    {
+        "id": 114,
+        "name": "الناس",
+        "verses": 6,
+        "page": 569,
+        "type": "مكية"
+    }
 ];
 
 const QURAN_JUZS = [
@@ -165,3 +849,4 @@ function getSurahByPage(pageNum) {
     }
     return QURAN_SURAHS[0];
 }
+
