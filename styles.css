@@ -44,9 +44,7 @@ body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg-m
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
 .btn-sm { padding: 4px 10px; min-height: 32px; font-size: 0.85rem; }
 
-/* Settings & Form Controls */
-.settings-section { background: var(--bg-subtle); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); margin-bottom: 16px; }
-.settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+/* Form Controls */
 .form-group { display: flex; flex-direction: column; gap: 3px; }
 .form-group.full-width { grid-column: 1 / -1; }
 label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
@@ -57,21 +55,21 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); outlin
 /* Stats Bar */
 .stats-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--primary-light); border-radius: 6px; font-weight: bold; font-size: 0.9rem; margin-bottom: 14px; }
 
-/* Cards & Accordion */
+/* Card & Native Details Accordion */
 .students-container { display: flex; flex-direction: column; gap: 10px; }
-.student-card { border: 2px solid var(--border); background: var(--bg-card); border-radius: var(--radius); overflow: hidden; }
-.card-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--bg-subtle); cursor: pointer; user-select: none; }
-.student-card.open .card-header { background: var(--primary-light); }
-.card-header-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.student-index-badge { width: 24px; height: 24px; background: var(--primary); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; }
+.student-card, .settings-details { border: 2px solid var(--border); background: var(--bg-card); border-radius: var(--radius); overflow: hidden; margin-bottom: 10px; transition: border-color 0.2s; }
+.student-card[open], .settings-details[open] { border-color: var(--primary); }
+.card-header, .settings-summary-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--bg-subtle); cursor: pointer; user-select: none; list-style: none; font-weight: bold; }
+.card-header::-webkit-details-marker, .settings-summary-bar::-webkit-details-marker { display: none; }
+.student-card[open] > .card-header, .settings-details[open] > .settings-summary-bar { background: var(--primary-light); border-bottom: 1px solid var(--border); }
+.card-header-info, .summary-content { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.student-index-badge, .summary-icon { width: 24px; height: 24px; background: var(--primary); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; }
 .badge { padding: 2px 6px; font-size: 0.75rem; font-weight: bold; border-radius: 12px; }
+.summary-badge { font-size: 0.8rem; font-weight: normal; color: var(--text-muted); background: var(--bg-card); padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border); }
 .badge-male { background: #e0f2fe; color: #0369a1; }
 .badge-female { background: #fce7f3; color: #be185d; }
 .badge-grade { background: #dcfce7; color: #15803d; }
-.toggle-icon { font-size: 0.9rem; color: var(--primary); transition: transform 0.2s; }
-.student-card.open .toggle-icon { transform: rotate(180deg); }
-.card-body { display: none; padding: 14px; }
-.student-card.open .card-body { display: block; }
+.card-body, .settings-details-body { padding: 14px; background: var(--bg-card); }
 .card-fields-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
 .card-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
 .empty-state { text-align: center; padding: 30px; border: 2px dashed var(--border); border-radius: var(--radius); color: var(--text-muted); }

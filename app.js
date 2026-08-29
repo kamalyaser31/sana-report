@@ -68,6 +68,17 @@ function setDatePreset(preset) {
     }
 }
 
+function updateSettingsSummary() {
+    const d = id => document.getElementById(id)?.value || '';
+    const badge = document.getElementById('settingsBadge');
+    if (!badge) return;
+    const teacher = d('teacherName') || 'محمد نبيل';
+    const cat = d('studentCategory') || 'أطفال';
+    const type = d('halaType') || 'صباحية';
+    const dur = formatDurationText(d('durationHours'), d('durationMinutes'));
+    badge.textContent = `${teacher} • ${cat} • ${type} • ${dur}`;
+}
+
 function loadSettings() {
     const s = JSON.parse(localStorage.getItem('sana_settings') || '{}');
     document.getElementById('reportDate').value = s.date || new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -78,6 +89,17 @@ function loadSettings() {
     document.getElementById('durationMinutes').value = s.durationMinutes !== undefined ? s.durationMinutes : '0';
     document.getElementById('halaNum').value = s.halaNum || '';
     document.getElementById('adminNotes').value = s.adminNotes || '';
+    
+    const details = document.getElementById('settingsDetails');
+    if (details) {
+        if (localStorage.getItem('sana_settings_open') === '0') {
+            details.removeAttribute('open');
+        }
+        details.addEventListener('toggle', () => {
+            localStorage.setItem('sana_settings_open', details.open ? '1' : '0');
+        });
+    }
+    updateSettingsSummary();
 }
 
 function saveState() {
@@ -92,6 +114,7 @@ function saveState() {
         halaNum: document.getElementById('halaNum').value,
         adminNotes: document.getElementById('adminNotes').value
     }));
+    updateSettingsSummary();
     renderStats();
 }
 
@@ -131,16 +154,13 @@ function update(id, field, val) {
     }
 }
 
-function toggleCard(id) {
-    openIds.has(id) ? openIds.delete(id) : openIds.add(id);
-    document.querySelector(`.student-card[data-id="${id}"]`)?.classList.toggle('open', openIds.has(id));
-}
-
 function toggleAll() {
-    const allOpen = openIds.size === students.length && students.length > 0;
-    openIds = allOpen ? new Set() : new Set(students.map(s => s.id));
-    document.getElementById('expandAllBtn').textContent = allOpen ? 'توسيع الكل' : 'طي الكل';
-    render();
+    const cards = document.querySelectorAll('#studentsList .student-card');
+    if (!cards.length) return;
+    const anyClosed = Array.from(cards).some(c => !c.open);
+    cards.forEach(c => c.open = anyClosed);
+    openIds = anyClosed ? new Set(students.map(s => s.id)) : new Set();
+    document.getElementById('expandAllBtn').textContent = anyClosed ? 'طي الكل' : 'توسيع الكل';
 }
 
 function clearAll() {
@@ -213,16 +233,15 @@ function render() {
         `).join('');
 
         return `
-        <article class="student-card ${isOpen ? 'open' : ''}" data-id="${s.id}">
-            <header class="card-header" onclick="toggleCard(${s.id})" aria-expanded="${isOpen}">
+        <details class="student-card" data-id="${s.id}" ${isOpen ? 'open' : ''}>
+            <summary class="card-header">
                 <div class="card-header-info">
                     <span class="student-index-badge">${idx + 1}</span>
                     <strong class="student-name-display">${escapeHtml(s.name) || 'طالب جديد'}</strong>
                     <span class="badge badge-gender badge-${s.gender}">${s.gender === 'male' ? 'ذكر' : 'أنثى'}</span>
                     <span class="badge badge-grade">${s.تقييم_تسميع}</span>
                 </div>
-                <span class="toggle-icon">▼</span>
-            </header>
+            </summary>
             <div class="card-body">
                 <div class="card-fields-grid">
                     <div class="form-group">
@@ -243,8 +262,16 @@ function render() {
                     <button type="button" onclick="removeStudent(${s.id})" class="btn btn-danger btn-sm">حذف الطالب</button>
                 </footer>
             </div>
-        </article>`;
+        </details>`;
     }).join('');
+
+    // تسجيل حالة فتح وغلق البطاقات
+    list.querySelectorAll('.student-card').forEach(d => {
+        d.addEventListener('toggle', () => {
+            const id = Number(d.dataset.id);
+            d.open ? openIds.add(id) : openIds.delete(id);
+        });
+    });
 }
 
 function formatDurationText(hours, minutes) {

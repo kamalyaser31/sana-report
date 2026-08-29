@@ -23,59 +23,69 @@
         </div>
     </header>
 
-    <section class="settings-section" aria-label="بيانات الحلقة والاستمارة">
-        <div class="settings-grid">
-            <div class="form-group">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <label for="reportDate">تاريخ التقرير:</label>
-                    <div style="display:flex;gap:4px;">
-                        <button type="button" onclick="setDatePreset('today')" class="btn btn-outline btn-sm" style="padding:2px 6px;min-height:24px;font-size:0.75rem;" aria-label="تعيين تاريخ اليوم">اليوم</button>
-                        <button type="button" onclick="setDatePreset('yesterday')" class="btn btn-outline btn-sm" style="padding:2px 6px;min-height:24px;font-size:0.75rem;" aria-label="تعيين تاريخ الأمس">الأمس</button>
+    <!-- بيانات الحلقة وإعدادات التقرير عبر عنصر details و summary الأصيل -->
+    <details class="settings-details" id="settingsDetails" open aria-label="بيانات الحلقة وإعدادات التقرير">
+        <summary class="settings-summary-bar">
+            <div class="summary-content">
+                <span class="summary-icon">⚙</span>
+                <strong>بيانات الحلقة</strong>
+                <span class="summary-badge" id="settingsBadge">محمد نبيل • أطفال • صباحية • 1 ساعة</span>
+            </div>
+        </summary>
+        <div class="settings-details-body">
+            <div class="card-fields-grid">
+                <div class="form-group">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <label for="reportDate">تاريخ التقرير:</label>
+                        <div style="display:flex;gap:4px;">
+                            <button type="button" onclick="setDatePreset('today')" class="btn btn-outline btn-sm" style="padding:2px 6px;min-height:24px;font-size:0.75rem;" aria-label="تعيين تاريخ اليوم">اليوم</button>
+                            <button type="button" onclick="setDatePreset('yesterday')" class="btn btn-outline btn-sm" style="padding:2px 6px;min-height:24px;font-size:0.75rem;" aria-label="تعيين تاريخ الأمس">الأمس</button>
+                        </div>
                     </div>
+                    <input type="text" id="reportDate" aria-label="تاريخ التقرير">
                 </div>
-                <input type="text" id="reportDate" aria-label="تاريخ التقرير">
-            </div>
-            <div class="form-group">
-                <label for="teacherName">اسم المعلم:</label>
-                <select id="teacherName" aria-label="اسم المعلم">
-                    <option value="محمد نبيل">محمد نبيل</option>
-                    <option value="أسماء علي">أسماء علي</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="studentCategory">فئة الطلاب:</label>
-                <select id="studentCategory" aria-label="فئة الطلاب">
-                    <option value="أطفال">أطفال</option>
-                    <option value="كبار">كبار</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="halaType">نوع الحلقة / الفترة:</label>
-                <select id="halaType" aria-label="نوع الحلقة">
-                    <option value="صباحية">صباحية</option>
-                    <option value="مسائية">مسائية</option>
-                    <option value="تجويد">تجويد</option>
-                    <option value="إضافية">إضافية</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="durationHours">الساعات:</label>
-                <input type="number" id="durationHours" min="0" max="24" value="1" placeholder="ساعات" aria-label="عدد الساعات">
-            </div>
-            <div class="form-group">
-                <label for="durationMinutes">الدقائق:</label>
-                <input type="number" id="durationMinutes" min="0" max="59" step="5" value="0" placeholder="دقائق" aria-label="عدد الدقائق">
-            </div>
-            <div class="form-group">
-                <label for="halaNum">رقم الحلقة (اختياري):</label>
-                <input type="text" id="halaNum" placeholder="رقم الحلقة" aria-label="رقم الحلقة">
-            </div>
-            <div class="form-group full-width">
-                <label for="adminNotes">ملاحظات خاصة للإدارة (تُرسل للاستمارة فقط):</label>
-                <input type="text" id="adminNotes" placeholder="تنبيه أو إشعار خاص للإدارة دون أن يظهر في تقرير الطلاب" aria-label="ملاحظات خاصة للإدارة">
+                <div class="form-group">
+                    <label for="teacherName">اسم المعلم:</label>
+                    <select id="teacherName" aria-label="اسم المعلم">
+                        <option value="محمد نبيل">محمد نبيل</option>
+                        <option value="أسماء علي">أسماء علي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="studentCategory">فئة الطلاب:</label>
+                    <select id="studentCategory" aria-label="فئة الطلاب">
+                        <option value="أطفال">أطفال</option>
+                        <option value="كبار">كبار</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="halaType">نوع الحلقة / الفترة:</label>
+                    <select id="halaType" aria-label="نوع الحلقة">
+                        <option value="صباحية">صباحية</option>
+                        <option value="مسائية">مسائية</option>
+                        <option value="تجويد">تجويد</option>
+                        <option value="إضافية">إضافية</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="durationHours">الساعات:</label>
+                    <input type="number" id="durationHours" min="0" max="24" value="1" placeholder="ساعات" aria-label="عدد الساعات">
+                </div>
+                <div class="form-group">
+                    <label for="durationMinutes">الدقائق:</label>
+                    <input type="number" id="durationMinutes" min="0" max="59" step="5" value="0" placeholder="دقائق" aria-label="عدد الدقائق">
+                </div>
+                <div class="form-group">
+                    <label for="halaNum">رقم الحلقة (اختياري):</label>
+                    <input type="text" id="halaNum" placeholder="رقم الحلقة" aria-label="رقم الحلقة">
+                </div>
+                <div class="form-group full-width">
+                    <label for="adminNotes">ملاحظات خاصة للإدارة (تُرسل للاستمارة فقط):</label>
+                    <input type="text" id="adminNotes" placeholder="تنبيه أو إشعار خاص للإدارة دون أن يظهر في تقرير الطلاب" aria-label="ملاحظات خاصة للإدارة">
+                </div>
             </div>
         </div>
-    </section>
+    </details>
 
     <section class="stats-bar" aria-label="إحصائيات التقرير">
         <div>
