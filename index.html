@@ -25,17 +25,17 @@
     <header class="app-header">
         <div>
             <h1>أكاديمية سنا لتعليم القرآن الكريم</h1>
-            <p class="app-subtitle">نظام إعداد وتوثيق تقارير الحلقات اليومية المرتبط بالاستمارة السحابية</p>
+            <p class="app-subtitle">توثيق ومتابعة تقارير الحلقات</p>
         </div>
         <div class="header-controls">
-            <button type="button" onclick="openSettingsModal()" class="btn btn-outline btn-sm" aria-label="تخصيص الحقول المعروضة وإعدادات المعلم">⚙️ تخصيص الحقول</button>
-            <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-outline btn-sm" aria-label="تبديل الوضع الليلي">الوضع الليلي</button>
-            <button type="button" onclick="clearAll()" class="btn btn-danger btn-sm" aria-label="مسح التقرير كاملاً مع الإبقاء على اسم المعلم">مسح التقرير</button>
+            <button type="button" onclick="openSettingsModal()" class="btn btn-outline btn-sm" aria-label="تخصيص الحقول">⚙️ تخصيص الحقول</button>
+            <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-outline btn-sm" aria-label="الوضع الليلي">الوضع الليلي</button>
+            <button type="button" onclick="clearAll()" class="btn btn-danger btn-sm" aria-label="مسح التقرير">مسح التقرير</button>
         </div>
     </header>
 
-    <!-- بيانات الحلقة وإعدادات التقرير عبر عنصر details و summary الأصيل -->
-    <details class="settings-details" id="settingsDetails" open aria-label="بيانات الحلقة وإعدادات التقرير">
+    <!-- بيانات الحلقة -->
+    <details class="settings-details" id="settingsDetails" open aria-label="بيانات الحلقة">
         <summary class="settings-summary-bar">
             <div class="summary-content">
                 <span class="summary-icon">⚙</span>
@@ -47,31 +47,31 @@
             <div class="card-fields-grid">
                 <div class="form-group">
                     <div style="display:flex;justify-content:space-between;align-items:center;">
-                        <label for="reportDate">تاريخ التقرير:</label>
+                        <label for="reportDate">التاريخ:</label>
                         <div style="display:flex;gap:4px;">
-                            <button type="button" onclick="setDatePreset('today')" class="btn btn-outline btn-xs" aria-label="تعيين تاريخ اليوم">اليوم</button>
-                            <button type="button" onclick="setDatePreset('yesterday')" class="btn btn-outline btn-xs" aria-label="تعيين تاريخ الأمس">الأمس</button>
+                            <button type="button" onclick="setDatePreset('today')" class="btn btn-outline btn-xs" aria-label="اليوم">اليوم</button>
+                            <button type="button" onclick="setDatePreset('yesterday')" class="btn btn-outline btn-xs" aria-label="الأمس">الأمس</button>
                         </div>
                     </div>
-                    <input type="text" id="reportDate" aria-label="تاريخ التقرير">
+                    <input type="text" id="reportDate" aria-label="التاريخ">
                 </div>
                 <div class="form-group">
-                    <label for="teacherName">اسم المعلم:</label>
-                    <select id="teacherName" aria-label="اسم المعلم">
+                    <label for="teacherName">المعلم:</label>
+                    <select id="teacherName" aria-label="المعلم">
                         <option value="محمد نبيل">محمد نبيل</option>
                         <option value="أسماء علي">أسماء علي</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="studentCategory">فئة الطلاب:</label>
-                    <select id="studentCategory" aria-label="فئة الطلاب">
+                    <label for="studentCategory">الفئة:</label>
+                    <select id="studentCategory" aria-label="الفئة">
                         <option value="أطفال">أطفال</option>
                         <option value="كبار">كبار</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="halaType">نوع الحلقة / الفترة:</label>
-                    <select id="halaType" aria-label="نوع الحلقة">
+                    <label for="halaType">الفترة:</label>
+                    <select id="halaType" aria-label="الفترة">
                         <option value="صباحية">صباحية</option>
                         <option value="مسائية">مسائية</option>
                         <option value="تجويد">تجويد</option>
@@ -80,28 +80,28 @@
                 </div>
                 <div class="form-group">
                     <label for="durationHours">الساعات:</label>
-                    <input type="number" id="durationHours" min="0" max="24" value="1" placeholder="ساعات" aria-label="عدد الساعات">
+                    <input type="number" id="durationHours" min="0" max="24" value="1" placeholder="ساعة" aria-label="الساعات">
                 </div>
                 <div class="form-group">
                     <label for="durationMinutes">الدقائق:</label>
-                    <input type="number" id="durationMinutes" min="0" max="59" step="5" value="0" placeholder="دقائق" aria-label="عدد الدقائق">
+                    <input type="number" id="durationMinutes" min="0" max="59" step="5" value="0" placeholder="دقيقة" aria-label="الدقائق">
                 </div>
                 <div class="form-group">
-                    <label for="halaNum">رقم الحلقة (اختياري):</label>
-                    <input type="text" id="halaNum" placeholder="رقم الحلقة" aria-label="رقم الحلقة">
+                    <label for="halaNum">رقم الحلقة:</label>
+                    <input type="text" id="halaNum" placeholder="اختياري" aria-label="رقم الحلقة">
                 </div>
                 <div class="form-group full-width">
-                    <label for="adminNotes">ملاحظات خاصة للإدارة (تُرسل للاستمارة فقط):</label>
-                    <input type="text" id="adminNotes" placeholder="تنبيه أو إشعار خاص للإدارة دون أن يظهر في تقرير الطلاب" aria-label="ملاحظات خاصة للإدارة">
+                    <label for="adminNotes">ملاحظات الإدارة:</label>
+                    <input type="text" id="adminNotes" placeholder="ملاحظات للإدارة فقط" aria-label="ملاحظات الإدارة">
                 </div>
             </div>
         </div>
     </details>
 
-    <!-- اختيار المسودة الحالية (مبسط وسهل الوصول لقارئات الشاشة) -->
+    <!-- اختيار المسودة الحالية -->
     <div class="draft-selector-row">
-        <label for="draftSelect" class="draft-selector-label">📂 المسودة الحالية:</label>
-        <select id="draftSelect" class="draft-select-control" onchange="onDraftChange(this.value)" aria-label="اختر المسودة الحالية"></select>
+        <label for="draftSelect" class="draft-selector-label">المسودة:</label>
+        <select id="draftSelect" class="draft-select-control" onchange="onDraftChange(this.value)" aria-label="المسودة الحالية"></select>
     </div>
 
     <section class="stats-bar" aria-label="إحصائيات التقرير">
@@ -109,7 +109,7 @@
             <span>إجمالي الطلاب: <strong id="totalCount">0</strong></span>
             <span style="margin-right:8px;font-size:0.85rem;opacity:0.9;">(ذكور: <strong id="maleCount">0</strong> | إناث: <strong id="femaleCount">0</strong>)</span>
         </div>
-        <button type="button" id="expandAllBtn" onclick="toggleAll()" class="btn btn-outline btn-sm" style="color:inherit;border-color:currentColor;" aria-label="طي أو توسيع كافة بطاقات الطلاب">طي الكل</button>
+        <button type="button" id="expandAllBtn" onclick="toggleAll()" class="btn btn-outline btn-sm" style="color:inherit;border-color:currentColor;" aria-label="طي الكل">طي الكل</button>
     </section>
 
     <section id="studentsList" class="students-container" aria-label="بطاقات الطلاب"></section>
@@ -117,10 +117,10 @@
 
 <footer class="action-bar-container" aria-label="شريط الإجراءات">
     <div class="action-bar-inner">
-        <button type="button" onclick="addStudent()" class="btn btn-success" aria-label="إضافة طالب جديد">+ إضافة طالب</button>
-        <button type="button" onclick="copyAll(event)" class="btn btn-primary" aria-label="نسخ التقرير الكلي">نسخ التقرير</button>
-        <button type="button" onclick="exportPDF()" class="btn btn-outline" style="border-color:var(--primary);color:var(--primary);" aria-label="تصدير ملف PDF">تصدير PDF</button>
-        <button type="button" onclick="submitToGoogleForm()" class="btn btn-primary" style="background:#0284c7;" aria-label="فتح استمارة جوجل المعبأة مسبقاً لإرسال التقرير">إرسال للاستمارة ↗</button>
+        <button type="button" onclick="addStudent()" class="btn btn-success" aria-label="إضافة طالب">+ إضافة طالب</button>
+        <button type="button" onclick="copyAll(event)" class="btn btn-primary" aria-label="نسخ التقرير">نسخ التقرير</button>
+        <button type="button" onclick="exportPDF()" class="btn btn-outline" style="border-color:var(--primary);color:var(--primary);" aria-label="تصدير PDF">تصدير PDF</button>
+        <button type="button" onclick="submitToGoogleForm()" class="btn btn-primary" style="background:#0284c7;" aria-label="إرسال للاستمارة">إرسال للاستمارة ↗</button>
     </div>
 </footer>
 
@@ -128,13 +128,13 @@
 <div id="quranModal" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="quranModalTitle">
     <div class="modal-box">
         <header class="modal-header">
-            <h3 id="quranModalTitle">📖 اختيار من المصحف الشريف</h3>
+            <h3 id="quranModalTitle">📖 المصحف الشريف</h3>
             <button type="button" class="modal-close-btn" onclick="closeQuranPicker()" aria-label="إغلاق">✕</button>
         </header>
         <div class="modal-tabs" role="tablist">
-            <button type="button" class="tab-btn active" id="tabSurahBtn" onclick="setQuranTab('surah')">١. بالسورة والآيات</button>
-            <button type="button" class="tab-btn" id="tabPageBtn" onclick="setQuranTab('page')">٢. بالصفحات</button>
-            <button type="button" class="tab-btn" id="tabJuzBtn" onclick="setQuranTab('juz')">٣. بالأجزاء والأرباع</button>
+            <button type="button" class="tab-btn active" id="tabSurahBtn" onclick="setQuranTab('surah')">السورة والآيات</button>
+            <button type="button" class="tab-btn" id="tabPageBtn" onclick="setQuranTab('page')">الصفحات</button>
+            <button type="button" class="tab-btn" id="tabJuzBtn" onclick="setQuranTab('juz')">الأجزاء والأرباع</button>
         </div>
         <div class="modal-body">
             <!-- تبويب السورة والآيات -->
@@ -165,11 +165,11 @@
             <div id="tabPageContent" style="display:none;">
                 <div class="two-col-grid">
                     <div class="form-group">
-                        <label for="pickerFromPage">من صفحة (1-604):</label>
+                        <label for="pickerFromPage">من صفحة:</label>
                         <input type="number" id="pickerFromPage" min="1" max="604" value="1" oninput="updateQuranPreview()">
                     </div>
                     <div class="form-group">
-                        <label for="pickerToPage">إلى صفحة (1-604):</label>
+                        <label for="pickerToPage">إلى صفحة:</label>
                         <input type="number" id="pickerToPage" min="1" max="604" value="1" oninput="updateQuranPreview()">
                     </div>
                 </div>
@@ -189,7 +189,7 @@
                     <select id="pickerJuzSelect" onchange="onJuzChange()"></select>
                 </div>
                 <div class="form-group">
-                    <label for="pickerRubSelect">الربع / المقرر:</label>
+                    <label for="pickerRubSelect">الربع:</label>
                     <select id="pickerRubSelect" onchange="updateQuranPreview()"></select>
                 </div>
             </div>
@@ -202,7 +202,7 @@
         </div>
         <footer class="modal-footer">
             <button type="button" onclick="closeQuranPicker()" class="btn btn-outline btn-sm">إلغاء</button>
-            <button type="button" onclick="insertQuranSelection()" class="btn btn-success btn-sm">إدراج في التقرير ✓</button>
+            <button type="button" onclick="insertQuranSelection()" class="btn btn-success btn-sm">إدراج ✓</button>
         </footer>
     </div>
 </div>
@@ -211,37 +211,37 @@
 <div id="settingsModal" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
     <div class="modal-box">
         <header class="modal-header">
-            <h3 id="settingsModalTitle">⚙️ تخصيص الحقول وإعدادات المعلم</h3>
+            <h3 id="settingsModalTitle">⚙️ تخصيص الحقول</h3>
             <button type="button" class="modal-close-btn" onclick="closeSettingsModal()" aria-label="إغلاق">✕</button>
         </header>
         <div class="modal-body">
             <p class="modal-desc">
-                حدد الحقول التي ترغب في إظهارها في بطاقة كل طالب، لتخصيص الواجهة بحسب نظام حلقتك:
+                اختر الحقول المطلوب إظهارها في بطاقات الطلاب:
             </p>
             <div class="settings-checklist">
                 <label class="checkbox-label">
                     <input type="checkbox" id="vis_تسميع" onchange="updateFieldVisibility()">
-                    <span>التسميع اليومي (مع التقييم)</span>
+                    <span>التسميع</span>
                 </label>
                 <label class="checkbox-label">
                     <input type="checkbox" id="vis_ماضي_قريب" onchange="updateFieldVisibility()">
-                    <span>الماضي القريب (مع التقييم)</span>
+                    <span>الماضي القريب</span>
                 </label>
                 <label class="checkbox-label">
                     <input type="checkbox" id="vis_مراجعة_قديمة" onchange="updateFieldVisibility()">
-                    <span>المراجعة القديمة - الماضي البعيد (مع التقييم)</span>
+                    <span>المراجعة القديمة</span>
                 </label>
                 <label class="checkbox-label">
                     <input type="checkbox" id="vis_حفظ" onchange="updateFieldVisibility()">
-                    <span>الحفظ الجديد المطلوب (المقرر للحصة القادمة)</span>
+                    <span>الحفظ الجديد</span>
                 </label>
                 <label class="checkbox-label">
                     <input type="checkbox" id="vis_ماضي_قريب_جديد" onchange="updateFieldVisibility()">
-                    <span>الماضي القريب المطلوب (المقرر للحصة القادمة)</span>
+                    <span>الماضي القريب المطلوب</span>
                 </label>
                 <label class="checkbox-label">
                     <input type="checkbox" id="vis_مراجعة" onchange="updateFieldVisibility()">
-                    <span>المراجعة القديمة المطلوبة (المقرر للحصة القادمة)</span>
+                    <span>المراجعة المطلوبة</span>
                 </label>
                 <label class="checkbox-label">
                     <input type="checkbox" id="vis_ملاحظات" onchange="updateFieldVisibility()">
@@ -249,29 +249,26 @@
                 </label>
                 <label class="checkbox-label">
                     <input type="checkbox" id="vis_وسام" onchange="updateFieldVisibility()">
-                    <span>الوسام التشجيعي</span>
+                    <span>الوسام</span>
                 </label>
                 <hr style="border:none;border-top:1px solid var(--border);margin:8px 0;">
                 <label class="checkbox-label" style="color:var(--primary);">
                     <input type="checkbox" id="vis_quran_picker" onchange="updateFieldVisibility()">
-                    <span>إظهار أزرار منتقي المصحف الشريف (📖 مصحف)</span>
+                    <span>أزرار منتقي المصحف (📖)</span>
                 </label>
             </div>
 
             <hr class="modal-divider">
             
-            <div class="settings-section-title">📁 إدارة مسودات الحلقات:</div>
-            <p class="modal-desc" style="margin-bottom:10px;">
-                يمكنك إنشاء مسودات مخصصة لكل حلقة، أو إعادة تسميتها، أو حذف المسودة الحالية:
-            </p>
+            <div class="settings-section-title">📁 إدارة المسودات:</div>
             <div class="draft-modal-actions">
-                <button type="button" onclick="createNewDraftPrompt()" class="btn btn-outline btn-sm" aria-label="إنشاء مسودة جديدة">+ إنشاء مسودة جديدة</button>
-                <button type="button" onclick="renameCurrentDraftPrompt()" class="btn btn-outline btn-sm" aria-label="إعادة تسمية المسودة الحالية">✏️ إعادة تسمية المسودة الحالية</button>
-                <button type="button" onclick="deleteCurrentDraftConfirm()" class="btn btn-outline btn-sm btn-danger-outline" aria-label="حذف المسودة الحالية">🗑️ حذف المسودة الحالية</button>
+                <button type="button" onclick="createNewDraftPrompt()" class="btn btn-outline btn-sm" aria-label="مسودة جديدة">+ مسودة جديدة</button>
+                <button type="button" onclick="renameCurrentDraftPrompt()" class="btn btn-outline btn-sm" aria-label="إعادة تسمية">✏️ إعادة تسمية</button>
+                <button type="button" onclick="deleteCurrentDraftConfirm()" class="btn btn-outline btn-sm btn-danger-outline" aria-label="حذف المسودة">🗑️ حذف المسودة</button>
             </div>
         </div>
         <footer class="modal-footer">
-            <button type="button" onclick="resetFieldVisibility()" class="btn btn-outline btn-sm" style="margin-left:auto;">إظهار كافة الحقول</button>
+            <button type="button" onclick="resetFieldVisibility()" class="btn btn-outline btn-sm" style="margin-left:auto;">إظهار الكل</button>
             <button type="button" onclick="closeSettingsModal()" class="btn btn-success btn-sm">تم ✓</button>
         </footer>
     </div>

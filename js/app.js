@@ -190,7 +190,7 @@ function renameCurrentDraftPrompt() {
 
 function deleteCurrentDraftConfirm() {
     if (drafts.length <= 1) {
-        alert('لا يمكن حذف المسودة الوحيدة المتبقية في النظام.');
+        alert('لا يمكن حذف المسودة الأخيرة.');
         return;
     }
     const current = getActiveDraft();
@@ -363,7 +363,7 @@ function toggleAll() {
 
 function clearAll() {
     const current = getActiveDraft();
-    if (!confirm(`هل أنت متأكد من مسح بيانات "${current.name}"؟\n\nسيتم تصفير طلاب هذه المسودة وحقول الجلسة، مع الحفاظ على اسم المعلم وباقي المسودات.`)) return;
+    if (!confirm(`مسح بيانات "${current.name}"؟\nسيُصفَّر طلاب هذه المسودة وحقول الجلسة.`)) return;
     
     // مسح بيانات طلاب المسودة الحالية فقط
     students = [];
@@ -388,7 +388,7 @@ function clearAll() {
 function rolloverStudent(id) {
     const s = students.find(x => x.id === id);
     if (!s) return;
-    if (!confirm(`هل ترغب في تدوير واجبات (${s.name || 'هذا الطالب'})؟\n\n- ينتقل (الحفظ الجديد) إلى (التسميع اليومي)\n- ينتقل (الماضي القريب المطلوب) إلى (الماضي القريب)\n- ينتقل (المراجعة القديمة المطلوبة) إلى (المراجعة القديمة)\n- تُفرّغ خانات الواجبات القادمة والملاحظات والوسام للبدء من جديد.`)) return;
+    if (!confirm(`تدوير واجبات ${s.name || 'الطالب'}؟\n- الحفظ الجديد → التسميع\n- الماضي القريب المطلوب → الماضي القريب\n- المراجعة المطلوبة → المراجعة القديمة`)) return;
     
     s.تسميع = s.حفظ || '';
     s.ماضي_قريب = s.ماضي_قريب_جديد || '';
@@ -421,17 +421,17 @@ function render() {
     }
 
     const fields = [
-        { k: 'تسميع', l: 'التسميع اليومي:', t: 'area', ph: 'السور أو الآيات التي سُمّعت اليوم' },
-        { k: 'تقييم_تسميع', l: 'تقييم التسميع:', t: 'sel', opts: GRADES },
-        { k: 'ماضي_قريب', l: 'الماضي القريب:', t: 'area', ph: 'تسميع الماضي القريب اليوم' },
-        { k: 'تقييم_ماضي_قريب', l: 'تقييم الماضي القريب:', t: 'sel', opts: GRADES },
-        { k: 'مراجعة_قديمة', l: 'المراجعة القديمة (الماضي البعيد):', t: 'area', ph: 'تسميع المحفوظات السابقة البعيدة اليوم' },
-        { k: 'تقييم_مراجعة', l: 'تقييم المراجعة القديمة:', t: 'sel', opts: GRADES },
-        { k: 'حفظ', l: 'الحفظ الجديد المطلوب:', t: 'area', ph: 'المقرر للحصة القادمة' },
-        { k: 'ماضي_قريب_جديد', l: 'الماضي القريب المطلوب:', t: 'area', ph: 'الماضي القريب للحصة القادمة' },
-        { k: 'مراجعة', l: 'المراجعة القديمة المطلوبة:', t: 'area', ph: 'المراجعة القديمة للحصة القادمة' },
-        { k: 'ملاحظات', l: 'ملاحظات المعلم:', t: 'area', ph: 'توجيهات لولي الأمر أو الطالب' },
-        { k: 'وسام', l: 'الوسام التشجيعي:', t: 'sel', opts: ['', ...AWARDS], def: '-- اختر وساماً --' }
+        { k: 'تسميع', l: 'التسميع:', t: 'area', ph: 'السور أو الآيات' },
+        { k: 'تقييم_تسميع', l: 'التقييم:', t: 'sel', opts: GRADES },
+        { k: 'ماضي_قريب', l: 'الماضي القريب:', t: 'area', ph: 'تسميع الماضي القريب' },
+        { k: 'تقييم_ماضي_قريب', l: 'التقييم:', t: 'sel', opts: GRADES },
+        { k: 'مراجعة_قديمة', l: 'المراجعة القديمة:', t: 'area', ph: 'المحفوظات السابقة' },
+        { k: 'تقييم_مراجعة', l: 'التقييم:', t: 'sel', opts: GRADES },
+        { k: 'حفظ', l: 'الحفظ الجديد:', t: 'area', ph: 'المقرر للحصة القادمة' },
+        { k: 'ماضي_قريب_جديد', l: 'الماضي القريب المطلوب:', t: 'area', ph: 'الماضي القريب القادم' },
+        { k: 'مراجعة', l: 'المراجعة المطلوبة:', t: 'area', ph: 'المراجعة القادمة' },
+        { k: 'ملاحظات', l: 'الملاحظات:', t: 'area', ph: 'توجيهات لولي الأمر أو الطالب' },
+        { k: 'وسام', l: 'الوسام:', t: 'sel', opts: ['', ...AWARDS], def: '-- وسام --' }
     ];
 
     const isFieldVisible = (k) => {
@@ -493,9 +493,9 @@ function render() {
                     ${fieldsHtml}
                 </div>
                 <footer class="card-actions">
-                    <button type="button" onclick="copySingle(${s.id}, event)" class="btn btn-primary btn-sm">نسخ تقرير الطالب</button>
-                    <button type="button" onclick="rolloverStudent(${s.id})" class="btn btn-outline btn-sm" style="border-color:var(--primary);color:var(--primary);" aria-label="تدوير واجبات هذا الطالب">تدوير الواجبات</button>
-                    <button type="button" onclick="removeStudent(${s.id})" class="btn btn-danger btn-sm">حذف الطالب</button>
+                    <button type="button" onclick="copySingle(${s.id}, event)" class="btn btn-primary btn-sm">نسخ</button>
+                    <button type="button" onclick="rolloverStudent(${s.id})" class="btn btn-outline btn-sm" style="border-color:var(--primary);color:var(--primary);" aria-label="تدوير الواجبات">تدوير الواجبات</button>
+                    <button type="button" onclick="removeStudent(${s.id})" class="btn btn-danger btn-sm">حذف</button>
                 </footer>
             </div>
         </details>`;
