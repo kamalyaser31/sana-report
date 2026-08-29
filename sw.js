@@ -1,15 +1,15 @@
-const CACHE_NAME = 'sana-report-v4';
+const CACHE_NAME = 'sana-report-v5';
 const ASSETS = [
   './',
   './index.html',
-  './styles.css',
-  './quran-data.js',
-  './quran_surahs.json',
-  './quran_juzs.json',
-  './app.js',
-  './html2pdf.bundle.min.js',
   './manifest.json',
-  './icon.svg'
+  './css/styles.css',
+  './js/app.js',
+  './js/quran-data.js',
+  './js/html2pdf.bundle.min.js',
+  './data/quran_surahs.json',
+  './data/quran_juzs.json',
+  './assets/icon.svg'
 ];
 
 self.addEventListener('install', (event) => {
