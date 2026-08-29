@@ -120,7 +120,7 @@ function saveState() {
 
 function addStudent() {
     const id = Date.now();
-    students.unshift({ id, name: '', gender: 'male', تسميع: '', تقييم_تسميع: 'ممتاز', مراجعة_قديمة: '', تقييم_مراجعة: 'ممتاز', حفظ: '', مراجعة: '', ملاحظات: '', وسام: '' });
+    students.unshift({ id, name: '', gender: 'male', تسميع: '', تقييم_تسميع: 'ممتاز', ماضي_قريب: '', تقييم_ماضي_قريب: 'ممتاز', مراجعة_قديمة: '', تقييم_مراجعة: 'ممتاز', حفظ: '', مراجعة: '', ملاحظات: '', وسام: '' });
     openIds.add(id);
     saveState();
     render();
@@ -172,26 +172,21 @@ function clearAll() {
     }
 }
 
-function rolloverHomework() {
-    if (!students.length) return alert('لا يوجد طلاب مسجلون لتدوير واجباتهم.');
-    if (!confirm('هل ترغب في تدوير الواجبات لتقرير جديد؟\n\nسيتم نقل (الحفظ الجديد) إلى (التسميع)، و(المراجعة) إلى (المراجعة القديمة)، وتفريغ خانات الواجبات والتقييمات للبدء من جديد.')) return;
+function rolloverStudent(id) {
+    const s = students.find(x => x.id === id);
+    if (!s) return;
+    if (!confirm(`هل ترغب في تدوير واجبات (${s.name || 'هذا الطالب'})؟\n\n- سينتقل (الحفظ الجديد) إلى (التسميع اليومي)\n- وسينتقل (المراجعة) إلى (الماضي القريب)\n- وتُفرّغ خانات الحفظ والمراجعة والملاحظات والوسام للبدء من جديد.`)) return;
     
-    students.forEach(s => {
-        s.تسميع = s.حفظ || '';
-        s.مراجعة_قديمة = s.مراجعة || '';
-        s.حفظ = '';
-        s.مراجعة = '';
-        s.ملاحظات = '';
-        s.وسام = '';
-        s.تقييم_تسميع = 'ممتاز';
-        s.تقييم_مراجعة = 'ممتاز';
-    });
-    
-    document.getElementById('reportDate').value = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('adminNotes').value = '';
+    s.تسميع = s.حفظ || '';
+    s.ماضي_قريب = s.مراجعة || '';
+    s.حفظ = '';
+    s.مراجعة = '';
+    s.ملاحظات = '';
+    s.وسام = '';
+    s.تقييم_تسميع = 'ممتاز';
+    s.تقييم_ماضي_قريب = 'ممتاز';
     saveState();
     render();
-    alert('تم تدوير الواجبات بنجاح وتحديث تاريخ التقرير.');
 }
 
 function renderStats() {
@@ -209,12 +204,14 @@ function render() {
     }
 
     const fields = [
-        { k: 'تسميع', l: 'التسميع اليومي:', t: 'area', ph: 'السور أو الآيات التي سُمّعت' },
+        { k: 'تسميع', l: 'التسميع اليومي:', t: 'area', ph: 'السور أو الآيات التي سُمّعت اليوم' },
         { k: 'تقييم_تسميع', l: 'تقييم التسميع:', t: 'sel', opts: GRADES },
-        { k: 'مراجعة_قديمة', l: 'المراجعة القديمة:', t: 'area', ph: 'المحفوظات السابقة' },
-        { k: 'تقييم_مراجعة', l: 'تقييم المراجعة:', t: 'sel', opts: GRADES },
+        { k: 'ماضي_قريب', l: 'الماضي القريب:', t: 'area', ph: 'المراجعة القريبة السابقة' },
+        { k: 'تقييم_ماضي_قريب', l: 'تقييم الماضي القريب:', t: 'sel', opts: GRADES },
+        { k: 'مراجعة_قديمة', l: 'المراجعة القديمة (الماضي البعيد):', t: 'area', ph: 'المحفوظات السابقة البعيدة' },
+        { k: 'تقييم_مراجعة', l: 'تقييم المراجعة القديمة:', t: 'sel', opts: GRADES },
         { k: 'حفظ', l: 'الحفظ الجديد المطلوب:', t: 'area', ph: 'المقرر للحصة القادمة' },
-        { k: 'مراجعة', l: 'المراجعة القريبة:', t: 'area', ph: 'المراجعة للحصة القادمة' },
+        { k: 'مراجعة', l: 'المراجعة القريبة المطلوبة:', t: 'area', ph: 'المراجعة للحصة القادمة' },
         { k: 'ملاحظات', l: 'ملاحظات المعلم:', t: 'area', ph: 'توجيهات لولي الأمر أو الطالب' },
         { k: 'وسام', l: 'الوسام التشجيعي:', t: 'sel', opts: ['', ...AWARDS], def: '-- اختر وساماً --' }
     ];
@@ -259,6 +256,7 @@ function render() {
                 </div>
                 <footer class="card-actions">
                     <button type="button" onclick="copySingle(${s.id})" class="btn btn-primary btn-sm">نسخ تقرير الطالب</button>
+                    <button type="button" onclick="rolloverStudent(${s.id})" class="btn btn-outline btn-sm" style="border-color:var(--primary);color:var(--primary);" aria-label="تدوير واجبات هذا الطالب">تدوير الواجبات</button>
                     <button type="button" onclick="removeStudent(${s.id})" class="btn btn-danger btn-sm">حذف الطالب</button>
                 </footer>
             </div>
@@ -286,8 +284,9 @@ function formatDurationText(hours, minutes) {
 function formatStudent(s) {
     const isMale = s.gender === 'male';
     let res = `${isMale ? 'الطالب' : 'الطالبة'}: ${s.name.trim() || 'بدون اسم'}\n\n`;
-    if (s.تسميع?.trim()) res += `التسميع:\n${s.تسميع.trim()}\nالتقييم: ${s.تقييم_تسميع}\n━━━━━━━━━━━━━━━\n`;
-    if (s.مراجعة_قديمة?.trim()) res += `المراجعة القديمة:\n${s.مراجعة_قديمة.trim()}\nالتقييم: ${s.تقييم_مراجعة}\n━━━━━━━━━━━━━━━\n`;
+    if (s.تسميع?.trim()) res += `التسميع:\n${s.تسميع.trim()}\nالتقييم: ${s.تقييم_تسميع || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
+    if (s.ماضي_قريب?.trim()) res += `الماضي القريب:\n${s.ماضي_قريب.trim()}\nالتقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
+    if (s.مراجعة_قديمة?.trim()) res += `المراجعة القديمة:\n${s.مراجعة_قديمة.trim()}\nالتقييم: ${s.تقييم_مراجعة || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
     if (s.حفظ?.trim()) res += `الحفظ الجديد:\n${s.حفظ.trim()}\n━━━━━━━━━━━━━━━\n`;
     if (s.مراجعة?.trim()) res += `المراجعة:\n${s.مراجعة.trim()}\n━━━━━━━━━━━━━━━\n`;
     if (s.ملاحظات?.trim()) res += `ملاحظات:\n${s.ملاحظات.trim().replace(/يسمع/g, isMale ? 'يسمع' : 'تسمع').replace(/يستمر/g, isMale ? 'يستمر' : 'تستمر')}\n━━━━━━━━━━━━━━━\n`;
@@ -393,8 +392,9 @@ function exportPDF() {
                     <span>${i + 1}. ${s.gender === 'male' ? 'الطالب' : 'الطالبة'}: ${escapeHtml(s.name) || 'بدون اسم'}</span>
                     <span>التقييم: ${s.تقييم_تسميع}</span>
                 </div>
-                ${s.تسميع ? `<div><strong>التسميع:</strong> ${escapeHtml(s.تسميع)}</div>` : ''}
-                ${s.مراجعة_قديمة ? `<div><strong>المراجعة القديمة:</strong> ${escapeHtml(s.مراجعة_قديمة)} (تقييم: ${s.تقييم_مراجعة})</div>` : ''}
+                ${s.تسميع ? `<div><strong>التسميع:</strong> ${escapeHtml(s.تسميع)} (تقييم: ${s.تقييم_تسميع || 'ممتاز'})</div>` : ''}
+                ${s.ماضي_قريب ? `<div><strong>الماضي القريب:</strong> ${escapeHtml(s.ماضي_قريب)} (تقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'})</div>` : ''}
+                ${s.مراجعة_قديمة ? `<div><strong>المراجعة القديمة:</strong> ${escapeHtml(s.مراجعة_قديمة)} (تقييم: ${s.تقييم_مراجعة || 'ممتاز'})</div>` : ''}
                 ${s.حفظ ? `<div><strong>الحفظ الجديد:</strong> ${escapeHtml(s.حفظ)}</div>` : ''}
                 ${s.مراجعة ? `<div><strong>المراجعة:</strong> ${escapeHtml(s.مراجعة)}</div>` : ''}
                 ${s.ملاحظات ? `<div><strong>ملاحظات:</strong> ${escapeHtml(s.ملاحظات)}</div>` : ''}
