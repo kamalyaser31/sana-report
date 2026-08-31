@@ -82,7 +82,6 @@ function clearAll() {
     document.getElementById('durationHours').value = '1';
     document.getElementById('durationMinutes').value = '0';
     document.getElementById('halaNum').value = '';
-    document.getElementById('adminNotes').value = '';
 
     saveState();
     render();
