@@ -72,7 +72,10 @@ function clearAll() {
 
     students = [];
     openIds.clear();
-    if (current) current.students = [];
+    if (current) {
+        current.students = [];
+        current.halaNum = '';
+    }
 
     // تصفير حقول الجلسة مع استثناء اسم المعلم
     const today = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });

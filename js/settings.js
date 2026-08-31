@@ -49,7 +49,7 @@ function loadSettings() {
     document.getElementById('halaType').value = s.halaType || 'صباحية';
     document.getElementById('durationHours').value = s.durationHours !== undefined ? s.durationHours : '1';
     document.getElementById('durationMinutes').value = s.durationMinutes !== undefined ? s.durationMinutes : '0';
-    document.getElementById('halaNum').value = s.halaNum || '';
+    document.getElementById('halaNum').value = (typeof getActiveDraft === 'function' ? getActiveDraft()?.halaNum : '') || s.halaNum || '';
 
     const details = document.getElementById('settingsDetails');
     if (details) {
@@ -67,17 +67,18 @@ function saveState() {
     const current = getActiveDraft();
     if (current) {
         current.students = students;
+        current.halaNum = document.getElementById('halaNum')?.value || '';
     }
     localStorage.setItem('sana_drafts', JSON.stringify(drafts));
     localStorage.setItem('sana_data', JSON.stringify(students));
     localStorage.setItem('sana_settings', JSON.stringify({
-        date: document.getElementById('reportDate').value,
-        teacherName: document.getElementById('teacherName').value,
-        studentCategory: document.getElementById('studentCategory').value,
-        halaType: document.getElementById('halaType').value,
-        durationHours: document.getElementById('durationHours').value,
-        durationMinutes: document.getElementById('durationMinutes').value,
-        halaNum: document.getElementById('halaNum').value
+        date: document.getElementById('reportDate')?.value || '',
+        teacherName: document.getElementById('teacherName')?.value || '',
+        studentCategory: document.getElementById('studentCategory')?.value || '',
+        halaType: document.getElementById('halaType')?.value || '',
+        durationHours: document.getElementById('durationHours')?.value || '',
+        durationMinutes: document.getElementById('durationMinutes')?.value || '',
+        halaNum: document.getElementById('halaNum')?.value || ''
     }));
     updateSettingsSummary();
     renderStats();

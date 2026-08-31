@@ -15,10 +15,12 @@ function initDrafts() {
     // ترحيل البيانات السابقة إن وجدت أو إنشاء المسودة 1 افتراضياً
     if (!drafts || !Array.isArray(drafts) || drafts.length === 0) {
         const legacyData = JSON.parse(localStorage.getItem('sana_data') || '[]');
+        const legacySettings = JSON.parse(localStorage.getItem('sana_settings') || '{}');
         drafts = [
             {
                 id: 'draft_' + Date.now(),
                 name: 'المسودة 1',
+                halaNum: legacySettings.halaNum || '',
                 students: legacyData
             }
         ];
@@ -27,12 +29,14 @@ function initDrafts() {
 
     const savedActiveId = localStorage.getItem('sana_active_draft_id');
     const existing = drafts.find(d => d.id === savedActiveId);
-    if (existing) {
-        activeDraftId = existing.id;
-        students = existing.students || [];
-    } else {
-        activeDraftId = drafts[0].id;
-        students = drafts[0].students || [];
+    const activeDraft = existing || drafts[0];
+
+    activeDraftId = activeDraft.id;
+    students = activeDraft.students || [];
+
+    const halaNumEl = document.getElementById('halaNum');
+    if (halaNumEl) {
+        halaNumEl.value = activeDraft.halaNum || '';
     }
 
     openIds = new Set(students.length ? [students[0].id] : []);
@@ -58,7 +62,8 @@ function updateDraftSelectUI() {
         const opt = document.createElement('option');
         opt.value = d.id;
         const count = (d.students || []).length;
-        opt.textContent = `${d.name} (${formatArabicStudentCount(count)})`;
+        const halaLabel = d.halaNum ? ` [حلقة ${d.halaNum}]` : '';
+        opt.textContent = `${d.name}${halaLabel} (${formatArabicStudentCount(count)})`;
         if (d.id === activeDraftId) opt.selected = true;
         select.appendChild(opt);
     });
@@ -67,7 +72,10 @@ function updateDraftSelectUI() {
 function onDraftChange(newId) {
     if (newId === activeDraftId) return;
     const current = getActiveDraft();
-    if (current) current.students = students;
+    if (current) {
+        current.students = students;
+        current.halaNum = document.getElementById('halaNum')?.value || '';
+    }
 
     activeDraftId = newId;
     localStorage.setItem('sana_active_draft_id', activeDraftId);
@@ -76,11 +84,17 @@ function onDraftChange(newId) {
     students = nextDraft.students || [];
     openIds = new Set(students.length ? [students[0].id] : []);
 
+    const halaNumEl = document.getElementById('halaNum');
+    if (halaNumEl) {
+        halaNumEl.value = nextDraft.halaNum || '';
+    }
+
     localStorage.setItem('sana_drafts', JSON.stringify(drafts));
     localStorage.setItem('sana_data', JSON.stringify(students));
 
     updateDraftSelectUI();
     render();
+    updateSettingsSummary();
     showToast(`تم التبديل إلى: ${nextDraft.name}`);
 }
 
@@ -90,11 +104,15 @@ function createNewDraftPrompt() {
     if (!name || !name.trim()) return;
 
     const current = getActiveDraft();
-    if (current) current.students = students;
+    if (current) {
+        current.students = students;
+        current.halaNum = document.getElementById('halaNum')?.value || '';
+    }
 
     const newDraft = {
         id: 'draft_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
         name: name.trim(),
+        halaNum: '',
         students: []
     };
 
@@ -103,12 +121,18 @@ function createNewDraftPrompt() {
     students = newDraft.students;
     openIds = new Set();
 
+    const halaNumEl = document.getElementById('halaNum');
+    if (halaNumEl) {
+        halaNumEl.value = '';
+    }
+
     localStorage.setItem('sana_drafts', JSON.stringify(drafts));
     localStorage.setItem('sana_active_draft_id', activeDraftId);
     localStorage.setItem('sana_data', JSON.stringify(students));
 
     updateDraftSelectUI();
     render();
+    updateSettingsSummary();
     showToast(`تم إنشاء: ${newDraft.name}`);
 }
 
@@ -143,11 +167,17 @@ function deleteCurrentDraftConfirm() {
     students = drafts[0].students || [];
     openIds = new Set(students.length ? [students[0].id] : []);
 
+    const halaNumEl = document.getElementById('halaNum');
+    if (halaNumEl) {
+        halaNumEl.value = drafts[0].halaNum || '';
+    }
+
     localStorage.setItem('sana_drafts', JSON.stringify(drafts));
     localStorage.setItem('sana_active_draft_id', activeDraftId);
     localStorage.setItem('sana_data', JSON.stringify(students));
 
     updateDraftSelectUI();
     render();
+    updateSettingsSummary();
     showToast(`تم حذف: ${deletedName}`);
 }

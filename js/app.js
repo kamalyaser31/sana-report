@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
 
     // ربط أحداث الإدخال للحفظ التلقائي
-    ['reportDate', 'teacherName', 'studentCategory', 'halaType', 'durationHours', 'durationMinutes', 'halaNum', 'adminNotes'].forEach(id => {
+    ['reportDate', 'teacherName', 'studentCategory', 'halaType', 'durationHours', 'durationMinutes', 'halaNum'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', saveState);
         document.getElementById(id)?.addEventListener('change', saveState);
     });
