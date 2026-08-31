@@ -1,5 +1,7 @@
 # سجل التغييرات (CHANGELOG)
 
+- 2026-08-31: refactor(fields): تعديل تسميات حقول التقرير من «المراجعة القديمة / المراجعة المطلوبة» إلى «الماضي البعيد / الماضي البعيد المطلوب» في واجهة البطاقات، ونصوص التقارير، وتصدير PDF، ومربع تدوير الواجبات، ونافذة تخصيص الحقول مع صيانة التوافقية مع البيانات المخزنة.
+- 2026-08-29: refactor(architecture): تفكيك app.js إلى 10 وحدات برمجية متخصصة (constants, state, ui, drafts, settings, render, students, report, quran, app) وفق مبدأ فصل المخاوف (SoC) والحفاظ على مصدر الحقيقة (SoT) وترقية كاش PWA إلى v7.
 - 2026-08-29: refactor(app.js + index.html): تطبيق clean-code-guard — استخلاص VISIBILITY_FIELD_KEYS وSTUDENT_FIELDS وformatArabicStudentCount وrenderStudentHeader وbuildStudentFieldHtml وbuildStudentCardHtml وbuildPdfHtml، وإصلاح catch-all handlers في SW وJSON.parse، وإعادة تسمية d إلى getFieldValue في كل مواضعها، وتصفية localStorage عند التهيئة؛ وإضافة role/aria-selected/aria-controls لأزرار التبويب (WCAG 2.1 AA).
 
 - 2026-08-29: إضافة ميزة إدارة مسودات الحلقات المتعددة (Multi-Session Drafts) بواجهة بسيطة ورشيقة (Minimalist) تتيح إنشاء مسودات مخصصة والتبديل السريع بينها مع عزل تام لبيانات الطلاب وحفظها تلقائياً وترقية كاش PWA إلى v6.

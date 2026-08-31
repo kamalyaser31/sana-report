@@ -1,9 +1,18 @@
-const CACHE_NAME = 'sana-report-v6';
+const CACHE_NAME = 'sana-report-v7';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './css/styles.css',
+  './js/constants.js',
+  './js/state.js',
+  './js/ui.js',
+  './js/drafts.js',
+  './js/settings.js',
+  './js/render.js',
+  './js/students.js',
+  './js/report.js',
+  './js/quran.js',
   './js/app.js',
   './js/quran-data.js',
   './js/html2pdf.bundle.min.js',
