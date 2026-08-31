@@ -17,12 +17,12 @@ const VISIBILITY_FIELD_KEYS = ['تسميع', 'ماضي_قريب', 'مراجعة_
 const FORM_CONFIG = {
     URL: "https://docs.google.com/forms/d/e/1FAIpQLSfNKy_h48Ia7dhe_zBoGxTdw0dF5qU2rlul-4JYYUX2VCgcyQ/viewform",
     ENTRIES: {
-        TEACHER: "entry.1538514296",
-        STUDENT_CATEGORY: "entry.265432297",
-        HOURS: "entry.758192319",
+        TEACHER: "entry.194128415",
+        STUDENT_CATEGORY: "entry.1179001327",
+        HOURS: "entry.719118299",
         MINUTES: "entry.592377570",
-        REPORT_TEXT: "entry.253620165",
-        ADMIN_NOTES: "entry.1749036968"
+        REPORT_TEXT: "entry.536106001",
+        ADMIN_NOTES: "entry.1628958721"
     }
 };
 
