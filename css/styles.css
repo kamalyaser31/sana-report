@@ -156,7 +156,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); outlin
 }
 
 @media (max-width: 600px) {
-    .settings-grid, .card-fields-grid { grid-template-columns: 1fr; }
+    .card-fields-grid { grid-template-columns: 1fr; }
     .action-bar-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .container { margin-bottom: 140px; }
 }
@@ -164,6 +164,6 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); outlin
 @media print {
     body { background: #fff !important; color: #000 !important; padding: 0 !important; }
     .container { box-shadow: none !important; border: none !important; padding: 0 !important; }
-    .action-bar-container, .btn, .card-actions, .toggle-icon, .header-controls { display: none !important; }
+    .action-bar-container, .btn, .card-actions, .header-controls { display: none !important; }
     .card-body { display: block !important; }
 }
