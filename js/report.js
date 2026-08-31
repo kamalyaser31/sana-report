@@ -96,10 +96,6 @@ function submitToGoogleForm() {
     params.append(FORM_CONFIG.ENTRIES.MINUTES, getFieldValue('durationMinutes') || '0');
     params.append(FORM_CONFIG.ENTRIES.REPORT_TEXT, reportText);
 
-    if (getFieldValue('adminNotes')) {
-        params.append(FORM_CONFIG.ENTRIES.ADMIN_NOTES, getFieldValue('adminNotes'));
-    }
-
     window.open(`${FORM_CONFIG.URL}?${params.toString()}`, '_blank');
 }
 
