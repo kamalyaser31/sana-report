@@ -14,12 +14,12 @@ function formatStudent(s) {
     const isMale = s.gender === 'male';
     const vis = k => fieldVisibility[k] !== false;
     let res = `${isMale ? 'الطالب' : 'الطالبة'}: ${s.name.trim() || 'بدون اسم'}\n\n`;
-    if (vis('تسميع') && s.تسميع?.trim()) res += `التسميع اليومي:\n${s.تسميع.trim()}\nالتقييم: ${s.تقييم_تسميع || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('تسميع') && s.تسميع?.trim()) res += `التسميع:\n${s.تسميع.trim()}\nالتقييم: ${s.تقييم_تسميع || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('مراجعة_قديمة') && s.مراجعة_قديمة?.trim()) res += `الماضي:\n${s.مراجعة_قديمة.trim()}\nالتقييم: ${s.تقييم_مراجعة || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
     if (vis('ماضي_قريب') && s.ماضي_قريب?.trim()) res += `الماضي القريب:\n${s.ماضي_قريب.trim()}\nالتقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
-    if (vis('مراجعة_قديمة') && s.مراجعة_قديمة?.trim()) res += `الماضي البعيد:\n${s.مراجعة_قديمة.trim()}\nالتقييم: ${s.تقييم_مراجعة || 'ممتاز'}\n━━━━━━━━━━━━━━━\n`;
-    if (vis('حفظ') && s.حفظ?.trim()) res += `الحفظ الجديد المطلوب:\n${s.حفظ.trim()}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('حفظ') && s.حفظ?.trim()) res += `الحفظ الجديد:\n${s.حفظ.trim()}\n━━━━━━━━━━━━━━━\n`;
+    if (vis('مراجعة') && s.مراجعة?.trim()) res += `الماضي المطلوب:\n${s.مراجعة.trim()}\n━━━━━━━━━━━━━━━\n`;
     if (vis('ماضي_قريب_جديد') && s.ماضي_قريب_جديد?.trim()) res += `الماضي القريب المطلوب:\n${s.ماضي_قريب_جديد.trim()}\n━━━━━━━━━━━━━━━\n`;
-    if (vis('مراجعة') && s.مراجعة?.trim()) res += `الماضي البعيد المطلوب:\n${s.مراجعة.trim()}\n━━━━━━━━━━━━━━━\n`;
     if (vis('ملاحظات') && s.ملاحظات?.trim()) res += `ملاحظات:\n${s.ملاحظات.trim().replace(/يسمع/g, isMale ? 'يسمع' : 'تسمع').replace(/يستمر/g, isMale ? 'يستمر' : 'تستمر')}\n━━━━━━━━━━━━━━━\n`;
     if (vis('وسام') && s.وسام?.trim()) res += `الوسام:\n${s.وسام.trim()}\n`;
     return res.replace(/\n━━━━━━━━━━━━━━━\n$/, '');
@@ -108,12 +108,12 @@ function buildPdfHtml(sessionFields, studentsList) {
                 <span>${i + 1}. ${s.gender === 'male' ? 'الطالب' : 'الطالبة'}: ${escapeHtml(s.name) || 'بدون اسم'}</span>
                 ${fieldVisibility['تسميع'] !== false ? `<span>التقييم: ${s.تقييم_تسميع || 'ممتاز'}</span>` : ''}
             </div>
-            ${(fieldVisibility['تسميع'] !== false && s.تسميع) ? `<div><strong>التسميع اليومي:</strong> ${escapeHtml(s.تسميع)} (تقييم: ${s.تقييم_تسميع || 'ممتاز'})</div>` : ''}
+            ${(fieldVisibility['تسميع'] !== false && s.تسميع) ? `<div><strong>التسميع:</strong> ${escapeHtml(s.تسميع)} (تقييم: ${s.تقييم_تسميع || 'ممتاز'})</div>` : ''}
+            ${(fieldVisibility['مراجعة_قديمة'] !== false && s.مراجعة_قديمة) ? `<div><strong>الماضي:</strong> ${escapeHtml(s.مراجعة_قديمة)} (تقييم: ${s.تقييم_مراجعة || 'ممتاز'})</div>` : ''}
             ${(fieldVisibility['ماضي_قريب'] !== false && s.ماضي_قريب) ? `<div><strong>الماضي القريب:</strong> ${escapeHtml(s.ماضي_قريب)} (تقييم: ${s.تقييم_ماضي_قريب || 'ممتاز'})</div>` : ''}
-            ${(fieldVisibility['مراجعة_قديمة'] !== false && s.مراجعة_قديمة) ? `<div><strong>الماضي البعيد:</strong> ${escapeHtml(s.مراجعة_قديمة)} (تقييم: ${s.تقييم_مراجعة || 'ممتاز'})</div>` : ''}
-            ${(fieldVisibility['حفظ'] !== false && s.حفظ) ? `<div><strong>الحفظ الجديد المطلوب:</strong> ${escapeHtml(s.حفظ)}</div>` : ''}
+            ${(fieldVisibility['حفظ'] !== false && s.حفظ) ? `<div><strong>الحفظ الجديد:</strong> ${escapeHtml(s.حفظ)}</div>` : ''}
+            ${(fieldVisibility['مراجعة'] !== false && s.مراجعة) ? `<div><strong>الماضي المطلوب:</strong> ${escapeHtml(s.مراجعة)}</div>` : ''}
             ${(fieldVisibility['ماضي_قريب_جديد'] !== false && s.ماضي_قريب_جديد) ? `<div><strong>الماضي القريب المطلوب:</strong> ${escapeHtml(s.ماضي_قريب_جديد)}</div>` : ''}
-            ${(fieldVisibility['مراجعة'] !== false && s.مراجعة) ? `<div><strong>الماضي البعيد المطلوب:</strong> ${escapeHtml(s.مراجعة)}</div>` : ''}
             ${(fieldVisibility['ملاحظات'] !== false && s.ملاحظات) ? `<div><strong>ملاحظات:</strong> ${escapeHtml(s.ملاحظات)}</div>` : ''}
             ${(fieldVisibility['وسام'] !== false && s.وسام) ? `<div style="color:#d97706;font-weight:bold;"><strong>الوسام:</strong> ${escapeHtml(s.وسام)}</div>` : ''}
         </div>

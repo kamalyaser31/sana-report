@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sana-report-v10';
+const CACHE_NAME = 'sana-report-v11';
 const ASSETS = [
   './',
   './index.html',
