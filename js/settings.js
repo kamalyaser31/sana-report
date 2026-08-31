@@ -34,17 +34,28 @@ function updateSettingsSummary() {
     const getFieldValue = id => document.getElementById(id)?.value || '';
     const badge = document.getElementById('settingsBadge');
     if (!badge) return;
-    const teacher = getFieldValue('teacherName') || 'محمد نبيل';
+    const teacher = getFieldValue('teacherName') || (typeof TEACHERS !== 'undefined' ? TEACHERS[0] : 'محمد نبيل');
     const cat = getFieldValue('studentCategory') || 'أطفال';
     const type = getFieldValue('halaType') || 'صباحية';
     const dur = formatDurationText(getFieldValue('durationHours'), getFieldValue('durationMinutes'));
     badge.textContent = `${teacher} • ${cat} • ${type} • ${dur}`;
 }
 
+function initTeacherSelect() {
+    const el = document.getElementById('teacherName');
+    if (!el || typeof TEACHERS === 'undefined') return;
+    el.innerHTML = TEACHERS.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+}
+
 function loadSettings() {
+    initTeacherSelect();
     const s = JSON.parse(localStorage.getItem('sana_settings') || '{}');
     document.getElementById('reportDate').value = s.date || new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('teacherName').value = s.teacherName || 'محمد نبيل';
+    if (s.teacherName && typeof TEACHERS !== 'undefined' && TEACHERS.includes(s.teacherName)) {
+        document.getElementById('teacherName').value = s.teacherName;
+    } else if (typeof TEACHERS !== 'undefined' && TEACHERS.length) {
+        document.getElementById('teacherName').value = TEACHERS[0];
+    }
     document.getElementById('studentCategory').value = s.studentCategory || 'أطفال';
     document.getElementById('halaType').value = s.halaType || 'صباحية';
     document.getElementById('durationHours').value = s.durationHours !== undefined ? s.durationHours : '1';
