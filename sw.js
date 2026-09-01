@@ -1,7 +1,8 @@
-const CACHE_NAME = 'sana-report-v11';
+const CACHE_NAME = 'sana-report-v13';
 const ASSETS = [
   './',
   './index.html',
+  './tajweed.html',
   './manifest.json',
   './css/styles.css',
   './js/constants.js',
@@ -40,9 +41,30 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // تفعيل التخزين المؤقت للموارد المحلية فقط
   if (event.request.method !== 'GET') return;
-  
+
+  const requestUrl = new URL(event.request.url);
+  const isHtml = event.request.headers.get('accept')?.includes('text/html') ||
+                 requestUrl.pathname.endsWith('.html') ||
+                 requestUrl.pathname.endsWith('/');
+
+  // استراتيجية الشبكة أولاً لصفحات HTML لضمان وصول التحديثات لحظياً
+  if (isHtml) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // استراتيجية الكاش أولاً للملفات الثابتة (js, css, json, fonts, svg) مع الجلب عند الغياب
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -51,16 +73,9 @@ self.addEventListener('fetch', (event) => {
       return fetch(event.request).then((networkResponse) => {
         if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
           const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
         }
         return networkResponse;
-      }).catch(() => {
-        // إذا كان الطلب لصفحة HTML والشبكة مقطوعة
-        if (event.request.headers.get('accept')?.includes('text/html')) {
-          return caches.match('./index.html');
-        }
       });
     })
   );

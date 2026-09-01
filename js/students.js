@@ -75,6 +75,8 @@ function clearAll() {
     if (current) {
         current.students = [];
         current.halaNum = '';
+        current.studentCategory = 'أطفال';
+        current.halaType = 'صباحية';
     }
 
     // تصفير حقول الجلسة مع استثناء اسم المعلم

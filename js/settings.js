@@ -56,11 +56,12 @@ function loadSettings() {
     } else if (typeof TEACHERS !== 'undefined' && TEACHERS.length) {
         document.getElementById('teacherName').value = TEACHERS[0];
     }
-    document.getElementById('studentCategory').value = s.studentCategory || 'أطفال';
-    document.getElementById('halaType').value = s.halaType || 'صباحية';
+    const activeDraft = typeof getActiveDraft === 'function' ? getActiveDraft() : null;
+    document.getElementById('studentCategory').value = activeDraft?.studentCategory || s.studentCategory || 'أطفال';
+    document.getElementById('halaType').value = activeDraft?.halaType || s.halaType || 'صباحية';
     document.getElementById('durationHours').value = s.durationHours !== undefined ? s.durationHours : '1';
     document.getElementById('durationMinutes').value = s.durationMinutes !== undefined ? s.durationMinutes : '0';
-    document.getElementById('halaNum').value = (typeof getActiveDraft === 'function' ? getActiveDraft()?.halaNum : '') || s.halaNum || '';
+    document.getElementById('halaNum').value = activeDraft?.halaNum || s.halaNum || '';
 
     const details = document.getElementById('settingsDetails');
     if (details) {
@@ -79,6 +80,8 @@ function saveState() {
     if (current) {
         current.students = students;
         current.halaNum = document.getElementById('halaNum')?.value || '';
+        current.studentCategory = document.getElementById('studentCategory')?.value || 'أطفال';
+        current.halaType = document.getElementById('halaType')?.value || 'صباحية';
     }
     localStorage.setItem('sana_drafts', JSON.stringify(drafts));
     localStorage.setItem('sana_data', JSON.stringify(students));

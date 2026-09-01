@@ -21,6 +21,8 @@ function initDrafts() {
                 id: 'draft_' + Date.now(),
                 name: 'المسودة 1',
                 halaNum: legacySettings.halaNum || '',
+                studentCategory: legacySettings.studentCategory || 'أطفال',
+                halaType: legacySettings.halaType || 'صباحية',
                 students: legacyData
             }
         ];
@@ -37,6 +39,14 @@ function initDrafts() {
     const halaNumEl = document.getElementById('halaNum');
     if (halaNumEl) {
         halaNumEl.value = activeDraft.halaNum || '';
+    }
+    const catEl = document.getElementById('studentCategory');
+    if (catEl) {
+        catEl.value = activeDraft.studentCategory || 'أطفال';
+    }
+    const typeEl = document.getElementById('halaType');
+    if (typeEl) {
+        typeEl.value = activeDraft.halaType || 'صباحية';
     }
 
     openIds = new Set(students.length ? [students[0].id] : []);
@@ -75,6 +85,8 @@ function onDraftChange(newId) {
     if (current) {
         current.students = students;
         current.halaNum = document.getElementById('halaNum')?.value || '';
+        current.studentCategory = document.getElementById('studentCategory')?.value || 'أطفال';
+        current.halaType = document.getElementById('halaType')?.value || 'صباحية';
     }
 
     activeDraftId = newId;
@@ -87,6 +99,14 @@ function onDraftChange(newId) {
     const halaNumEl = document.getElementById('halaNum');
     if (halaNumEl) {
         halaNumEl.value = nextDraft.halaNum || '';
+    }
+    const catEl = document.getElementById('studentCategory');
+    if (catEl) {
+        catEl.value = nextDraft.studentCategory || 'أطفال';
+    }
+    const typeEl = document.getElementById('halaType');
+    if (typeEl) {
+        typeEl.value = nextDraft.halaType || 'صباحية';
     }
 
     localStorage.setItem('sana_drafts', JSON.stringify(drafts));
@@ -107,12 +127,16 @@ function createNewDraftPrompt() {
     if (current) {
         current.students = students;
         current.halaNum = document.getElementById('halaNum')?.value || '';
+        current.studentCategory = document.getElementById('studentCategory')?.value || 'أطفال';
+        current.halaType = document.getElementById('halaType')?.value || 'صباحية';
     }
 
     const newDraft = {
         id: 'draft_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
         name: name.trim(),
         halaNum: '',
+        studentCategory: 'أطفال',
+        halaType: 'صباحية',
         students: []
     };
 
@@ -124,6 +148,14 @@ function createNewDraftPrompt() {
     const halaNumEl = document.getElementById('halaNum');
     if (halaNumEl) {
         halaNumEl.value = '';
+    }
+    const catEl = document.getElementById('studentCategory');
+    if (catEl) {
+        catEl.value = 'أطفال';
+    }
+    const typeEl = document.getElementById('halaType');
+    if (typeEl) {
+        typeEl.value = 'صباحية';
     }
 
     localStorage.setItem('sana_drafts', JSON.stringify(drafts));
@@ -170,6 +202,14 @@ function deleteCurrentDraftConfirm() {
     const halaNumEl = document.getElementById('halaNum');
     if (halaNumEl) {
         halaNumEl.value = drafts[0].halaNum || '';
+    }
+    const catEl = document.getElementById('studentCategory');
+    if (catEl) {
+        catEl.value = drafts[0].studentCategory || 'أطفال';
+    }
+    const typeEl = document.getElementById('halaType');
+    if (typeEl) {
+        typeEl.value = drafts[0].halaType || 'صباحية';
     }
 
     localStorage.setItem('sana_drafts', JSON.stringify(drafts));

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أكاديمية سنا - تقرير حصة التجويد</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+    <link rel="apple-touch-icon" href="assets/icon.svg">
+    <meta name="theme-color" content="#006655">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="تجويد سنا">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .tajweed-report-area {
+            min-height: 220px;
+            font-size: 1rem;
+            line-height: 1.7;
+            padding: 14px;
+        }
+        .tajweed-summary-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<main class="container">
+    <header class="app-header">
+        <div>
+            <h1>أكاديمية سنا لتعليم القرآن الكريم</h1>
+            <p class="app-subtitle">توثيق تقرير حصة التجويد الجماعية</p>
+            <span class="tajweed-summary-badge">حصة تجويد</span>
+        </div>
+        <div class="header-controls">
+            <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-outline btn-sm" aria-label="الوضع الليلي">الوضع الليلي</button>
+            <button type="button" onclick="clearTajweed()" class="btn btn-danger btn-sm" aria-label="مسح التقرير">مسح التقرير</button>
+        </div>
+    </header>
+
+    <!-- بيانات الجلسة -->
+    <section class="student-card" style="margin-top: 18px;" aria-label="بيانات حصة التجويد">
+        <header class="card-header" style="cursor: default;">
+            <div class="card-header-info">
+                <span class="student-index-badge">⚙</span>
+                <strong>بيانات الحصة</strong>
+            </div>
+        </header>
+        <div class="card-body">
+            <div class="card-fields-grid">
+                <div class="form-group">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <label for="reportDate">التاريخ:</label>
+                        <div style="display:flex;gap:4px;">
+                            <button type="button" onclick="setDatePreset('today')" class="btn btn-outline btn-xs" aria-label="تعيين تاريخ اليوم">اليوم</button>
+                            <button type="button" onclick="setDatePreset('yesterday')" class="btn btn-outline btn-xs" aria-label="تعيين تاريخ الأمس">الأمس</button>
+                        </div>
+                    </div>
+                    <input type="text" id="reportDate" aria-label="التاريخ">
+                </div>
+
+                <div class="form-group">
+                    <label for="teacherName">المعلم:</label>
+                    <select id="teacherName" aria-label="المعلم"></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentCategory">الفئة:</label>
+                    <select id="studentCategory" aria-label="الفئة">
+                        <option value="أطفال">أطفال</option>
+                        <option value="كبار">كبار</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="durationHours">الساعات:</label>
+                    <input type="number" id="durationHours" min="0" max="24" value="1" placeholder="ساعة" aria-label="عدد الساعات">
+                </div>
+
+                <div class="form-group">
+                    <label for="durationMinutes">الدقائق:</label>
+                    <input type="number" id="durationMinutes" min="0" max="59" step="5" value="0" placeholder="دقيقة" aria-label="عدد الدقائق">
+                </div>
+
+                <div class="form-group">
+                    <label for="halaNum">رقم الحلقة (اختياري):</label>
+                    <input type="text" id="halaNum" placeholder="مثال: 1" aria-label="رقم الحلقة">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- تقرير الحصة -->
+    <section class="student-card" style="margin-top: 18px;" aria-label="تقرير الحصة">
+        <header class="card-header" style="cursor: default;">
+            <div class="card-header-info">
+                <span class="student-index-badge">📝</span>
+                <strong>تقرير حصة التجويد</strong>
+            </div>
+        </header>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="tajweedReport">تفاصيل ما تم شرحه وتطبيقه في الحصة:</label>
+                <textarea id="tajweedReport" class="tajweed-report-area" placeholder="اكتب موضوع الدرس، الأحكام المشروحة، الأمثلة والتطبيقات العملية، والتوجيهات العامة للطلاب هنا..." aria-label="محتوى تقرير حصة التجويد"></textarea>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="action-bar-container" aria-label="شريط الإجراءات">
+    <div class="action-bar-inner" style="max-width: 600px;">
+        <button type="button" onclick="copyReport(event)" class="btn btn-primary" aria-label="نسخ التقرير">نسخ التقرير</button>
+        <button type="button" onclick="submitToGoogleForm()" class="btn btn-primary" style="background:#0284c7;" aria-label="إرسال للاستمارة">إرسال للاستمارة ↗</button>
+    </div>
+</footer>
+
+<script>
+    const BASMALA = "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ";
+    const HEADER = "═══ [ تقرير أكاديمية سنا لتعليم القرآن الكريم ] ═══";
+    const TEACHERS = ["محمد نبيل", "أسماء علي", "فاطمة إبراهيم"];
+    const STORAGE_KEY = "sana_tajweed_state";
+
+    const FORM_CONFIG = {
+        URL: "https://docs.google.com/forms/d/e/1FAIpQLSfNKy_h48Ia7dhe_zBoGxTdw0dF5qU2rlul-4JYYUX2VCgcyQ/viewform",
+        ENTRIES: {
+            TEACHER: "entry.194128415",
+            STUDENT_CATEGORY: "entry.1179001327",
+            HOURS: "entry.719118299",
+            MINUTES: "entry.592377570",
+            REPORT_TEXT: "entry.536106001"
+        }
+    };
+
+    function escapeHtml(text) {
+        return text ? String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : '';
+    }
+
+    function showToast(message) {
+        let toast = document.getElementById('toastMsg');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toastMsg';
+            toast.className = 'toast-msg';
+            toast.setAttribute('role', 'status');
+            toast.setAttribute('aria-live', 'polite');
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => toast.classList.remove('show'), 1600);
+    }
+
+    function setTheme(themeName) {
+        document.documentElement.setAttribute("data-theme", themeName);
+        localStorage.setItem("sana_theme", themeName);
+        const btn = document.getElementById("themeToggleBtn");
+        if (btn) btn.textContent = themeName === "dark" ? "الوضع الفاتح" : "الوضع الليلي";
+    }
+
+    function toggleTheme() {
+        setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+    }
+
+    function setDatePreset(preset) {
+        const targetDate = new Date();
+        if (preset === 'yesterday') {
+            targetDate.setDate(targetDate.getDate() - 1);
+        }
+        const formattedDate = targetDate.toLocaleDateString('ar-EG', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        const dateInput = document.getElementById('reportDate');
+        if (dateInput) {
+            dateInput.value = formattedDate;
+            saveState();
+        }
+    }
+
+    function formatDurationText(hours, minutes) {
+        const h = parseInt(hours || '0', 10);
+        const m = parseInt(minutes || '0', 10);
+        if (h > 0 && m > 0) return `${h} ${h === 1 ? 'ساعة' : (h === 2 ? 'ساعتان' : (h <= 10 ? 'ساعات' : 'ساعة'))} و${m} دقيقة`;
+        if (h > 0) return `${h} ${h === 1 ? 'ساعة' : (h === 2 ? 'ساعتان' : (h <= 10 ? 'ساعات' : 'ساعة'))}`;
+        if (m > 0) return `${m} دقيقة`;
+        return '0 دقيقة';
+    }
+
+    function initTeacherSelect() {
+        const selectElement = document.getElementById('teacherName');
+        if (!selectElement) return;
+        selectElement.innerHTML = TEACHERS.map(teacher => `<option value="${escapeHtml(teacher)}">${escapeHtml(teacher)}</option>`).join('');
+    }
+
+    function getInputValue(elementId) {
+        return document.getElementById(elementId)?.value || '';
+    }
+
+    function getFullReportText() {
+        const durationText = formatDurationText(getInputValue('durationHours'), getInputValue('durationMinutes'));
+        const tajweedText = getInputValue('tajweedReport').trim();
+
+        let report = `${BASMALA}\n${HEADER}\n`;
+        report += `التاريخ: ${getInputValue('reportDate')}\n`;
+        report += `الفترة: تجويد\n`;
+        if (getInputValue('halaNum').trim()) report += `رقم الحلقة: ${getInputValue('halaNum').trim()}\n`;
+        report += `المدة: ${durationText}\n`;
+        if (getInputValue('teacherName')) report += `المعلم: ${getInputValue('teacherName')}\n`;
+        report += `━━━━━━━━━━━━━━━\n`;
+        report += `تقرير حصة التجويد:\n${tajweedText || 'لا يوجد تقرير مسجل'}\n\n`;
+        report += `*نسأل الله للجميع التوفيق والسداد.*`;
+        return report;
+    }
+
+    function copyReport(event) {
+        const tajweedText = getInputValue('tajweedReport').trim();
+        if (!tajweedText) {
+            return showToast('يرجى كتابة تقرير الحصة أولاً');
+        }
+        const text = getFullReportText();
+        const actionButton = event?.target || document.querySelector('button[onclick*="copyReport"]');
+
+        navigator.clipboard?.writeText(text).then(() => {
+            showToast('تم النسخ في الحافظة ✓');
+            if (actionButton && actionButton.tagName === 'BUTTON') {
+                const originalText = actionButton.textContent;
+                actionButton.textContent = 'تم النسخ ✓';
+                actionButton.disabled = true;
+                setTimeout(() => {
+                    actionButton.textContent = originalText;
+                    actionButton.disabled = false;
+                }, 1400);
+            }
+        }).catch(() => {
+            prompt('انسخ التقرير:', text);
+        });
+    }
+
+    function submitToGoogleForm() {
+        const tajweedText = getInputValue('tajweedReport').trim();
+
+        if (!tajweedText) {
+            return showToast('يرجى كتابة تقرير الحصة قبل الإرسال');
+        }
+
+        const reportText = getFullReportText();
+        navigator.clipboard?.writeText(reportText).catch(() => {
+            /* نسخ احتياطي صامت؛ عدم دعم الحافظة لا يمنع استكمال فتح الاستمارة */
+        });
+        showToast('جاري فتح الاستمارة المعبأة...');
+
+        const params = new URLSearchParams();
+        params.append('usp', 'pp_url');
+        params.append(FORM_CONFIG.ENTRIES.TEACHER, getInputValue('teacherName'));
+        params.append(FORM_CONFIG.ENTRIES.STUDENT_CATEGORY, getInputValue('studentCategory'));
+        params.append(FORM_CONFIG.ENTRIES.HOURS, getInputValue('durationHours') || '0');
+        params.append(FORM_CONFIG.ENTRIES.MINUTES, getInputValue('durationMinutes') || '0');
+        params.append(FORM_CONFIG.ENTRIES.REPORT_TEXT, reportText);
+
+        window.open(`${FORM_CONFIG.URL}?${params.toString()}`, '_blank');
+    }
+
+    function clearTajweed() {
+        if (!confirm('هل أنت متأكد من مسح تقرير حصة التجويد؟')) return;
+        const today = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('reportDate').value = today;
+        document.getElementById('studentCategory').value = 'أطفال';
+        document.getElementById('durationHours').value = '1';
+        document.getElementById('durationMinutes').value = '0';
+        document.getElementById('halaNum').value = '';
+        document.getElementById('tajweedReport').value = '';
+        saveState();
+        showToast('تم مسح التقرير بنجاح');
+    }
+
+    function saveState() {
+        const state = {
+            reportDate: document.getElementById('reportDate')?.value || '',
+            teacherName: document.getElementById('teacherName')?.value || '',
+            studentCategory: document.getElementById('studentCategory')?.value || '',
+            durationHours: document.getElementById('durationHours')?.value || '1',
+            durationMinutes: document.getElementById('durationMinutes')?.value || '0',
+            halaNum: document.getElementById('halaNum')?.value || '',
+            tajweedReport: document.getElementById('tajweedReport')?.value || ''
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+        initTeacherSelect();
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        const today = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        
+        document.getElementById('reportDate').value = saved.reportDate || today;
+        if (saved.teacherName && TEACHERS.includes(saved.teacherName)) {
+            document.getElementById('teacherName').value = saved.teacherName;
+        } else if (TEACHERS.length) {
+            document.getElementById('teacherName').value = TEACHERS[0];
+        }
+        document.getElementById('studentCategory').value = saved.studentCategory || 'أطفال';
+        document.getElementById('durationHours').value = saved.durationHours !== undefined ? saved.durationHours : '1';
+        document.getElementById('durationMinutes').value = saved.durationMinutes !== undefined ? saved.durationMinutes : '0';
+        document.getElementById('halaNum').value = saved.halaNum || '';
+        document.getElementById('tajweedReport').value = saved.tajweedReport || '';
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const savedTheme = localStorage.getItem("sana_theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        setTheme(savedTheme);
+        loadState();
+
+        ['reportDate', 'teacherName', 'studentCategory', 'durationHours', 'durationMinutes', 'halaNum', 'tajweedReport'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', saveState);
+                el.addEventListener('change', saveState);
+            }
+        });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+                .then((registration) => {
+                    registration.update();
+                })
+                .catch(err => console.warn('SW registration failed:', err));
+
+            let isRefreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!isRefreshing) {
+                    isRefreshing = true;
+                    window.location.reload();
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

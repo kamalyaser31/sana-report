@@ -14,9 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(id)?.addEventListener('change', saveState);
     });
 
-    // تسجيل عامل الخدمة لتشغيل وتثبيت التطبيق دون اتصال (PWA)
+    // تسجيل عامل الخدمة لتشغيل وتثبيت التطبيق دون اتصال (PWA) مع فحص التحديثات الفوري
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW registration failed:', err));
+        navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+            .then((registration) => {
+                registration.update();
+            })
+            .catch(err => console.warn('SW registration failed:', err));
+
+        let isRefreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!isRefreshing) {
+                isRefreshing = true;
+                window.location.reload();
+            }
+        });
     }
 
     // إغلاق النوافذ المنبثقة بمفتاح Escape
