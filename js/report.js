@@ -83,18 +83,20 @@ function submitToGoogleForm() {
     const getFieldValue = id => document.getElementById(id)?.value || '';
     const reportText = getFullReportText();
 
-    // نسخ النص للحافظة احتياطياً — الفشل هنا غير حرج ويُتجاهل عمداً
-    navigator.clipboard?.writeText(reportText).catch(() => {});
-    showToast('جاري فتح الاستمارة المعبأة...');
+    // نسخ التقرير في الحافظة ليلصقه المعلم يدوياً في الاستمارة
+    navigator.clipboard?.writeText(reportText).then(() => {
+        showToast('تم نسخ التقرير.. الصقه في خانة التقرير بالاستمارة ✓');
+    }).catch(() => {
+        prompt('انسخ التقرير للصقه في الاستمارة:', reportText);
+    });
 
-    // تجهيز معلمات الرابط المعبأ مسبقاً (Pre-filled URL)
+    // تجهيز معلمات الرابط المعبأ مسبقاً (بيانات الجلسة فقط دون نص التقرير منعاً لتجاوز طول الرابط)
     const params = new URLSearchParams();
     params.append('usp', 'pp_url');
     params.append(FORM_CONFIG.ENTRIES.TEACHER, getFieldValue('teacherName'));
     params.append(FORM_CONFIG.ENTRIES.STUDENT_CATEGORY, getFieldValue('studentCategory'));
     params.append(FORM_CONFIG.ENTRIES.HOURS, getFieldValue('durationHours') || '0');
     params.append(FORM_CONFIG.ENTRIES.MINUTES, getFieldValue('durationMinutes') || '0');
-    params.append(FORM_CONFIG.ENTRIES.REPORT_TEXT, reportText);
 
     window.open(`${FORM_CONFIG.URL}?${params.toString()}`, '_blank');
 }

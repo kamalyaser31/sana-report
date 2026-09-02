@@ -258,10 +258,11 @@
         }
 
         const reportText = getFullReportText();
-        navigator.clipboard?.writeText(reportText).catch(() => {
-            /* نسخ احتياطي صامت؛ عدم دعم الحافظة لا يمنع استكمال فتح الاستمارة */
+        navigator.clipboard?.writeText(reportText).then(() => {
+            showToast('تم نسخ التقرير.. الصقه في خانة التقرير بالاستمارة ✓');
+        }).catch(() => {
+            prompt('انسخ التقرير للصقه في الاستمارة:', reportText);
         });
-        showToast('جاري فتح الاستمارة المعبأة...');
 
         const params = new URLSearchParams();
         params.append('usp', 'pp_url');
@@ -269,7 +270,6 @@
         params.append(FORM_CONFIG.ENTRIES.STUDENT_CATEGORY, getInputValue('studentCategory'));
         params.append(FORM_CONFIG.ENTRIES.HOURS, getInputValue('durationHours') || '0');
         params.append(FORM_CONFIG.ENTRIES.MINUTES, getInputValue('durationMinutes') || '0');
-        params.append(FORM_CONFIG.ENTRIES.REPORT_TEXT, reportText);
 
         window.open(`${FORM_CONFIG.URL}?${params.toString()}`, '_blank');
     }
