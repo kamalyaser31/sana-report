@@ -102,7 +102,8 @@ function submitToGoogleForm() {
 }
 
 function buildPdfHtml(sessionFields, studentsList) {
-    const { date, halaType, studentCategory, teacherName, durationText } = sessionFields;
+    const { date, halaType, halaNum, studentCategory, teacherName, durationText } = sessionFields;
+    const halaTypeDisplay = halaNum ? `${halaType} (حلقة ${halaNum})` : halaType;
 
     const studentRows = studentsList.map((s, i) => `
         <div style="border:1px solid #006655;border-radius:5px;padding:10px;margin-bottom:10px;page-break-inside:avoid;font-size:13px;line-height:1.5;">
@@ -129,7 +130,7 @@ function buildPdfHtml(sessionFields, studentsList) {
         <table style="width:100%;border-collapse:collapse;margin-bottom:15px;font-size:13px;">
             <tr>
                 <td style="padding:6px;border:1px solid #ddd;"><strong>التاريخ:</strong> ${escapeHtml(date)}</td>
-                <td style="padding:6px;border:1px solid #ddd;"><strong>الفترة:</strong> ${escapeHtml(halaType)}</td>
+                <td style="padding:6px;border:1px solid #ddd;"><strong>الفترة:</strong> ${escapeHtml(halaTypeDisplay)}</td>
                 <td style="padding:6px;border:1px solid #ddd;"><strong>فئة الطلاب:</strong> ${escapeHtml(studentCategory)}</td>
             </tr>
             <tr>
@@ -152,6 +153,7 @@ function exportPDF() {
     const sessionFields = {
         date: getFieldValue('reportDate'),
         halaType: getFieldValue('halaType'),
+        halaNum: getFieldValue('halaNum'),
         studentCategory: getFieldValue('studentCategory'),
         teacherName: getFieldValue('teacherName'),
         durationText

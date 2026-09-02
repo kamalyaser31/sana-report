@@ -22,8 +22,8 @@ function buildStudentFieldHtml(f, s) {
         : '';
 
     const inputHtml = f.t === 'area'
-        ? `<textarea placeholder="${f.ph}" oninput="update(${s.id},'${f.k}',this.value)">${escapeHtml(s[f.k])}</textarea>`
-        : `<select onchange="update(${s.id},'${f.k}',this.value)">
+        ? `<textarea placeholder="${f.ph}" aria-label="${f.l}" oninput="update(${s.id},'${f.k}',this.value)">${escapeHtml(s[f.k])}</textarea>`
+        : `<select aria-label="${f.l}" onchange="update(${s.id},'${f.k}',this.value)">
             ${f.opts.map(o => `<option value="${escapeHtml(o)}" ${s[f.k] === o ? 'selected' : ''}>${o || f.def}</option>`).join('')}
            </select>`;
 
@@ -54,11 +54,11 @@ function buildStudentCardHtml(s, idx, isOpen, visibleFields) {
             <div class="card-fields-grid">
                 <div class="form-group">
                     <label>اسم الطالب:</label>
-                    <input type="text" value="${escapeHtml(s.name)}" placeholder="اسم الطالب" oninput="update(${s.id},'name',this.value)">
+                    <input type="text" value="${escapeHtml(s.name)}" placeholder="اسم الطالب" aria-label="اسم الطالب" oninput="update(${s.id},'name',this.value)">
                 </div>
                 <div class="form-group">
                     <label>الجنس:</label>
-                    <select onchange="update(${s.id},'gender',this.value)">
+                    <select aria-label="الجنس" onchange="update(${s.id},'gender',this.value)">
                         <option value="male" ${s.gender === 'male' ? 'selected' : ''}>ذكر</option>
                         <option value="female" ${s.gender === 'female' ? 'selected' : ''}>أنثى</option>
                     </select>
