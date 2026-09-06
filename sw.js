@@ -1,8 +1,8 @@
-const CACHE_NAME = 'sana-report-v15';
+const CACHE_NAME = 'sana-report-v18';
 const ASSETS = [
   './',
   './index.html',
-  './tajweed.html',
+  './USER_GUIDE.md',
   './manifest.json',
   './css/styles.css',
   './js/constants.js',

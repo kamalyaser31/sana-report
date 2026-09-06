@@ -37,7 +37,10 @@ body { font-family: 'Readex Pro', system-ui, -apple-system, BlinkMacSystemFont, 
 
 h1, h2, h3, .app-header h1, .modal-header h3, #quranPreviewText { font-family: 'Amiri', 'Readex Pro', serif; }
 .app-header h1 { font-size: 1.45rem; color: var(--primary); font-weight: 700; }
-.app-subtitle { font-size: 0.92rem; color: var(--text-muted); margin-top: 4px; font-weight: 400; }
+.app-subtitle { font-size: 0.92rem; color: var(--text-muted); margin-top: 4px; font-weight: 400; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.subtitle-sep { opacity: 0.4; }
+.guide-link { color: var(--primary); text-decoration: none; font-size: 0.82rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 10px; background: var(--primary-light); transition: opacity 0.2s, text-decoration 0.2s; }
+.guide-link:hover { opacity: 0.8; text-decoration: underline; }
 .header-controls { display: flex; gap: 8px; }
 
 /* Buttons */
