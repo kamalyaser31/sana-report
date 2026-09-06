@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل استخدام نظام تقارير أكاديمية سنا</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+    <link rel="apple-touch-icon" href="assets/icon.svg">
+    <meta name="theme-color" content="#006655">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .guide-container {
+            max-width: 840px;
+            margin: 0 auto 40px auto;
+            background: var(--bg-card);
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            line-height: 1.8;
+        }
+        .guide-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .guide-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 6px 14px;
+            background: var(--primary-light);
+            border-radius: 8px;
+            transition: opacity 0.2s;
+        }
+        .guide-back-link:hover {
+            opacity: 0.85;
+        }
+        .guide-section {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .guide-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .guide-section h2 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .guide-section h3 {
+            font-size: 1.08rem;
+            color: var(--text);
+            margin: 16px 0 8px 0;
+        }
+        .guide-section p {
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+        .guide-section ul, .guide-section ol {
+            padding-right: 24px;
+            margin-bottom: 14px;
+            color: var(--text);
+        }
+        .guide-section li {
+            margin-bottom: 8px;
+        }
+        .guide-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+        .guide-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .guide-step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+        @media print {
+            .guide-topbar { display: none !important; }
+            .guide-container { box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<main class="guide-container">
+    <nav class="guide-topbar" aria-label="التنقل السريع">
+        <a href="index.html" class="guide-back-link" aria-label="الرجوع إلى صفحة التقارير">
+            <span>←</span>
+            <span>العودة إلى نظام التقارير</span>
+        </a>
+        <button type="button" onclick="window.print()" class="btn btn-outline btn-sm" aria-label="طباعة الدليل">🖨️ طباعة الدليل</button>
+    </nav>
+
+    <header style="text-align: center; margin-bottom: 28px;">
+        <h1 style="font-size: 1.6rem; color: var(--primary); margin-bottom: 6px;">دليل استخدام نظام تقارير أكاديمية سنا</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">دليل ميسر لمعلمي ومعلمات الأكاديمية لتوثيق ومتابعة الحلقات القرآنية اليومية ومشاركتها بسهولة وإتقان</p>
+    </header>
+
+    <!-- 1. فتح البرنامج وتثبيته -->
+    <section class="guide-section">
+        <h2><span>1.</span> فتح البرنامج وتثبيته على جهازك</h2>
+        <div class="guide-card">
+            <p><strong>رابط البرنامج:</strong> <a href="https://kamalyaser31.github.io/sana-report/" target="_blank" style="color:var(--primary);font-weight:600;">https://kamalyaser31.github.io/sana-report/</a></p>
+            <p><strong>العمل دون إنترنت:</strong> يعمل الموقع مباشرة حتى في حال انقطاع الشبكة بمجرد فتحه للمرة الأولى.</p>
+        </div>
+        <p><strong>تثبيت البرنامج كأيقونة مستقلة لسرعة الاستخدام أثناء الحلقة:</strong></p>
+        <ul>
+            <li><strong>على الهاتف:</strong> من خيارات المتصفح (النقاط الثلاث)، اختر <strong>«إضافة إلى الشاشة الرئيسية»</strong> ليظهر كأيقونة تطبيق مستقل يعمل بملء الشاشة.</li>
+            <li><strong>على الحاسوب:</strong> اضغط على علامة التثبيت (⊕) في شريط العنوان أعلى المتصفح.</li>
+        </ul>
+    </section>
+
+    <!-- 2. إدخال بيانات الحلقة اليومية -->
+    <section class="guide-section">
+        <h2><span>2.</span> إدخال بيانات الحلقة اليومية</h2>
+        <p>في أعلى الشاشة، يظهر شريط <strong>بيانات الحلقة</strong> (يمكنك طيه أو إظهاره بالضغط على عنوانه):</p>
+        <ul>
+            <li><strong>التاريخ:</strong> تاريخ عقد الحلقة. يتوفر زران سريعان: <span class="guide-badge">اليوم</span> لضبط تاريخ اليوم فوراً، و<span class="guide-badge">الأمس</span> لضبط تاريخ الأمس بنقرة واحدة.</li>
+            <li><strong>المعلم:</strong> اختر اسمك من القائمة المنسدلة (يظل اسمك محفوظاً دائماً ولا يُمسح عند مسح التقرير).</li>
+            <li><strong>الفئة:</strong> حدد فئة الطلاب: <strong>«أطفال»</strong> أو <strong>«كبار»</strong>.</li>
+            <li><strong>الفترة:</strong> اختر وقت الحلقة: <strong>«صباحية»</strong>، أو <strong>«مسائية»</strong>، أو <strong>«إضافية»</strong>، أو <strong>«تجويد»</strong>.</li>
+            <li><strong>الساعات والدقائق:</strong> اكتب مدة الحلقة (مثلاً: 1 ساعة و 0 دقيقة).</li>
+            <li><strong>رقم الحلقة:</strong> خانة اختيارية لتدوين رقم الحلقة إن وُجد (مثل: حلقة 1 أو 2).</li>
+        </ul>
+    </section>
+
+    <!-- 3. التنقل بين الحلقات المختلفة -->
+    <section class="guide-section">
+        <h2><span>3.</span> التنقل بين الحلقات المختلفة (المسودات)</h2>
+        <p>إذا كنت تدرّس أكثر من حلقة في اليوم، يتيح لك البرنامج حفظ كل حلقة في مسودة مستقلة تماماً دون اختلاط أسماء الطلاب:</p>
+        <ul>
+            <li><strong>التبديل بين الحلقات:</strong> من قائمة <strong>«المسودة:»</strong> أعلى شاشة الطلاب، اختر الحلقة التي تريد العمل عليها، ويظهر بجانب كل حلقة عدد طلابها.</li>
+            <li><strong>إضافة حلقة جديدة أو تسميتها:</strong> اضغط على زر <strong>«⚙️ تخصيص الحقول»</strong> أعلى الصفحة:
+                <ul>
+                    <li>اضغط <strong>«+ مسودة جديدة»</strong> لإنشاء حلقة جديدة خالية.</li>
+                    <li>اضغط <strong>«✏️ إعادة تسمية»</strong> لكتابة اسم مميز للحلقة (مثل: "حلقة البنين" أو "حلقة الفتيات").</li>
+                    <li>اضغط <strong>«🗑️ حذف المسودة»</strong> لحذف الحلقة الحالية إذا لم تعد بحاجة إليها.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <!-- 4. تدوين تقييمات الطلاب والواجبات -->
+    <section class="guide-section">
+        <h2><span>4.</span> تدوين تقييمات الطلاب والواجبات</h2>
+        <p>اضغط على زر <strong>«+ إضافة طالب»</strong> أسفل الشاشة لإدراج بطاقة طالب جديدة، وتحتوي كل بطاقة على:</p>
+        <ol>
+            <li><strong>الاسم والجنس:</strong> كتابة اسم الطالب، وتحديد نوعه (<strong>ذكر</strong> أو <strong>أنثى</strong>) ليضبط النظام عبارات التقرير بدقة.</li>
+            <li><strong>التسميع (ما سمعه اليوم):</strong> السور أو الآيات التي سمّعها الطالب + تقييم الأداء من القائمة: <em>(ممتاز، جيد جداً، جيد مرتفع، جيد، مقبول، إعادة)</em>.</li>
+            <li><strong>الماضي (المراجعة البعيدة):</strong> ما راجعه الطالب من السور القديمة مع تقييمه.</li>
+            <li><strong>الماضي القريب:</strong> ما سمعه الطالب من السور القريبة مع تقييمه.</li>
+            <li><strong>الحفظ الجديد:</strong> المقرر حفظه للحصة القادمة.</li>
+            <li><strong>الماضي المطلوب:</strong> المقرر مراجعته من المحفوظ القديم للحصة القادمة.</li>
+            <li><strong>الماضي القريب المطلوب:</strong> المقرر مراجعته من الماضي القريب للحصة القادمة.</li>
+            <li><strong>الملاحظات:</strong> توجيهات للمعلم تُوجه لولي الأمر أو الطالب (يقوم البرنامج تلقائياً بضبط التذكير والتأنيث بحسب جنس الطالب).</li>
+            <li><strong>الوسام:</strong> اختيار وسام تشجيعي جاهز للطالب (مثل: <em>ما شاء الله، إتقان مبهر 🌟</em> أو <em>حفظ متين، بارك الله فيك 👑</em>).</li>
+        </ol>
+    </section>
+
+    <!-- 5. منتقي المصحف الشريف -->
+    <section class="guide-section">
+        <h2><span>5.</span> اختيار السور والآيات بنقرة زر (منتقي المصحف 📖)</h2>
+        <p>لتجنب عناء الكتابة اليدوية، يوجد بجانب كل خانة قرآنية زر عليه صورة مصحف <strong>(📖)</strong>:</p>
+        <ul>
+            <li><strong>بالسورة والآيات:</strong> اختر السورة من قائمة الـ 114 سورة، وحدد رقم الآيات، أو استخدم الأزرار السريعة: <em>(كامل السورة، النصف الأول، النصف الثاني، أول ١٠ آيات)</em>.</li>
+            <li><strong>بالصفحات:</strong> حدد رقم الصفحة من وإلى (1-604)، أو اختر: <em>(صفحة واحدة، وجهان، ٥ صفحات، ١٠ صفحات)</em>.</li>
+            <li><strong>بالأجزاء والأرباع:</strong> اختر الجزء ورقم الربع المطلوب.</li>
+        </ul>
+        <p>اضغط على زر <strong>«إدراج ✓»</strong> ليُكتب النص المختار مباشرة في خانة الطالب.</p>
+    </section>
+
+    <!-- 6. زر تدوير الواجبات -->
+    <section class="guide-section">
+        <h2><span>6.</span> زر «تدوير الواجبات» (للحلقة القادمة)</h2>
+        <div class="guide-card">
+            <p>بعد انتهاء الحلقة وتوثيق تقريرها، يوفر البرنامج داخل بطاقة كل طالب زراً باسم <strong>«تدوير الواجبات»</strong>:</p>
+            <ul>
+                <li>يتحول <strong>الحفظ الجديد</strong> السابق ليصبح في خانة <strong>التسميع</strong>.</li>
+                <li>يتحول <strong>الماضي المطلوب</strong> السابق ليصبح في خانة <strong>الماضي</strong>.</li>
+                <li>يتحول <strong>الماضي القريب المطلوب</strong> السابق ليصبح في خانة <strong>الماضي القريب</strong>.</li>
+                <li>تُمسح خانات الواجبات القادمة لتكون مستعدة لكتابة الواجبات الجديدة للحصة المقبلة بنقرة واحدة.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 7. نسخ التقرير وتصديره وإرساله للاستمارة -->
+    <section class="guide-section">
+        <h2><span>7.</span> نسخ التقرير، وتصديره، وإرساله للاستمارة</h2>
+        <p>تجد أسفل الشاشة الخيارات الآتية:</p>
+        <ul>
+            <li><strong>نسخ التقرير (العام):</strong> ينسخ تقرير الحلقة كاملاً بنقرة واحدة إلى حافظة جهازك مرتباً ومنسقاً، وجاهزاً للصقه في مجموعة WhatsApp أو Telegram الخاصة بالحلقة.</li>
+            <li><strong>نسخ تقرير الطالب (الفردي):</strong> موجود داخل بطاقة كل طالب، لنسخ تقرير مخصص لذلك الطالب وحده وإرساله لولي أمره في محادثة خاصة.</li>
+            <li><strong>تصدير PDF:</strong> يُنشئ ملف PDF رسمي أنيق بمقاس A4 وجاهز للطباعة أو الحفظ.</li>
+            <li><strong>إرسال للاستمارة ↗:</strong>
+                <ol style="margin-top:6px;">
+                    <li>اضغط على زر <strong>«إرسال للاستمارة ↗»</strong> (يقوم البرنامج بنسخ نص التقرير كاملاً تلقائياً ويفتح الاستمارة مع تعبئة اسمك وفئة الطلاب ومدة الحصة).</li>
+                    <li>توجّه إلى خانة <strong>«التقرير»</strong> داخل الاستمارة واضغط على <strong>لصق (Paste)</strong>.</li>
+                    <li>اضغط على زر <strong>«إرسال» (Submit)</strong>.</li>
+                </ol>
+            </li>
+        </ul>
+    </section>
+
+    <!-- 8. أدوات وإعدادات مفيدة -->
+    <section class="guide-section">
+        <h2><span>8.</span> أدوات وإعدادات مساندة</h2>
+        <ul>
+            <li><strong>تخصيص الحقول (⚙️):</strong> إذا كانت حلقتك لا تحتاج لبعض الخانات (مثل: وسام أو الماضي القريب)، يمكنك إخفاؤها عبر الضغط على <strong>«⚙️ تخصيص الحقول»</strong> أعلى الشاشة، وستختفي من البطاقات والتقرير المنسوخ تلقائياً.</li>
+            <li><strong>الوضع الليلي:</strong> لتعتيم الشاشة وتوفير مظهر مريح للعين أثناء الحلقات المسائية.</li>
+            <li><strong>طي الكل / توسيع الكل:</strong> لغلق بطاقات جميع الطلاب أو فتحها معاً لتسهيل الملاحة السريعة.</li>
+            <li><strong>مسح التقرير:</strong> لتفريغ بيانات طلاب الحلقة الحالية لبدء حلقة جديدة مع الحفاظ على اسم المعلم.</li>
+        </ul>
+    </section>
+</main>
+
+</body>
+</html>
