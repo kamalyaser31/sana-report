@@ -47,10 +47,20 @@ function initTeacherSelect() {
     el.innerHTML = TEACHERS.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
 }
 
+// مفتاح اليوم المحلي (YYYY-MM-DD) لمعرفة هل حُفظ التاريخ اليوم أم في يوم سابق
+function todayKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 function loadSettings() {
     initTeacherSelect();
     const s = JSON.parse(localStorage.getItem('sana_settings') || '{}');
-    document.getElementById('reportDate').value = s.date || new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    // لا يُستعاد التاريخ المحفوظ إلا في يوم حفظه، حتى لا يُرسَل تقرير اليوم بتاريخ الأمس سهواً
+    const savedDateIsFromToday = s.date && s.dateSavedOn === todayKey();
+    document.getElementById('reportDate').value = savedDateIsFromToday
+        ? s.date
+        : new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     if (s.teacherName && typeof TEACHERS !== 'undefined' && TEACHERS.includes(s.teacherName)) {
         document.getElementById('teacherName').value = s.teacherName;
     } else if (typeof TEACHERS !== 'undefined' && TEACHERS.length) {
@@ -87,6 +97,7 @@ function saveState() {
     localStorage.setItem('sana_data', JSON.stringify(students));
     localStorage.setItem('sana_settings', JSON.stringify({
         date: document.getElementById('reportDate')?.value || '',
+        dateSavedOn: todayKey(),
         teacherName: document.getElementById('teacherName')?.value || '',
         studentCategory: document.getElementById('studentCategory')?.value || '',
         halaType: document.getElementById('halaType')?.value || '',
