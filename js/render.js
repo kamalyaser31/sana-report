@@ -60,7 +60,7 @@ function buildStudentCardHtml(s, idx, isOpen, visibleFields) {
             <div class="card-fields-grid">
                 <div class="form-group">
                     <label>اسم الطالب:</label>
-                    <input type="text" value="${escapeHtml(s.name)}" placeholder="الاسم ثنائياً" aria-label="اسم الطالب" data-field="name" list="knownNames" autocomplete="off" oninput="update(${s.id},'name',this.value)" onchange="onNameCommitted(${s.id}, this)">
+                    <input type="text" value="${escapeHtml(s.name)}" placeholder="الاسم ثنائياً" aria-label="اسم الطالب" data-field="name" ${fieldVisibility['name_suggestions'] !== false ? 'list="knownNames"' : ''} autocomplete="off" oninput="update(${s.id},'name',this.value)" onchange="onNameCommitted(${s.id}, this)">
                 </div>
                 <div class="form-group">
                     <label>الجنس:</label>
@@ -81,7 +81,21 @@ function buildStudentCardHtml(s, idx, isOpen, visibleFields) {
     </details>`;
 }
 
+// إخفاء منتقي التاريخ يُبقي زرّي «اليوم» و«الأمس» ونص التاريخ المطبوع؛
+// فإن كان الحقل فارغاً حين يُخفى مُلئ بتاريخ اليوم، لأنه لا سبيل إلى ملئه وهو مخفي.
+function applySessionVisibility() {
+    const dateInput = document.getElementById('reportDate');
+    if (!dateInput) return;
+    const showPicker = fieldVisibility['date_picker'] !== false;
+    dateInput.hidden = !showPicker;
+    if (!showPicker && !dateInput.value) {
+        dateInput.value = todayKey();
+        updateReportDateText();
+    }
+}
+
 function render() {
+    applySessionVisibility();
     renderStats();
     const list = document.getElementById('studentsList');
     if (!students.length) {

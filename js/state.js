@@ -15,7 +15,9 @@ const DEFAULT_FIELD_VISIBILITY = {
     'مراجعة': true,
     'ملاحظات': true,
     'وسام': true,
-    'quran_picker': true
+    'quran_picker': true,
+    'name_suggestions': true,
+    'date_picker': true
 };
 
 // تهيئة fieldVisibility مع تصفية مفاتيح localStorage لمنع تلوث الإصدارات السابقة

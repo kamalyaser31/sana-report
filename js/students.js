@@ -84,7 +84,7 @@ function onNameCommitted(id, el) {
     const name = normalizeName(el.value);
     el.value = name;
     s.name = name;
-    const knownGender = loadKnownNames()[name];
+    const knownGender = fieldVisibility['name_suggestions'] !== false ? loadKnownNames()[name] : '';
     if (knownGender && !s.gender) {
         s.gender = knownGender;
         const genderSelect = studentFieldElement(id, 'gender');
