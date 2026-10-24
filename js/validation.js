@@ -45,12 +45,24 @@ function studentProblem(s, index) {
     return null;
 }
 
+/** مفتاح المطابقة نفسه الذي يستعمله سجل الطلاب في الأتمتة (S-03)، فما يدمجه السجل يُمنع هنا. */
+function nameMatchKey(name) {
+    return normalizeName(name)
+        .replace(/[أإآ]/g, 'ا')
+        .replace(/ة/g, 'ه')
+        .replace(/ى/g, 'ي')
+        .replace(/[ً-ْٰـ\s]/g, '');
+}
+
 function duplicateNameProblem(list) {
     const seen = new Map();
     for (let i = 0; i < list.length; i++) {
-        const key = normalizeName(list[i].name);
+        const key = nameMatchKey(list[i].name);
         if (seen.has(key)) {
-            return { index: i, message: `في التقرير اسمان متطابقان: «${key}». ميّز بينهما بالاسم الثالث.` };
+            const first = normalizeName(list[seen.get(key)].name);
+            const second = normalizeName(list[i].name);
+            const names = first === second ? `«${first}»` : `«${first}» و«${second}»`;
+            return { index: i, message: `في التقرير اسمان متطابقان: ${names}. ميّز بينهما بالاسم الثالث.` };
         }
         seen.set(key, i);
     }
