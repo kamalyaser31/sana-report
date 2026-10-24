@@ -25,17 +25,6 @@
   - `html2pdf.bundle.min.js`: حزمة التصدير لـ PDF محلياً.
 - `data/quran_surahs.json` & `data/quran_juzs.json`: بيانات سور وأجزاء القرآن المحملة من GitHub.
 - `assets/icon.svg`: أيقونة التطبيق الرسمية.
-- `CONTEXT.md`: مسرد المصطلحات المعمارية لربط السحاب ومرآة التخزين المحلي.
-- `docs/adr/`: سجلات القرارات المعمارية المستقرة:
-  - `0001-supabase-single-table-state.md`: اعتماد مرآة التخزين المحلي السحابية بجدول مفرد `teacher_profiles`.
-  - `0002-submitted-reports-archive.md`: أرشفة نصوص التقارير المعتمدة في جدول `reports` عند الإرسال.
-  - `0003-double-submit-prevention.md`: نظام الحصانة ثلاثي الطبقات لمنع تكرار الإرسال والنقر المزدوج.
-  - `0004-one-click-parent-whatsapp.md`: مراسلة أولياء الأمور بنقرة واحدة عبر روابط واتساب العميقة (`wa.me`).
-  - `0005-digital-award-badge.md`: توليد بطاقة الوسام الرقمية محلياً عبر Canvas دون مكتبات.
-  - `0006-unmemorized-today-toggle.md`: وسم "لم يحفظ اليوم" وتجميد ترحيل الحفظ الجديد تلقائياً.
-  - `0007-simple-session-stopwatch.md`: ساعة توقف تصاعدية بسيطة في شريط الرأس دون تنبيهات صوتية.
-  - `0008-predefined-notes-picker.md`: بنك الملاحظات التربوية الجاهزة مع إتاحة التحرير اليدوي الحر.
-- `docs/ROADMAP_FUTURE_AUTOMATION.md`: خارطة طريق الترقية المستقبلية (Phase 2) للربط المباشر مع محرك الأتمتة (`doPost`) والاستغناء عن Google Forms.
 - `README.md`, `guide.html`, `USER_GUIDE.md` & `CHANGELOG.md`: التوثيق ودليل المعلمين وسجل التحديثات التراكمي وبيانات المطور.
 
 ## حالة التطوير الراهنة (Current Milestone)
