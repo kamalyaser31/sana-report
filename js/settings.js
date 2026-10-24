@@ -12,20 +12,33 @@ function toggleTheme() {
     setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
 }
 
+const REPORT_DATE_FORMAT = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+// نص التاريخ في التقرير يبقى بصيغته («الأربعاء، ٧ أكتوبر ٢٠٢٦») لأن منظومة الأتمتة تحلّله؛
+// وإنما صار الحقل منتقي تاريخ (YYYY-MM-DD) فلا يُكتب باليد.
+function formatReportDate(isoDate) {
+    if (!isoDate) return '';
+    const [y, m, d] = isoDate.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('ar-EG', REPORT_DATE_FORMAT);
+}
+
+function getReportDateText() {
+    return formatReportDate(document.getElementById('reportDate')?.value || '');
+}
+
+function updateReportDateText() {
+    const el = document.getElementById('reportDateText');
+    if (el) el.textContent = getReportDateText() || 'لم يُختر تاريخ';
+}
+
 function setDatePreset(preset) {
     const d = new Date();
     if (preset === 'yesterday') {
         d.setDate(d.getDate() - 1);
     }
-    const formatted = d.toLocaleDateString('ar-EG', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
     const el = document.getElementById('reportDate');
     if (el) {
-        el.value = formatted;
+        el.value = todayKey(d);
         saveState();
     }
 }
@@ -48,19 +61,18 @@ function initTeacherSelect() {
 }
 
 // مفتاح اليوم المحلي (YYYY-MM-DD) لمعرفة هل حُفظ التاريخ اليوم أم في يوم سابق
-function todayKey() {
-    const d = new Date();
+function todayKey(d = new Date()) {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 function loadSettings() {
     initTeacherSelect();
     const s = JSON.parse(localStorage.getItem('sana_settings') || '{}');
-    // لا يُستعاد التاريخ المحفوظ إلا في يوم حفظه، حتى لا يُرسَل تقرير اليوم بتاريخ الأمس سهواً
-    const savedDateIsFromToday = s.date && s.dateSavedOn === todayKey();
-    document.getElementById('reportDate').value = savedDateIsFromToday
-        ? s.date
-        : new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    // لا يُستعاد التاريخ المحفوظ إلا في يوم حفظه، حتى لا يُرسَل تقرير اليوم بتاريخ الأمس سهواً.
+    // والنص المحفوظ بالصيغة القديمة (s.date) يُترك، فيبدأ الحقل بتاريخ اليوم.
+    const savedDateIsFromToday = s.dateIso && s.dateSavedOn === todayKey();
+    document.getElementById('reportDate').value = savedDateIsFromToday ? s.dateIso : todayKey();
+    updateReportDateText();
     if (s.teacherName && typeof TEACHERS !== 'undefined' && TEACHERS.includes(s.teacherName)) {
         document.getElementById('teacherName').value = s.teacherName;
     } else if (typeof TEACHERS !== 'undefined' && TEACHERS.length) {
@@ -96,7 +108,7 @@ function saveState() {
     localStorage.setItem('sana_drafts', JSON.stringify(drafts));
     localStorage.setItem('sana_data', JSON.stringify(students));
     localStorage.setItem('sana_settings', JSON.stringify({
-        date: document.getElementById('reportDate')?.value || '',
+        dateIso: document.getElementById('reportDate')?.value || '',
         dateSavedOn: todayKey(),
         teacherName: document.getElementById('teacherName')?.value || '',
         studentCategory: document.getElementById('studentCategory')?.value || '',
@@ -106,6 +118,7 @@ function saveState() {
         halaNum: document.getElementById('halaNum')?.value || ''
     }));
     updateSettingsSummary();
+    updateReportDateText();
     renderStats();
     updateDraftSelectUI();
 }

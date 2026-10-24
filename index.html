@@ -20,6 +20,7 @@
     <script src="js/constants.js" defer></script>
     <script src="js/state.js" defer></script>
     <script src="js/ui.js" defer></script>
+    <script src="js/validation.js" defer></script>
     <script src="js/drafts.js" defer></script>
     <script src="js/settings.js" defer></script>
     <script src="js/render.js" defer></script>
@@ -66,7 +67,8 @@
                             <button type="button" onclick="setDatePreset('yesterday')" class="btn btn-outline btn-xs" aria-label="الأمس">الأمس</button>
                         </div>
                     </div>
-                    <input type="text" id="reportDate" aria-label="التاريخ">
+                    <input type="date" id="reportDate" aria-label="التاريخ" aria-describedby="reportDateText" required>
+                    <p id="reportDateText" class="date-preview">لم يُختر تاريخ</p>
                 </div>
                 <div class="form-group">
                     <label for="teacherName">المعلم:</label>
@@ -98,7 +100,7 @@
                 </div>
                 <div class="form-group">
                     <label for="halaNum">رقم الحلقة:</label>
-                    <input type="text" id="halaNum" placeholder="اختياري" aria-label="رقم الحلقة">
+                    <input type="text" id="halaNum" inputmode="numeric" placeholder="مثال: 12" aria-label="رقم الحلقة" required>
                 </div>
             </div>
         </div>
@@ -119,9 +121,11 @@
     </section>
 
     <section id="studentsList" class="students-container" aria-label="بطاقات الطلاب"></section>
+    <datalist id="knownNames"></datalist>
 </main>
 
 <footer class="action-bar-container" aria-label="شريط الإجراءات">
+    <p id="validationLive" class="validation-msg" role="alert" aria-atomic="true"></p>
     <div class="action-bar-inner">
         <button type="button" onclick="addStudent()" class="btn btn-success" aria-label="إضافة طالب">+ إضافة طالب</button>
         <button type="button" onclick="copyAll(event)" class="btn btn-primary" aria-label="نسخ التقرير">نسخ التقرير</button>

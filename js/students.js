@@ -6,13 +6,14 @@ function addStudent() {
     students.unshift({
         id,
         name: '',
-        gender: 'male',
+        // الجنس والتقييمات تبدأ فارغة حتى يختارها المعلم؛ فالافتراض كان يُطبع على أنه اختيار.
+        gender: '',
         تسميع: '',
-        تقييم_تسميع: 'ممتاز',
+        تقييم_تسميع: '',
         ماضي_قريب: '',
-        تقييم_ماضي_قريب: 'ممتاز',
+        تقييم_ماضي_قريب: '',
         مراجعة_قديمة: '',
-        تقييم_مراجعة: 'ممتاز',
+        تقييم_مراجعة: '',
         حفظ: '',
         ماضي_قريب_جديد: '',
         مراجعة: '',
@@ -42,9 +43,55 @@ function renderStudentHeader(id) {
     if (!card) return;
     card.querySelector('.student-name-display').textContent = s.name.trim() || 'طالب جديد';
     const genderBadge = card.querySelector('.badge-gender');
-    genderBadge.className = `badge badge-gender badge-${s.gender}`;
-    genderBadge.textContent = s.gender === 'male' ? 'ذكر' : 'أنثى';
-    card.querySelector('.badge-grade').textContent = s.تقييم_تسميع;
+    genderBadge.className = `badge badge-gender badge-${s.gender || 'none'}`;
+    genderBadge.textContent = genderLabel(s.gender);
+    card.querySelector('.badge-grade').textContent = s.تقييم_تسميع || 'بلا تقييم';
+}
+
+// الأسماء المعروفة {الاسم: الجنس} تُقترح في حقل الاسم وتملأ الجنس، فلا يُعاد كتابة الاسم كل حلقة.
+function loadKnownNames() {
+    try {
+        return JSON.parse(localStorage.getItem('sana_known_names') || '{}');
+    } catch (e) {
+        return {};
+    }
+}
+
+function addKnownNames(list) {
+    const known = loadKnownNames();
+    list.forEach(s => {
+        const name = normalizeName(s.name);
+        if (!nameProblem(name) && (s.gender === 'male' || s.gender === 'female')) known[name] = s.gender;
+    });
+    localStorage.setItem('sana_known_names', JSON.stringify(known));
+    renderKnownNames();
+}
+
+function seedKnownNames() {
+    addKnownNames(drafts.flatMap(d => d.students || []));
+}
+
+function renderKnownNames() {
+    const list = document.getElementById('knownNames');
+    if (!list) return;
+    list.innerHTML = Object.keys(loadKnownNames()).sort()
+        .map(n => `<option value="${escapeHtml(n)}"></option>`).join('');
+}
+
+function onNameCommitted(id, el) {
+    const s = students.find(x => x.id === id);
+    if (!s) return;
+    const name = normalizeName(el.value);
+    el.value = name;
+    s.name = name;
+    const knownGender = loadKnownNames()[name];
+    if (knownGender && !s.gender) {
+        s.gender = knownGender;
+        const genderSelect = studentFieldElement(id, 'gender');
+        if (genderSelect) genderSelect.value = knownGender;
+    }
+    saveState();
+    renderStudentHeader(id);
 }
 
 function update(id, field, val) {
@@ -80,8 +127,7 @@ function clearAll() {
     }
 
     // تصفير حقول الجلسة مع استثناء اسم المعلم
-    const today = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('reportDate').value = today;
+    document.getElementById('reportDate').value = todayKey();
     document.getElementById('studentCategory').value = 'أطفال';
     document.getElementById('halaType').value = 'صباحية';
     document.getElementById('durationHours').value = '1';
@@ -106,9 +152,9 @@ function rolloverStudent(id) {
     s.مراجعة = '';
     s.ملاحظات = '';
     s.وسام = '';
-    s.تقييم_تسميع = 'ممتاز';
-    s.تقييم_ماضي_قريب = 'ممتاز';
-    s.تقييم_مراجعة = 'ممتاز';
+    s.تقييم_تسميع = '';
+    s.تقييم_ماضي_قريب = '';
+    s.تقييم_مراجعة = '';
     saveState();
     render();
     showToast(`تم تدوير واجبات ${s.name || 'الطالب'} بنجاح ✓`);

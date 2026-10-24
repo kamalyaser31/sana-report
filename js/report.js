@@ -30,7 +30,7 @@ function getFullReportText() {
     const durationText = formatDurationText(getFieldValue('durationHours'), getFieldValue('durationMinutes'));
 
     let rep = `${BASMALA}\n${HEADER}\n`;
-    rep += `التاريخ: ${getFieldValue('reportDate')}\n`;
+    rep += `التاريخ: ${getReportDateText()}\n`;
     rep += `الفترة: ${getFieldValue('halaType')}\n`;
     if (getFieldValue('halaNum')) rep += `رقم الحلقة: ${getFieldValue('halaNum')}\n`;
     rep += `المدة: ${durationText}\n`;
@@ -45,6 +45,8 @@ function getFullReportText() {
 
 function copyAll(e) {
     if (!students.length) return showToast('لا يوجد طلاب مسجلون لنسخ التقرير');
+    if (!validateReport().ok) return;
+    addKnownNames(students);
     const rep = getFullReportText();
     copyText(rep, e?.target || document.querySelector('button[onclick*="copyAll"]'));
 }
@@ -52,8 +54,10 @@ function copyAll(e) {
 function copySingle(id, e) {
     const s = students.find(x => x.id === id);
     if (!s) return;
+    if (!validateStudent(s).ok) return;
+    addKnownNames([s]);
     const getFieldValue = fieldId => document.getElementById(fieldId)?.value || '';
-    const rep = `${BASMALA}\n${HEADER}\nالتاريخ: ${getFieldValue('reportDate')}\nالمعلم: ${getFieldValue('teacherName')}\n━━━━━━━━━━━━━━━\n${formatStudent(s)}\n\n*نسأل الله ${s.gender === 'male' ? 'له' : 'لها'} التوفيق.*`;
+    const rep = `${BASMALA}\n${HEADER}\nالتاريخ: ${getReportDateText()}\nالمعلم: ${getFieldValue('teacherName')}\n━━━━━━━━━━━━━━━\n${formatStudent(s)}\n\n*نسأل الله ${s.gender === 'male' ? 'له' : 'لها'} التوفيق.*`;
     copyText(rep, e?.target);
 }
 
@@ -79,6 +83,9 @@ function submitToGoogleForm() {
     if (!students.length) {
         return showToast('يرجى إضافة الطلاب قبل الإرسال للاستمارة');
     }
+    if (!validateReport().ok) return;
+    addKnownNames(students);
+    rememberSentHalaNum();
 
     const getFieldValue = id => document.getElementById(id)?.value || '';
     const reportText = getFullReportText();
@@ -146,12 +153,13 @@ function buildPdfHtml(sessionFields, studentsList) {
 
 function exportPDF() {
     if (!students.length) return showToast('لا يوجد طلاب لتصدير التقرير');
+    if (!validateReport().ok) return;
     showToast('جاري تجهيز ملف PDF...');
     const getFieldValue = id => document.getElementById(id)?.value || '';
     const durationText = formatDurationText(getFieldValue('durationHours'), getFieldValue('durationMinutes'));
 
     const sessionFields = {
-        date: getFieldValue('reportDate'),
+        date: getReportDateText(),
         halaType: getFieldValue('halaType'),
         halaNum: getFieldValue('halaNum'),
         studentCategory: getFieldValue('studentCategory'),
@@ -164,7 +172,7 @@ function exportPDF() {
     box.innerHTML = buildPdfHtml(sessionFields, students);
     document.body.appendChild(box);
 
-    const fname = `تقرير_سنا_${(getFieldValue('reportDate') || 'يومي').replace(/[ /\\:]/g, '_')}.pdf`;
+    const fname = `تقرير_سنا_${(getReportDateText() || 'يومي').replace(/[ /\\:]/g, '_')}.pdf`;
 
     if (typeof html2pdf !== 'undefined') {
         html2pdf().set({ margin: 8, filename: fname, image: { type: 'jpeg', quality: 0.98 }, jsPDF: { unit: 'mm', format: 'a4' } }).from(box).save().then(() => box.remove()).catch(() => { box.remove(); window.print(); });

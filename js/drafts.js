@@ -35,6 +35,7 @@ function initDrafts() {
 
     activeDraftId = activeDraft.id;
     students = activeDraft.students || [];
+    suggestNextHalaNum(activeDraft);
 
     const halaNumEl = document.getElementById('halaNum');
     if (halaNumEl) {
@@ -55,6 +56,22 @@ function initDrafts() {
 
 function getActiveDraft() {
     return drafts.find(d => d.id === activeDraftId) || drafts[0];
+}
+
+// يُحفظ رقم الحلقة المرسل وتاريخه؛ فإن فُتحت المسودة في يوم لاحق ورقمها هو المرسل اقتُرح التالي.
+// وإعادة الإرسال في اليوم نفسه تُبقي الرقم كما هو.
+function rememberSentHalaNum() {
+    const draft = getActiveDraft();
+    if (!draft) return;
+    draft.lastSentHalaNum = toWesternDigits(document.getElementById('halaNum')?.value).trim();
+    draft.lastSentOn = todayKey();
+    saveState();
+}
+
+function suggestNextHalaNum(draft) {
+    if (!draft?.lastSentOn || draft.lastSentOn === todayKey()) return;
+    if (toWesternDigits(draft.halaNum).trim() !== draft.lastSentHalaNum) return;
+    draft.halaNum = String(Number(draft.lastSentHalaNum) + 1);
 }
 
 function formatArabicStudentCount(count) {
@@ -94,6 +111,7 @@ function onDraftChange(newId) {
 
     const nextDraft = getActiveDraft();
     students = nextDraft.students || [];
+    suggestNextHalaNum(nextDraft);
     openIds = new Set(students.length ? [students[0].id] : []);
 
     const halaNumEl = document.getElementById('halaNum');

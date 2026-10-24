@@ -8,9 +8,9 @@ function renderStats() {
 }
 
 function isFieldVisible(k) {
-    if (k.startsWith('تقييم_')) {
-        return fieldVisibility[k.replace('تقييم_', '')] !== false;
-    }
+    // التقييم يتبع خانة نصه من RATED_FIELDS؛ فـ«تقييم_مراجعة» يتبع «مراجعة_قديمة» (الماضي) لا «مراجعة».
+    const rated = RATED_FIELDS.find(f => f.rating === k);
+    if (rated) return fieldVisibility[rated.text] !== false;
     return fieldVisibility[k] !== false;
 }
 
@@ -22,8 +22,8 @@ function buildStudentFieldHtml(f, s) {
         : '';
 
     const inputHtml = f.t === 'area'
-        ? `<textarea placeholder="${f.ph}" aria-label="${f.l}" oninput="update(${s.id},'${f.k}',this.value)">${escapeHtml(s[f.k])}</textarea>`
-        : `<select aria-label="${f.l}" onchange="update(${s.id},'${f.k}',this.value)">
+        ? `<textarea placeholder="${f.ph}" aria-label="${f.l}" data-field="${f.k}" oninput="update(${s.id},'${f.k}',this.value)">${escapeHtml(s[f.k])}</textarea>`
+        : `<select aria-label="${f.l}" data-field="${f.k}" onchange="update(${s.id},'${f.k}',this.value)">
             ${f.opts.map(o => `<option value="${escapeHtml(o)}" ${s[f.k] === o ? 'selected' : ''}>${o || f.def}</option>`).join('')}
            </select>`;
 
@@ -37,6 +37,12 @@ function buildStudentFieldHtml(f, s) {
     </div>`;
 }
 
+function genderLabel(gender) {
+    if (gender === 'male') return 'ذكر';
+    if (gender === 'female') return 'أنثى';
+    return 'الجنس؟';
+}
+
 function buildStudentCardHtml(s, idx, isOpen, visibleFields) {
     const fieldsHtml = visibleFields.map(f => buildStudentFieldHtml(f, s)).join('');
 
@@ -46,19 +52,20 @@ function buildStudentCardHtml(s, idx, isOpen, visibleFields) {
             <div class="card-header-info">
                 <span class="student-index-badge">${idx + 1}</span>
                 <strong class="student-name-display">${escapeHtml(s.name) || 'طالب جديد'}</strong>
-                <span class="badge badge-gender badge-${s.gender}">${s.gender === 'male' ? 'ذكر' : 'أنثى'}</span>
-                <span class="badge badge-grade">${s.تقييم_تسميع}</span>
+                <span class="badge badge-gender badge-${s.gender || 'none'}">${genderLabel(s.gender)}</span>
+                <span class="badge badge-grade">${s.تقييم_تسميع || 'بلا تقييم'}</span>
             </div>
         </summary>
         <div class="card-body">
             <div class="card-fields-grid">
                 <div class="form-group">
                     <label>اسم الطالب:</label>
-                    <input type="text" value="${escapeHtml(s.name)}" placeholder="اسم الطالب" aria-label="اسم الطالب" oninput="update(${s.id},'name',this.value)">
+                    <input type="text" value="${escapeHtml(s.name)}" placeholder="الاسم ثنائياً" aria-label="اسم الطالب" data-field="name" list="knownNames" autocomplete="off" oninput="update(${s.id},'name',this.value)" onchange="onNameCommitted(${s.id}, this)">
                 </div>
                 <div class="form-group">
                     <label>الجنس:</label>
-                    <select aria-label="الجنس" onchange="update(${s.id},'gender',this.value)">
+                    <select aria-label="الجنس" data-field="gender" onchange="update(${s.id},'gender',this.value)">
+                        <option value="" ${!s.gender ? 'selected' : ''}>-- اختر --</option>
                         <option value="male" ${s.gender === 'male' ? 'selected' : ''}>ذكر</option>
                         <option value="female" ${s.gender === 'female' ? 'selected' : ''}>أنثى</option>
                     </select>

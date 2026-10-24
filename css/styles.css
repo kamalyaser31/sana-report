@@ -96,6 +96,15 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); outlin
 /* Floating Action Bar */
 .action-bar-container { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); padding: 12px 18px; box-shadow: 0 -3px 12px rgba(0,0,0,0.1); border-top: 1px solid var(--border); display: flex; justify-content: center; z-index: 100; }
 .action-bar-inner { max-width: 840px; width: 100%; display: flex; gap: 10px; }
+
+/* Input Validation: the message is text with an icon, and the field gets a thick border — never color alone */
+.action-bar-container { flex-direction: column; align-items: center; }
+.validation-msg { max-width: 840px; width: 100%; margin: 0 0 8px; padding: 8px 12px; border: 2px solid var(--danger); border-radius: 6px; font-weight: 600; font-size: 0.92rem; color: var(--text); background: var(--bg-card); }
+.validation-msg::before { content: "⚠ تنبيه: "; }
+.validation-msg:empty { display: none; }
+[aria-invalid="true"] { border: 3px solid var(--danger) !important; }
+.date-preview { margin: 4px 0 0; font-size: 0.85rem; color: var(--text-muted); }
+.badge-none { background: transparent; color: var(--text); border: 1px dashed var(--text-muted); }
 .action-bar-inner .btn { flex: 1; }
 
 /* Quran Picker & Modal */

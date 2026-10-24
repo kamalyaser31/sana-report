@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTheme(savedTheme);
     loadSettings();
     initDrafts();
+    seedKnownNames();
     render();
 
     // ربط أحداث الإدخال للحفظ التلقائي
