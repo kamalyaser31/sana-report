@@ -78,6 +78,26 @@ function halaNumProblem() {
     return /^[1-9]\d*$/.test(value) ? '' : 'اكتب رقم الحلقة رقماً صحيحاً، مثل 12.';
 }
 
+/** أطول حلقة تُقبل بالدقائق: خمس ساعات، فلا تمرّ «15 ساعة» بدل «15 دقيقة». */
+const MAX_DURATION_MINUTES = 5 * 60;
+
+/** يعيد { field, message } لخطأ مدة الحصة، أو null. */
+function durationProblem() {
+    const read = id => toWesternDigits(document.getElementById(id)?.value).trim();
+    const hours = read('durationHours') || '0';
+    const minutes = read('durationMinutes') || '0';
+    if (!/^\d+$/.test(hours)) return { field: 'durationHours', message: 'اكتب الساعات رقماً صحيحاً، مثل 1.' };
+    if (!/^\d+$/.test(minutes) || Number(minutes) > 59) {
+        return { field: 'durationMinutes', message: 'اكتب الدقائق رقماً من 0 إلى 59.' };
+    }
+    const total = Number(hours) * 60 + Number(minutes);
+    if (total === 0) return { field: 'durationHours', message: 'مدة الحصة صفر؛ اكتب الساعات أو الدقائق.' };
+    if (total > MAX_DURATION_MINUTES) {
+        return { field: 'durationHours', message: 'مدة الحصة أكثر من 5 ساعات؛ راجع الساعات والدقائق، فلعلك كتبت الدقائق في خانة الساعات.' };
+    }
+    return null;
+}
+
 function clearInvalidMarks() {
     document.querySelectorAll('[aria-invalid="true"]').forEach(el => el.removeAttribute('aria-invalid'));
     const live = document.getElementById('validationLive');
@@ -121,13 +141,15 @@ function failField(id, message) {
     return { ok: false, message };
 }
 
-/** بوابة التقرير الكامل: التاريخ ورقم الحلقة ثم الطلاب بترتيب عرضهم ثم تكرار الأسماء. */
+/** بوابة التقرير الكامل: التاريخ ورقم الحلقة ومدة الحصة ثم الطلاب بترتيب عرضهم ثم تكرار الأسماء. */
 function validateReport() {
     clearInvalidMarks();
     const dateProblem = reportDateProblem();
     if (dateProblem) return failField('reportDate', dateProblem);
     const halaProblem = halaNumProblem();
     if (halaProblem) return failField('halaNum', halaProblem);
+    const duration = durationProblem();
+    if (duration) return failField(duration.field, duration.message);
 
     for (let i = 0; i < students.length; i++) {
         const problem = studentProblem(students[i], i);
