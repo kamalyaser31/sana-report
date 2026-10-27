@@ -85,7 +85,6 @@ function submitToGoogleForm() {
     }
     if (!validateReport().ok) return;
     addKnownNames(students);
-    rememberSentHalaNum();
 
     const getFieldValue = id => document.getElementById(id)?.value || '';
     const reportText = getFullReportText();
