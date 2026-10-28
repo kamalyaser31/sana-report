@@ -21,8 +21,7 @@ const FORM_CONFIG = {
         TEACHER: "entry.194128415",
         STUDENT_CATEGORY: "entry.1179001327",
         HOURS: "entry.719118299",
-        MINUTES: "entry.592377570",
-        REPORT_TEXT: "entry.536106001"
+        MINUTES: "entry.592377570"
     }
 };
 
