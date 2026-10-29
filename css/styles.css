@@ -7,10 +7,14 @@
     --bg-header: #f0f6f4;
     --bg-body: #ffffff;
     --border: #d1dedb;
+    /* Field borders need 3:1 against the card (WCAG 1.4.11); --border stays light for cards */
+    --border-input: #7a8f89;
     --text: #1a2e35;
     --text-muted: #556b73;
     --danger: #dc3545;
-    --success: #28a745;
+    --danger-text: #b91c1c;
+    --success: #1e7e34;
+    --on-primary: #fff;
     --radius: 8px;
     --shadow: 0 2px 6px rgba(0,0,0,0.06);
 }
@@ -24,10 +28,14 @@
     --bg-header: #1b2824;
     --bg-body: #192421;
     --border: #2e433d;
+    --border-input: #6b8780;
     --text: #f0fdf4;
     --text-muted: #9ca3af;
     --danger: #ef4444;
+    --danger-text: #f87171;
     --success: #10b981;
+    /* White on #10b981 is 2.5:1, so the bright buttons take dark text */
+    --on-primary: #0f1715;
     --shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
@@ -45,9 +53,10 @@ h1, h2, h3, .app-header h1, .modal-header h3, #quranPreviewText { font-family: '
 
 /* Buttons */
 .btn { display: inline-flex; align-items: center; justify-content: center; padding: 9px 16px; min-height: 42px; font-size: 0.95rem; font-weight: bold; border-radius: var(--radius); border: none; cursor: pointer; text-decoration: none; font-family: inherit; transition: opacity 0.2s; }
-.btn-primary { background: var(--primary); color: #fff; }
-.btn-success { background: var(--success); color: #fff; }
-.btn-danger { background: var(--danger); color: #fff; }
+.btn-primary { background: var(--primary); color: var(--on-primary); }
+.btn-success { background: var(--success); color: var(--on-primary); }
+.btn-form { background: #0369a1; color: #fff; }
+.btn-danger { background: #dc3545; color: #fff; }
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
 .btn-sm { padding: 5px 12px; min-height: 34px; font-size: 0.85rem; }
 .btn-xs { padding: 3px 9px; min-height: 24px; font-size: 0.78rem; font-weight: 500; }
@@ -57,18 +66,19 @@ h1, h2, h3, .app-header h1, .modal-header h3, #quranPreviewText { font-family: '
 .field-note { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
 .form-group.full-width { grid-column: 1 / -1; }
 label { font-size: 0.88rem; font-weight: 600; color: var(--text-muted); }
-input, select, textarea { width: 100%; padding: 10px 12px; min-height: 42px; font-size: 16px; font-family: inherit; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); color: var(--text); }
+input, select, textarea { width: 100%; padding: 10px 12px; min-height: 42px; font-size: 16px; font-family: inherit; border: 1px solid var(--border-input); border-radius: 6px; background: var(--bg-card); color: var(--text); }
 textarea { resize: vertical; min-height: 64px; }
-input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
 
 /* Draft Selector Minimal Row */
 .draft-selector-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; background: var(--bg-card); padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius); }
 .draft-selector-label { font-size: 0.9rem; font-weight: bold; color: var(--text); white-space: nowrap; margin-bottom: 0; }
-.draft-select-control { flex: 1; min-height: 38px; padding: 6px 12px; font-size: 0.92rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-subtle); color: var(--text); }
+.draft-select-control { flex: 1; min-height: 38px; padding: 6px 12px; font-size: 0.92rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-input); background: var(--bg-subtle); color: var(--text); }
 .modal-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 .settings-section-title { font-size: 0.95rem; font-weight: bold; color: var(--text); margin-bottom: 6px; }
 .draft-modal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.btn-danger-outline { border-color: #ef4444; color: #ef4444; }
+.btn-danger-outline { border-color: var(--danger-text); color: var(--danger-text); }
 .btn-danger-outline:hover { background: #fef2f2; }
 [data-theme="dark"] .btn-danger-outline:hover { background: #450a0a; }
 
@@ -83,7 +93,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); outlin
 .card-header::-webkit-details-marker, .settings-summary-bar::-webkit-details-marker { display: none; }
 .student-card[open] > .card-header, .settings-details[open] > .settings-summary-bar { background: var(--primary-light); border-bottom: 1px solid var(--border); }
 .card-header-info, .summary-content { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.student-index-badge, .summary-icon { width: 26px; height: 26px; background: var(--primary); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: bold; }
+.student-index-badge, .summary-icon { width: 26px; height: 26px; background: var(--primary); color: var(--on-primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: bold; }
 .badge { padding: 3px 8px; font-size: 0.75rem; font-weight: bold; border-radius: 12px; }
 .summary-badge { font-size: 0.82rem; font-weight: normal; color: var(--text-muted); background: var(--bg-card); padding: 3px 10px; border-radius: 12px; border: 1px solid var(--border); }
 .badge-male { background: #e0f2fe; color: #0369a1; }
@@ -112,7 +122,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); outlin
 .field-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .field-header label { margin-bottom: 0; }
 .btn-quran { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.75rem; padding: 2px 7px; border-radius: 4px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
-.btn-quran:hover { background: var(--primary); color: #fff; }
+.btn-quran:hover { background: var(--primary); color: var(--on-primary); }
 
 .modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 1100; padding: 16px; backdrop-filter: blur(2px); }
 .modal-box { background: var(--bg-card); border-radius: 14px; width: 100%; max-width: 520px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden; border: 1px solid var(--border); max-height: 90vh; display: flex; flex-direction: column; }

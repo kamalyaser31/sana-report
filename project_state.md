@@ -1,7 +1,7 @@
 # حالة المشروع (Project State) — sana-report
 
 - **الرابط:** `https://kamalyaser31.github.io/sana-report/`، والمستودع `https://github.com/kamalyaser31/sana-report`.
-- **كاش PWA:** `sana-report-v27` في `sw.js` (Network-First)؛ يُرفع رقمه مع كل تغيير في ملف يخدمه العامل، ومنه `guide.html`.
+- **كاش PWA:** `sana-report-v28` في `sw.js` (Network-First)؛ يُرفع رقمه مع كل تغيير في ملف يخدمه العامل، ومنه `guide.html`.
 - **تاريخ التحديث:** `2026-10-29`، والتاريخ في [CHANGELOG.md](./CHANGELOG.md).
 
 ## البنية

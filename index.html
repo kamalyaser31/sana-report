@@ -43,7 +43,7 @@
         </div>
         <div class="header-controls">
             <button type="button" onclick="openSettingsModal()" class="btn btn-outline btn-sm" aria-label="تخصيص الحقول">⚙️ تخصيص الحقول</button>
-            <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-outline btn-sm" aria-label="الوضع الليلي">الوضع الليلي</button>
+            <button type="button" id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-outline btn-sm">الوضع الليلي</button>
             <button type="button" onclick="clearAll()" class="btn btn-danger btn-sm" aria-label="مسح التقرير">مسح التقرير</button>
         </div>
     </header>
@@ -52,7 +52,7 @@
     <details class="settings-details" id="settingsDetails" open aria-label="بيانات الحلقة">
         <summary class="settings-summary-bar">
             <div class="summary-content">
-                <span class="summary-icon">⚙</span>
+                <span class="summary-icon" aria-hidden="true">⚙</span>
                 <strong>بيانات الحلقة</strong>
                 <span class="summary-badge" id="settingsBadge">محمد نبيل • أطفال • صباحية • 1 ساعة</span>
             </div>
@@ -118,7 +118,7 @@
             <span>إجمالي الطلاب: <strong id="totalCount">0</strong></span>
             <span style="margin-right:8px;font-size:0.85rem;opacity:0.9;">(ذكور: <strong id="maleCount">0</strong> | إناث: <strong id="femaleCount">0</strong>)</span>
         </div>
-        <button type="button" id="expandAllBtn" onclick="toggleAll()" class="btn btn-outline btn-sm" style="color:inherit;border-color:currentColor;" aria-label="طي الكل">طي الكل</button>
+        <button type="button" id="expandAllBtn" onclick="toggleAll()" class="btn btn-outline btn-sm" style="color:inherit;border-color:currentColor;">طي الكل</button>
     </section>
 
     <section id="studentsList" class="students-container" aria-label="بطاقات الطلاب"></section>
@@ -131,7 +131,7 @@
         <button type="button" onclick="addStudent()" class="btn btn-success" aria-label="إضافة طالب">+ إضافة طالب</button>
         <button type="button" onclick="copyAll(event)" class="btn btn-primary" aria-label="نسخ التقرير">نسخ التقرير</button>
         <button type="button" onclick="exportPDF()" class="btn btn-outline" style="border-color:var(--primary);color:var(--primary);" aria-label="تصدير PDF">تصدير PDF</button>
-        <button type="button" onclick="submitToGoogleForm()" class="btn btn-primary" style="background:#0284c7;" aria-label="إرسال للاستمارة">إرسال للاستمارة ↗</button>
+        <button type="button" onclick="submitToGoogleForm()" class="btn btn-form" aria-label="إرسال للاستمارة">إرسال للاستمارة ↗</button>
     </div>
 </footer>
 
@@ -139,7 +139,7 @@
 <div id="quranModal" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="quranModalTitle">
     <div class="modal-box">
         <header class="modal-header">
-            <h3 id="quranModalTitle">📖 المصحف الشريف</h3>
+            <h3 id="quranModalTitle"><span aria-hidden="true">📖 </span>المصحف الشريف</h3>
             <button type="button" class="modal-close-btn" onclick="closeQuranPicker()" aria-label="إغلاق">✕</button>
         </header>
         <div class="modal-tabs" role="tablist">
@@ -222,7 +222,7 @@
 <div id="settingsModal" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
     <div class="modal-box">
         <header class="modal-header">
-            <h3 id="settingsModalTitle">⚙️ تخصيص الحقول</h3>
+            <h3 id="settingsModalTitle"><span aria-hidden="true">⚙️ </span>تخصيص الحقول</h3>
             <button type="button" class="modal-close-btn" onclick="closeSettingsModal()" aria-label="إغلاق">✕</button>
         </header>
         <div class="modal-body">
@@ -265,7 +265,7 @@
                 <hr style="border:none;border-top:1px solid var(--border);margin:8px 0;">
                 <label class="checkbox-label" style="color:var(--primary);">
                     <input type="checkbox" id="vis_quran_picker" onchange="updateFieldVisibility()">
-                    <span>أزرار منتقي المصحف (📖)</span>
+                    <span>أزرار منتقي المصحف<span aria-hidden="true"> (📖)</span></span>
                 </label>
                 <label class="checkbox-label" style="color:var(--primary);">
                     <input type="checkbox" id="vis_name_suggestions" onchange="updateFieldVisibility()">
@@ -283,7 +283,7 @@
 
             <hr class="modal-divider">
             
-            <div class="settings-section-title">📁 إدارة المسودات:</div>
+            <div class="settings-section-title"><span aria-hidden="true">📁 </span>إدارة المسودات:</div>
             <div class="draft-modal-actions">
                 <button type="button" onclick="createNewDraftPrompt()" class="btn btn-outline btn-sm" aria-label="مسودة جديدة">+ مسودة جديدة</button>
                 <button type="button" onclick="renameCurrentDraftPrompt()" class="btn btn-outline btn-sm" aria-label="إعادة تسمية">✏️ إعادة تسمية</button>
