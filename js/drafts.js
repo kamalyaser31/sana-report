@@ -64,7 +64,26 @@ function formatArabicStudentCount(count) {
     return `${count} طالباً`;
 }
 
+// تذكير لا يملأ الخانة: الرقم لا يتغير وحده (قرار 2026-10-27).
+function updateLastHalaHint() {
+    const hint = document.getElementById('lastHalaHint');
+    if (!hint) return;
+    const sent = getActiveDraft()?.lastFormHala;
+    hint.hidden = !sent;
+    hint.textContent = sent ? `آخر رقم أرسلتَه من هذه المسودة: ${sent.num} (${formatReportDate(sent.day)})` : '';
+}
+
+/** يُحفظ في المسودة رقم الحلقة ويوم إرسالها حين يُفتح لها رابط الاستمارة. */
+function recordFormSent(halaNum) {
+    const current = getActiveDraft();
+    if (!current) return;
+    current.lastFormHala = { num: halaNum, day: todayKey() };
+    localStorage.setItem('sana_drafts', JSON.stringify(drafts));
+    updateLastHalaHint();
+}
+
 function updateDraftSelectUI() {
+    updateLastHalaHint();
     const select = document.getElementById('draftSelect');
     if (!select) return;
     select.innerHTML = '';

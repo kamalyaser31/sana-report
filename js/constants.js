@@ -15,6 +15,9 @@ const AWARDS = [
 const VISIBILITY_FIELD_KEYS = ['تسميع', 'مراجعة_قديمة', 'ماضي_قريب', 'حفظ', 'مراجعة', 'ماضي_قريب_جديد', 'ملاحظات', 'وسام', 'quran_picker', 'name_suggestions', 'date_picker'];
 
 // معرفات حقول نموذج Google Forms المعتمد في منظومة الأتمتة
+// أطول رابط wa.me فتح WhatsApp بنصه في تجربة 2026-10-28؛ وفشل 2184.
+const WHATSAPP_LINK_LIMIT = 1937;
+
 const FORM_CONFIG = {
     URL: "https://docs.google.com/forms/d/e/1FAIpQLSfNKy_h48Ia7dhe_zBoGxTdw0dF5qU2rlul-4JYYUX2VCgcyQ/viewform",
     ENTRIES: {

@@ -1,5 +1,6 @@
 # سجل التغييرات (CHANGELOG)
 
+- 2026-10-29: feat(parents): زر «أرسل لوليّ الأمر» في بطاقة كل طالب يفتح WhatsApp بنص «نسخ» نفسه بلا رقم، وما جاوز `WHATSAPP_LINK_LIMIT` يُنسخ ليُلصق؛ وسطر تحت رقم الحلقة يذكّر بآخر رقم أُرسل من المسودة (`lastFormHala`) ولا يملأ الخانة (كاش `sana-report-v26`).
 - 2026-10-28: chore(constants): حُذف `REPORT_TEXT` من `FORM_CONFIG.ENTRIES`، لأن نص التقرير يُنسخ إلى الحافظة ولا يمر في الرابط.
 - 2026-10-28: docs: `guide.html` يوافق بقاء رقم الحلقة كما كتبه المعلم (كاش `sana-report-v25`)، واختُصرت `project_state.md`، وصُحّح في `README.md` وصف الإرسال إلى الاستمارة وأُضيفت الرخصة.
 - 2026-10-27: feat(drafts): رقم الحلقة لا يُقترح تاليه بعد الإرسال، فيبقى كما كتبه المعلم (حُذف `suggestNextHalaNum` و`rememberSentHalaNum`).

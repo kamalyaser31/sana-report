@@ -51,14 +51,37 @@ function copyAll(e) {
     copyText(rep, e?.target || document.querySelector('button[onclick*="copyAll"]'));
 }
 
-function copySingle(id, e) {
+/** نص الطالب الواحد بعد التحقق من بياناته، أو null إن لم تكتمل. */
+function studentReportText(id) {
     const s = students.find(x => x.id === id);
-    if (!s) return;
-    if (!validateStudent(s).ok) return;
+    if (!s) return null;
+    if (!validateStudent(s).ok) return null;
     addKnownNames([s]);
     const getFieldValue = fieldId => document.getElementById(fieldId)?.value || '';
-    const rep = `${BASMALA}\n${HEADER}\nالتاريخ: ${getReportDateText()}\nالمعلم: ${getFieldValue('teacherName')}\n━━━━━━━━━━━━━━━\n${formatStudent(s)}\n\n*نسأل الله ${s.gender === 'male' ? 'له' : 'لها'} التوفيق.*`;
-    copyText(rep, e?.target);
+    return `${BASMALA}\n${HEADER}\nالتاريخ: ${getReportDateText()}\nالمعلم: ${getFieldValue('teacherName')}\n━━━━━━━━━━━━━━━\n${formatStudent(s)}\n\n*نسأل الله ${s.gender === 'male' ? 'له' : 'لها'} التوفيق.*`;
+}
+
+function copySingle(id, e) {
+    const rep = studentReportText(id);
+    if (rep) copyText(rep, e?.target);
+}
+
+// بلا رقم: يختار المعلم وليّ الأمر من جهات اتصاله، فلا هواتف في التطبيق.
+function sendToParent(id) {
+    const rep = studentReportText(id);
+    if (!rep) return;
+    const link = `https://wa.me/?text=${encodeURIComponent(rep)}`;
+    if (link.length <= WHATSAPP_LINK_LIMIT) {
+        window.open(link, '_blank');
+        return;
+    }
+    // أطول من أن يحمله الرابط: يُنسخ النص ويُفتح WhatsApp ليلصقه المعلم.
+    navigator.clipboard?.writeText(rep).then(() => {
+        showToast('التقرير طويل، فنُسخ.. الصقه في محادثة وليّ الأمر');
+    }).catch(() => {
+        prompt('انسخ التقرير والصقه في محادثة وليّ الأمر:', rep);
+    });
+    window.open('https://wa.me/?text=', '_blank');
 }
 
 function copyText(text, btn) {
@@ -105,6 +128,7 @@ function submitToGoogleForm() {
     params.append(FORM_CONFIG.ENTRIES.MINUTES, getFieldValue('durationMinutes') || '0');
 
     window.open(`${FORM_CONFIG.URL}?${params.toString()}`, '_blank');
+    recordFormSent(toWesternDigits(getFieldValue('halaNum')).trim());
 }
 
 function buildPdfHtml(sessionFields, studentsList) {
