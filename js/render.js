@@ -74,7 +74,7 @@ function buildStudentCardHtml(s, idx, isOpen, visibleFields) {
             </div>
             <footer class="card-actions">
                 <button type="button" onclick="copySingle(${s.id}, event)" class="btn btn-primary btn-sm">نسخ</button>
-                <button type="button" onclick="sendToParent(${s.id})" class="btn btn-outline btn-sm" style="border-color:var(--primary);color:var(--primary);">أرسل لوليّ الأمر</button>
+                ${fieldVisibility['send_parent'] !== false ? `<button type="button" onclick="sendToParent(${s.id})" class="btn btn-outline btn-sm" style="border-color:var(--primary);color:var(--primary);">أرسل لوليّ الأمر</button>` : ''}
                 <button type="button" onclick="rolloverStudent(${s.id})" class="btn btn-outline btn-sm" style="border-color:var(--primary);color:var(--primary);" aria-label="تدوير الواجبات">تدوير الواجبات</button>
                 <button type="button" onclick="removeStudent(${s.id})" class="btn btn-danger btn-sm">حذف</button>
             </footer>

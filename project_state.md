@@ -1,7 +1,7 @@
 # حالة المشروع (Project State) — sana-report
 
 - **الرابط:** `https://kamalyaser31.github.io/sana-report/`، والمستودع `https://github.com/kamalyaser31/sana-report`.
-- **كاش PWA:** `sana-report-v26` في `sw.js` (Network-First)؛ يُرفع رقمه مع كل تغيير في ملف يخدمه العامل، ومنه `guide.html`.
+- **كاش PWA:** `sana-report-v27` في `sw.js` (Network-First)؛ يُرفع رقمه مع كل تغيير في ملف يخدمه العامل، ومنه `guide.html`.
 - **تاريخ التحديث:** `2026-10-29`، والتاريخ في [CHANGELOG.md](./CHANGELOG.md).
 
 ## البنية
@@ -13,7 +13,7 @@
   - `state.js`: الحالة والتخزين المحلي. و`drafts.js`: المسودات المتعددة (`sana_drafts`)، ومنها `lastFormHala` ({num, day}) يكتبه `recordFormSent` حين يُفتح رابط الاستمارة، ويعرضه `updateLastHalaHint` في `#lastHalaHint` تذكيراً لا يملأ الخانة. و`settings.js`: المظهر وإظهار الحقول.
   - `validation.js`: `validateReport` و`validateStudent` قبل النسخ والإرسال وPDF، يعلنان الخطأ في `#validationLive` وينقلان التركيز إليه. و`durationProblem`: المدة من دقيقة إلى `MAX_DURATION_MINUTES` (300).
   - `render.js` و`students.js` (ومنه زر «تدوير الواجبات») و`ui.js`.
-  - `report.js`: نص التقرير، والنسخ، وPDF (`html2pdf.bundle.min.js` محلي)، وفتح الاستمارة. و`studentReportText` نص الطالب الواحد، يستعمله «نسخ» و`sendToParent` («أرسل لوليّ الأمر»): `wa.me/?text=` بلا رقم، وما جاوز `WHATSAPP_LINK_LIMIT` (1937) يُنسخ ويُفتح WhatsApp فارغاً.
+  - `report.js`: نص التقرير، والنسخ، وPDF (`html2pdf.bundle.min.js` محلي)، وفتح الاستمارة. و`studentReportText` نص الطالب الواحد، يستعمله «نسخ» و`sendToParent` («أرسل لوليّ الأمر»، يُخفى بـ `send_parent` في إظهار الحقول): `wa.me/?text=` بلا رقم، وما جاوز `WHATSAPP_LINK_LIMIT` (1937) يُنسخ ويُفتح WhatsApp فارغاً.
   - `quran.js` و`quran-data.js`: منتقي المصحف (السور والصفحات 1-604 والأجزاء)، وبياناته في `data/`.
   - `app.js`: نقطة الانطلاق.
 

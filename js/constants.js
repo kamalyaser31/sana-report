@@ -12,7 +12,7 @@ const AWARDS = [
 ];
 
 // مفاتيح حقول رؤية بطاقات الطلاب — مصدر حقيقة واحد يُستخدَم في كل المواضع
-const VISIBILITY_FIELD_KEYS = ['تسميع', 'مراجعة_قديمة', 'ماضي_قريب', 'حفظ', 'مراجعة', 'ماضي_قريب_جديد', 'ملاحظات', 'وسام', 'quran_picker', 'name_suggestions', 'date_picker'];
+const VISIBILITY_FIELD_KEYS = ['تسميع', 'مراجعة_قديمة', 'ماضي_قريب', 'حفظ', 'مراجعة', 'ماضي_قريب_جديد', 'ملاحظات', 'وسام', 'quran_picker', 'name_suggestions', 'date_picker', 'send_parent'];
 
 // معرفات حقول نموذج Google Forms المعتمد في منظومة الأتمتة
 // أطول رابط wa.me فتح WhatsApp بنصه في تجربة 2026-10-28؛ وفشل 2184.
